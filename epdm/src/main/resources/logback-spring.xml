@@ -1,0 +1,29 @@
+<configuration>
+    <property name="LOGS" value="./logs" />
+
+    <!-- Console logging -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File logging -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS}/epdm.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root logger -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </root>
+
+    <!-- Custom logger for debugging purposes -->
+    <logger name="com.ggt.epdm.service" level="ERROR">
+        <appender-ref ref="FILE" />
+    </logger>
+</configuration>

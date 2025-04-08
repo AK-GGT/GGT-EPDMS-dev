@@ -1,0 +1,73 @@
+package com.ggt.epdm.model;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.persistence.*;
+import java.time.Instant;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "contact")
+public class Contact extends DataSet {
+	
+    @Id
+    @Column(name = "ID", nullable = false)
+    private Long id;
+
+    @Column(name = "BRANCH")
+    private Integer branch;
+
+    @Column(name = "CENTRALCONTACTPOINT")
+    private String centralcontactpoint;
+
+    @Column(name = "classification_cache", length = 100)
+    private String classificationCache;
+
+    @Column(name = "CONTACTADDRESS")
+    private String contactaddress;
+
+    @Column(name = "EMAIL")
+    private String email;
+
+    @Column(name = "FAX")
+    private String fax;
+
+    @Column(name = "MOSTRECENTVERSION")
+    private Boolean mostrecentversion;
+
+    @Column(name = "name_cache")
+    private String nameCache;
+
+    @Column(name = "PERMANENTURI")
+    private String permanenturi;
+
+    @Column(name = "PHONE")
+    private String phone;
+
+    @Column(name = "RELEASESTATE")
+    private String releasestate;
+
+    @Column(name = "WWW")
+    private String www;
+
+    @Column(name = "MAJORVERSION")
+    private Integer majorversion;
+
+    @Column(name = "MINORVERSION")
+    private Integer minorversion;
+
+    @Column(name = "SUBMINORVERSION")
+    private Integer subminorversion;
+
+    @Column(name = "VERSION")
+    private Integer version;
+
+    @Column(name = "IMPORTDATE")
+    private Instant importdate;
+
+    @Column(name = "visible")
+    private Boolean visible;
+
+}
