@@ -1,0 +1,80 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:shiro="http://shiro.apache.org/tags">
+
+	<h:form id="adminMenuForm">
+		<p:growl id="messages" showDetail="false"/>
+		<p:menubar id="adminMenu">
+			<p:submenu label="#{i18n['admin.dataImport']}">
+				<p:menuitem value="#{i18n['admin.import']}" url="#{conf.contextPath}#{url.data.importUpload}" />
+				<p:menuitem value="#{i18n['admin.export']}" url="#{conf.contextPath}#{url.data.export}" />
+			</p:submenu>
+			<p:submenu label="#{i18n['admin.qualityAssurance']}">
+				<p:menuitem value="#{i18n['admin.compareDatasets']}" url="#{conf.contextPath}/admin/compareDatasetsSelection.xhtml?stock=#{stockSelection.currentStockName}" />
+			</p:submenu>
+			<p:submenu label="#{i18n['common.stock']}">
+				<p:menuitem value="#{i18n['admin.rootStock.new']}" url="#{conf.contextPath}#{url.rootStock.getNew()}" />
+				<p:menuitem value="#{i18n['admin.stock.new']}" url="#{conf.contextPath}#{url.stock.getNew()}" />
+				<p:separator />
+				<p:menuitem value="#{i18n['admin.stock.manageList']}" url="#{conf.contextPath}#{url.stock.manageList}" />
+			</p:submenu>
+			<p:submenu label="#{i18n['admin.dataset.manageList']}">
+				<p:menuitem value="#{i18n['admin.process.manageList']}" url="#{conf.contextPath}#{url.process.manageList}" />
+				<p:menuitem value="#{i18n['admin.lciaMethod.manageList']}" url="#{conf.contextPath}#{url.lciaMethod.manageList}" />
+				<p:menuitem value="#{i18n['admin.elementaryFlow.manageList']}" url="#{conf.contextPath}#{url.eflow.manageList}" />
+				<p:menuitem value="#{i18n['admin.productFlow.manageList']}" url="#{conf.contextPath}#{url.pflow.manageList}" />
+				<p:menuitem value="#{i18n['admin.flowProperty.manageList']}" url="#{conf.contextPath}#{url.flowProperty.manageList}" />
+				<p:menuitem value="#{i18n['admin.unitGroup.manageList']}" url="#{conf.contextPath}#{url.unitGroup.manageList}" />
+				<p:menuitem value="#{i18n['admin.source.manageList']}" url="#{conf.contextPath}#{url.source.manageList}" />
+				<p:menuitem value="#{i18n['admin.contact.manageList']}" url="#{conf.contextPath}#{url.contact.manageList}" />
+				<p:menuitem value="#{i18n['admin.lifecyclemodel.manageList']}" url="#{conf.contextPath}#{url.lifecyclemodel.manageList}" />
+			</p:submenu>
+			<shiro:hasPermission name="ADMIN_AREA">
+				<p:submenu label="#{i18n['admin.user']}">
+					<p:menuitem value="#{i18n['admin.user.new']}" url="#{conf.contextPath}#{url.user.getNew()}" />
+					<p:menuitem value="#{i18n['admin.user.manageList']}" url="#{conf.contextPath}#{url.user.showList}" />
+					<p:separator />
+					<p:menuitem value="#{i18n['admin.group.new']}" url="#{conf.contextPath}#{url.group.getNew()}" />
+					<p:menuitem value="#{i18n['admin.group.manageList']}" url="#{conf.contextPath}#{url.group.showList}" />
+				</p:submenu>
+			</shiro:hasPermission>
+			<p:submenu label="#{i18n['admin.network']}">
+				<p:menuitem value="#{i18n['admin.node.new']}" url="#{conf.contextPath}#{url.node.getNew()}" rendered="#{!applicationInfoBean.registryBasedNetworking}"/>
+				<p:menuitem value="#{i18n['admin.node.manageList']}" url="#{conf.contextPath}#{url.node.showList}" rendered="#{!applicationInfoBean.registryBasedNetworking}" />
+				<!-- //TODO: use property for path here as well -->
+				<p:menuitem value="#{i18n['common.adminMenu.registries']}" url="#{conf.contextPath}/admin/listRegistries.xhtml" rendered="#{applicationInfoBean.registryBasedNetworking}" />
+				<p:menuitem value="#{i18n['admin.node.info']}" url="#{conf.contextPath}#{url.node.nodeInfo}" />
+				<p:submenu label="#{i18n['admin.push']}" rendered="#{conf.pushShown}">
+					<p:menuitem value="#{i18n['admin.pushTarget.new']}" url="#{conf.contextPath}#{url.pushTarget.getNew()}"/>
+					<p:menuitem value="#{i18n['admin.pushTarget.manageList']}" url="#{conf.contextPath}#{url.pushTarget.showList}"/>
+					<p:menuitem value="#{i18n['admin.pushConfig.new']}" url="#{conf.contextPath}#{url.pushConfig.getNew()}"/>
+					<p:menuitem value="#{i18n['admin.pushConfig.manageList']}" url="#{conf.contextPath}#{url.pushConfig.showList}"/>
+				</p:submenu>
+			</p:submenu>
+			
+			<p:submenu label="#{i18n['admin.jobs']}" >
+				<p:menuitem value="#{i18n['admin.jobs.showList']}" url="#{conf.contextPath}#{url.jobs.showList}" />
+			</p:submenu>
+
+			<shiro:hasPermission name="*:*:*">
+				<p:submenu label="#{i18n['admin.globalConfig']}">
+					<p:menuitem value="#{i18n['admin.config']}" url="#{conf.contextPath}#{url.config}" />
+					<p:menuitem value="#{i18n['admin.glad.config']}" url="#{conf.contextPath}#{url.gladDatabaseProperties}" rendered="#{conf.gladEnabled}"/>
+					<p:menuitem value="#{i18n['admin.validation']}" url="#{conf.contextPath}/admin/manageProfile.xhtml"/>
+					<p:menuitem value="#{i18n['admin.categories.categorydefinitions']}" url="#{conf.contextPath}/admin/manageCategoryDefinitions.xhtml"/>
+					<p:menuitem value="#{i18n['admin.tags.edit']}" url="#{conf.contextPath}/admin/manageTags.xhtml"/>
+					<p:submenu label="#{i18n['admin.orgs']}">
+						<p:menuitem value="#{i18n['admin.org.new']}" url="#{conf.contextPath}#{url.org.getNew()}" />
+						<p:menuitem value="#{i18n['admin.org.manageList']}" url="#{conf.contextPath}#{url.org.manageList}" />
+					</p:submenu>
+				</p:submenu>
+			</shiro:hasPermission>
+			<p:submenu label="#{i18n['admin.maintenance.maintenance']}">
+				<p:menuitem value="#{i18n['admin.maintenance.reReadConfigs']}" action="#{reReadConfigsHandler.reReadConfigs()}" ajax="false" update="messages"/>
+ 				<p:menuitem value="#{i18n['admin.cleanCache']}" url="#{conf.contextPath}/admin/cleanCache.xhtml"/>
+			</p:submenu>
+		</p:menubar>
+	</h:form>
+</ui:composition>

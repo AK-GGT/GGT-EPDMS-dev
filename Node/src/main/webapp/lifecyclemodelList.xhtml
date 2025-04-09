@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:body>
+	<ui:composition template="#{conf.templatePath}/frontend.xhtml">
+		<ui:param name="pageTitle"
+			value="#{i18n['common.lifecyclemodels']}#{i18n['delimiter']}#{i18n['public.datasets']}" />
+		<ui:param name="activeMenu" value="#{Constants.MENU_LIFECYCLEMODEL}" />
+		<ui:define name="content">
+
+			<h:form id="tableForm" prependId="false">
+
+				<p:dataTable id="lifeCycleModelTable" var="lcm" lazy="true"
+					value="#{lifeCycleModelsHandler.lazyDataModel}" paginator="true"
+					rows="10" rowsPerPageTemplate="5,10,15,50"
+					paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                                 		 {PreviousPageLink} {PageLinks} {NextPageLink}
+                                 		 {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']}"
+					currentPageReportTemplate="#{i18n['common.list.currentEntries']}: {totalRecords} 
+                                 		 (#{lifeCycleModelsHandler.lazyDataModel.loadTotalElementCount()} #{i18n['common.list.total']})  
+                                 		 (#{i18n['common.list.page']} {currentPage} #{i18n['common.list.of']} {totalPages})"
+					emptyMessage="#{i18n['common.list.noneFound']}">
+
+					<!-- Name -->
+
+					<p:column style="width:30%" sortBy="#{lcm.name.defaultValue}"
+						filterBy="#{lcm.name}" headerText="#{i18n['common.name']}">
+
+						<h:link outcome="#{url.lifecyclemodel.getDetail(lcm)}"
+							value="#{lcm.name.defaultValue}"
+							title="#{lcm.uuidAsString}   #{lcm.version}" />
+
+					</p:column>
+
+					<!-- Classification -->
+
+					<p:column style="width:12%"
+						sortBy="#{lcm.classification.classHierarchyAsString}"
+						headerText="#{i18n['common.dataset.classif']}">
+						<h:outputText value="#{lcm.classification.classHierarchyAsString}" />
+					</p:column>
+
+
+					<!-- Owner -->
+
+					<p:column style="width:20%" sortBy="#{lcm.name.defaultValue}"
+						filterBy="#{lcm.name}" headerText="#{i18n['common.proc.owner']}">
+
+						<h:outputText outcome="#{url.lifecyclemodel.getDetail(lcm)}"
+							value="#{lcm.administrativeInformation.publicationAndOwnership.referenceToOwnershipOfDataSet.shortDescription.getDefaultValue()}"
+							title="#{lcm.uuidAsString}   #{lcm.version}" />
+					</p:column>
+
+					<!-- Compliance Systems -->
+
+					<p:column style="width:15%" sortBy="#{lcm.complianceSystems}">
+						<f:facet name="header">
+							<h:outputText id="lcmTableComplianceHeader"
+								value="#{i18n['public.proc.complianceSystems']}" />
+						</f:facet>
+
+						<p:dataList value="#{lcm.complianceSystems}" var="compliance"
+							styleClass="ourDataList" emptyMessage="">
+							<h:outputText value="#{compliance.name}" />
+						</p:dataList>
+					</p:column>
+
+
+					<!-- Timestamp -->
+
+					<p:column style="width:20%"
+						sortBy="#{sample.administrativeInformation.dataEntryBy.timeStamp}"
+						filterBy="#{lcm.administrativeInformation.dataEntryBy.timeStamp}"
+						headerText="#{i18n['common.timeStamp']}" styleClass="date">
+
+						<!-- 					<h:link outcome="#{url.lifecyclemodel.getDetail(lcm)}"
+							value="#{sample.administrativeInformation.dataEntryBy.timeStamp}"
+							title="#{lcm.uuidAsString}   #{lcm.version}" /> -->
+
+						<h:outputText
+							value="#{lcm.administrativeInformation.dataEntryBy.timeStamp}">
+							<!-- <f:convertDateTime pattern="dd.MM.yyyy HH:mm" /> -->
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

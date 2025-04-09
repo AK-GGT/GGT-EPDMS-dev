@@ -1,0 +1,1 @@
+ALTER TABLE `user` ADD `password_expired` boolean DEFAULT false AFTER `privacy_policy_accepted`;

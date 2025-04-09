@@ -1,0 +1,82 @@
+html,body {
+	margin-top: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+#admin_header .title a {
+	float: left;
+	font-size: 1.8em;
+	padding: 5px;
+	text-decoration: none;
+}
+
+.ui-border-none {
+	border-radius: 0px 0px 0px 0px;
+	-moz-border-radius: 0px 0px 0px 0px;
+	-khtml-border-radius: 0px 0px 0px 0px;
+	-webkit-border-radius: 0px 0px 0px 0px;
+}
+
+#admin_footer {
+	margin: 0px !important;
+	padding: 4px 0px;
+}
+
+#admin_content {
+	margin: 0px 10px 40px 10px;
+	/* overrides value set in theme */
+	max-width: none;
+}
+
+#admin_footer {
+	position: fixed;
+	width: 100%;
+	bottom: 0px;
+	left: 0px;
+	border-bottom: 0px;
+	height: auto !important;
+}
+ .notPushed > .ui-panel-footer{
+	background-color : #FFFF00;
+}
+
+.pushed > .ui-panel-footer{
+	background-color : #7FFF00 !important;
+}	
+
+.pushSourceLeft {
+	width : 60%;
+}
+
+.pushSourceRight {
+	width : 40%;
+}
+.panelgridwidth {
+	width : 100%;
+}
+
+.space_left {
+	margin-left : 3em;
+}
+
+.reportConfigs {
+	margin: 20px;
+	width: 120px;
+	height: 65px;
+}
+
+.reportConfigsDataGrid>.ui-datagrid-content {
+    border: none;
+}
+
+.warnThreshold {
+	background-color: orange !important;
+	background-image: none !important;
+	color: #000000 !important;
+}
+
+.bold {
+	font-weight: bold;
+}
+

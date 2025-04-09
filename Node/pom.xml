@@ -1,0 +1,880 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>soda4LCA</artifactId>
+		<groupId>edu.kit.iai.lca.soda4LCA</groupId>
+		<version>7.14.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>Node</artifactId>
+	<name>Node</name>
+	<packaging>war</packaging>
+
+	<properties>
+		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+		<compileSource>11</compileSource>
+		<testCompileSource>11</testCompileSource>
+		<test.app.node.port>8080</test.app.node.port>
+		<!-- mvn -Dmysql.database=root .... -->
+		<mysql.database>root</mysql.database>
+		<mysql.database2>root2</mysql.database2>
+		<mysql.user>root</mysql.user>
+		<mysql.pass>root</mysql.pass>
+		<mysql.port>3306</mysql.port>
+		<headless>true</headless>
+		<skipCargo>false</skipCargo>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>headless</id>
+			<properties>
+				<headless>true</headless>
+			</properties>
+		</profile>
+		<profile>
+			<id>externaldb_ci</id>
+			<properties>
+				<mysql.database>root</mysql.database>
+				<mysql.database2>root2</mysql.database2>
+				<mysql.pass>root</mysql.pass>
+			</properties>
+		</profile>
+	</profiles>
+
+	<build>
+		<finalName>Node</finalName>
+		<resources>
+			<!-- include main.properties -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+				<includes>
+					<include>app.properties</include>
+				</includes>
+			</resource>
+
+			<!-- exclude everything else from filtering -->
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+				<excludes>
+					<exclude>app.properties</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${compileSource}</source>
+					<target>${compileSource}</target>
+				</configuration>
+				<executions>
+					<execution>
+						<id>test-compile</id>
+						<phase>process-test-sources</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+						<configuration>
+							<source>${testCompileSource}</source>
+							<target>${testCompileSource}</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-test-resources</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.basedir}/target/test-resources</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/test/resources</directory>
+									<includes>
+										<include>**/*.xml</include>
+										<include>*.properties</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<VERSION>${project.version}</VERSION>
+							<VERSION-TAG>${project.version}</VERSION-TAG>
+							<APP-TITLE>ILCD Node</APP-TITLE>
+							<APP-TITLE-SHORT>ILCD Node</APP-TITLE-SHORT>
+							<BUILD-TIMESTAMP>${maven.build.timestamp}</BUILD-TIMESTAMP>
+						</manifestEntries>
+					</archive>
+					<warSourceExcludes>resources/css/**/*.css, resources/js/**/*.js</warSourceExcludes>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>test</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>${project.basedir}/src/main/assembly/test.xml</descriptor>
+								<descriptor>${project.basedir}/src/main/assembly/test-instance2.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>de.empulse.eclipselink</groupId>
+				<artifactId>staticweave-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>weave</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.eclipse.persistence</groupId>
+						<artifactId>eclipselink</artifactId>
+						<version>${eclipselink-version}</version>
+					</dependency>
+					<dependency>
+						<groupId>javax.faces</groupId>
+						<artifactId>javax.faces-api</artifactId>
+						<version>2.2</version>
+					</dependency>
+
+				</dependencies>
+			</plugin>
+
+			<plugin>
+				<groupId>com.samaxes.maven</groupId>
+				<artifactId>minify-maven-plugin</artifactId>
+				<version>1.7.6</version>
+				<executions>
+					<execution>
+						<id>default-minify</id>
+						<phase>prepare-package</phase>
+						<configuration>
+							<charset>UTF-8</charset>
+							<nosuffix>true</nosuffix>
+							<skipMerge>true</skipMerge>
+							<cssSourceDir>resources/css</cssSourceDir>
+							<cssSourceIncludes>
+								<cssSourceInclude>**/*.css</cssSourceInclude>
+							</cssSourceIncludes>
+							<jsSourceDir>resources/js</jsSourceDir>
+							<jsSourceIncludes>
+								<jsSourceInclude>**/*.js</jsSourceInclude>
+								<jsSourceExclude>**/*.min.js</jsSourceExclude>
+							</jsSourceIncludes>
+						</configuration>
+						<goals>
+							<goal>minify</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.plexus</groupId>
+						<artifactId>plexus-utils</artifactId>
+						<version>3.5.1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>edu.kit.soda4lca.test.ui.*.*</exclude>
+					</excludes>
+					<skip>true</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<suiteXmlFiles>
+						<suiteXmlFile>${project.basedir}/src/test/resources/testng.xml</suiteXmlFile>
+					</suiteXmlFiles>
+					<systemPropertyVariables>
+						<mvn.mysql.url>jdbc:mysql://127.0.0.1:${mysql.port}/${mysql.database}?useUnicode=yes&amp;characterEncoding=UTF-8&amp;useSSL=false&amp;sessionVariables=FOREIGN_KEY_CHECKS=0</mvn.mysql.url>
+						<mvn.mysql.database>${mysql.database}</mvn.mysql.database>
+						<mvn.mysql.username>${mysql.user}</mvn.mysql.username>
+						<mvn.mysql.password>${mysql.pass}</mvn.mysql.password>
+						<mvn.mysql2.url>jdbc:mysql://127.0.0.1:${mysql.port}/${mysql.database2}?useUnicode=yes&amp;characterEncoding=UTF-8&amp;useSSL=false&amp;sessionVariables=FOREIGN_KEY_CHECKS=0</mvn.mysql2.url>
+						<mvn.mysql2.database>${mysql.database2}</mvn.mysql2.database>
+						<mvn.mysql2.username>${mysql.user}</mvn.mysql2.username>
+						<mvn.mysql2.password>${mysql.pass}</mvn.mysql2.password>
+						<mvn.selenium.headless>${headless}</mvn.selenium.headless>
+					</systemPropertyVariables>
+				</configuration>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>integration-test</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>verify</id>
+						<goals>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<!-- Codehaus Cargo container for gitpod -->
+			<!-- mvn -pl Node cargo:run -->
+			<plugin>
+				<groupId>org.codehaus.cargo</groupId>
+				<artifactId>cargo-maven3-plugin</artifactId>
+				<version>1.10.14</version>
+				<configuration>
+					<container>
+						<containerId>tomcat9x</containerId>
+						<!-- 10 Minutes timeout for start & stop operations -->
+						<timeout>600000</timeout>
+						<dependencies>
+							<dependency>
+								<groupId>com.mysql</groupId>
+								<artifactId>mysql-connector-j</artifactId>
+							</dependency>
+						</dependencies>
+					</container>
+					<configuration>
+						<configfiles>
+							<configfile>
+								<file>${project.basedir}/src/main/resources/soda4LCA.properties</file>
+								<tofile>conf/soda4LCA.properties</tofile>
+							</configfile>
+						</configfiles>
+						<properties>
+s							<cargo.servlet.port>${test.app.node.port}</cargo.servlet.port>
+							<cargo.remote.timeout>600000</cargo.remote.timeout>
+							<cargo.datasource.datasource>
+								cargo.datasource.jndi=jdbc/soda4LCAdbconnection|
+								cargo.datasource.driver=com.mysql.cj.jdbc.Driver|
+								cargo.datasource.url=jdbc:mysql://127.0.0.1:${mysql.port}/${mysql.database}?characterEncoding=UTF-8|
+								cargo.datasource.username=${mysql.user}|
+								cargo.datasource.password=${mysql.pass}
+							</cargo.datasource.datasource>
+							<cargo.jvmargs>-Xmx2G</cargo.jvmargs>
+						</properties>
+					</configuration>
+					<deployables>
+						<deployable>
+							<groupId>${project.groupId}</groupId>
+							<artifactId>${project.artifactId}</artifactId>
+							<type>war</type>
+							<location>${project.build.directory}/Node.war</location>
+							<properties>
+								<context>/Node</context>
+							</properties>
+						</deployable>
+					</deployables>
+				</configuration>
+				<executions>
+					<execution>
+						<id>start-cargo</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>start</goal>
+						</goals>
+						<configuration>
+							<skip>${skipCargo}</skip>
+							<configuration>
+								<configfiles>
+									<configfile>
+										<file>${project.basedir}/src/test/resources/soda4LCA.properties</file>
+										<tofile>conf/soda4LCA.properties</tofile>
+									</configfile>
+									<configfile>
+										<file>${project.basedir}/src/test/resources/soda4LCA-instance2.properties</file>
+										<tofile>conf/soda4LCA-instance2.properties</tofile>
+									</configfile>
+								</configfiles>
+								<properties>
+									<!-- T150JWTTokenTest needs access to the public and private keys,
+									so cargo just write them to user.home
+									 this will pollute your home directory
+									 when running tests locally -->
+									<cargo.jvmargs>-Dkey.path="${user.home}/"</cargo.jvmargs>
+									<cargo.servlet.port>${test.app.node.port}</cargo.servlet.port>
+									<cargo.remote.timeout>200000</cargo.remote.timeout>
+									<cargo.datasource.datasource.soda4LCAdbconnection>
+										cargo.datasource.jndi=jdbc/soda4LCAdbconnection|
+										cargo.datasource.driver=com.mysql.cj.jdbc.Driver|
+										cargo.datasource.url=jdbc:mysql://127.0.0.1:${mysql.port}/${mysql.database}?characterEncoding=UTF-8|
+										cargo.datasource.username=${mysql.user}|
+										cargo.datasource.password=${mysql.pass}
+									</cargo.datasource.datasource.soda4LCAdbconnection>
+									<cargo.datasource.datasource.soda4LCAdbconnection2>
+										cargo.datasource.jndi=jdbc/soda4LCAdbconnection2|
+										cargo.datasource.driver=com.mysql.cj.jdbc.Driver|
+										cargo.datasource.url=jdbc:mysql://127.0.0.1:${mysql.port}/${mysql.database2}?characterEncoding=UTF-8|
+										cargo.datasource.username=${mysql.user}|
+										cargo.datasource.password=${mysql.pass}
+									</cargo.datasource.datasource.soda4LCAdbconnection2>
+									<cargo.datasource.datasource.properties2>
+										cargo.datasource.jndi=jdbc/soda4LCAdbconnection2|
+										cargo.datasource.driver=com.mysql.cj.jdbc.Driver|
+										cargo.datasource.url=jdbc:mysql://127.0.0.1:${mysql.port}/{mysql.database2}?characterEncoding=UTF-8|
+										cargo.datasource.username=${mysql.user}|
+										cargo.datasource.password=${mysql.pass}
+									</cargo.datasource.datasource.properties2>
+								</properties>
+							</configuration>
+							<deployables>
+								<deployable>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${project.artifactId}</artifactId>
+									<type>war</type>
+									<location>${project.build.directory}/Node-test.war</location>
+									<properties>
+										<context>/Node</context>
+									</properties>
+								</deployable>
+								<deployable>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>${project.artifactId}</artifactId>
+									<type>war</type>
+									<location>${project.build.directory}/Node-test2.war</location>
+									<properties>
+										<context>/Node2</context>
+									</properties>
+								</deployable>
+							</deployables>
+
+						</configuration>
+
+					</execution>
+					<execution>
+						<id>stop-cargo</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>stop</goal>
+						</goals>
+						<configuration>
+							<skip>${skipCargo}</skip>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- to generate subs/bindings from XSDs: mvn jaxb2:xjc  -->
+			<!-- when adding a new schema make sure to define it's package in the de.iai.ilcd.jaxb.JAXBContextConfig -->
+			<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+                <version>2.5.0</version>
+                <executions>
+                    <execution>
+                        <id>xjc</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sources>
+                        <source>src/main/bindings/xsd/</source>
+                    </sources>
+                    <xjbSources>
+                        <xjbSource>src/main/bindings/bindings.xjb</xjbSource>
+                    </xjbSources>
+                    <!--                    <outputDirectory>${basedir}/src/main/java/com/okworx/ilcd/rosette/jaxb/bindings/</outputDirectory>-->
+                    <!--                    <packageName>com.okworx.ilcd.rosette.jaxb.bindings</packageName>-->
+                    <clearOutputDir>false</clearOutputDir>
+                    <extension>true</extension>
+                    <generateEpisode>false</generateEpisode>
+                    <locale>de</locale>
+                </configuration>
+            </plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>de.empulse.eclipselink</groupId>
+										<artifactId>staticweave-maven-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>weave</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<execute>
+											<runOnIncremental>false</runOnIncremental>
+										</execute>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>com.google.code.maven-replacer-plugin</groupId>
+					<artifactId>replacer</artifactId>
+					<version>1.5.1</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+
+	</build>
+
+
+	<dependencies>
+
+		<dependency>
+			<groupId>guru.nidi</groupId>
+			<artifactId>graphviz-java</artifactId>
+			<version>0.18.1</version>
+		</dependency>
+
+		<!-- Fix a java.util.concurrent.ExecutionException: java.lang.NoClassDefFoundError: 
+			com.sun.syndication.io.FeedException -->
+		<!-- when using CompletableFuture at de.iai.ilcd.rest.ProcessResource -->
+
+
+		<!-- hsqldb driver -->
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>Registry-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>Commons</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+
+		<!-- spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${org.springframework-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+
+		<!-- WS -->
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
+		<!-- Bumping jjwt enforce using long secrets -->
+		<!-- upgrading breaks backwards compatibility -->
+		<!-- with BearerRealmOLD -->
+<!-- 		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-api</artifactId>
+		    <version>0.11.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-impl</artifactId>
+		    <version>0.11.2</version>
+		    <scope>runtime</scope>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-jackson</artifactId> or jjwt-gson if Gson is preferred
+		    <version>0.11.2</version>
+		    <scope>runtime</scope>
+		</dependency> -->
+
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>2.4.0-rc2</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-compress</artifactId>
+			<version>1.25.0</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.sun.mail</groupId>
+		    <artifactId>jakarta.mail</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>jakarta.mail</groupId>
+		    <artifactId>jakarta.mail-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.el</groupId>
+			<artifactId>javax.el-api</artifactId>
+			<version>3.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+		<groupId>org.glassfish</groupId>
+		<artifactId>javax.el</artifactId>
+		<version>3.0.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-jxpath</groupId>
+			<artifactId>commons-jxpath</artifactId>
+			<version>1.3</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-beanutils</groupId>
+					<artifactId>commons-beanutils-core</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-collections</groupId>
+					<artifactId>commons-collections</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.5</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.servlet.jsp.jstl</groupId>
+			<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+			<version>1.2.7</version>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>font-awesome</artifactId>
+			<version>5.12.0</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.10.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.12.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dbunit</groupId>
+			<artifactId>dbunit</artifactId>
+			<version>2.7.3</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>stax</groupId>
+					<artifactId>stax-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mchange</groupId>
+			<artifactId>c3p0</artifactId>
+			<version>0.9.5.5</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+		    <groupId>com.icegreen</groupId>
+		    <artifactId>greenmail</artifactId>
+		    <version>2.0.0-alpha-1</version>
+		    <scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+		    <artifactId>flyway-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-devtools-v124</artifactId>
+			<version>4.22.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.codeborne</groupId>
+			<artifactId>selenide</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+				</exclusion>
+			</exclusions>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.codeborne</groupId>
+			<artifactId>selenide-testng</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents.client5</groupId>
+			<artifactId>httpclient5</artifactId>
+			<version>5.2.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-csv</artifactId>
+			<version>1.10.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>4.1.1</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>4.1.1</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itextpdf</artifactId>
+			<version>5.5.13.3</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-annotations</artifactId>
+		</dependency>
+
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		</dependency>
+
+		<dependency>
+		    <groupId>com.fasterxml.jackson.module</groupId>
+		    <artifactId>jackson-module-jaxb-annotations</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.okworx.ilcd</groupId>
+			<artifactId>ilcd-service-api</artifactId>
+			<version>1.2.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xml-apis</groupId>
+					<artifactId>xml-apis</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.okworx.ilcd.validation</groupId>
+			<artifactId>ilcd-validation</artifactId>
+			<version>2.7.3</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/jdom/jdom -->
+		<dependency>
+			<groupId>jdom</groupId>
+			<artifactId>jdom</artifactId>
+			<version>1.1</version>
+		</dependency>
+
+		<!-- Jersey -->
+
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-multipart</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>5.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>1.9.4</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

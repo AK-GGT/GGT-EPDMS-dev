@@ -1,0 +1,16 @@
+ALTER TABLE `exchange`
+	MODIFY `MAXIMUMAMOUNT` double DEFAULT NULL,
+	MODIFY `MEANAMOUNT` double DEFAULT NULL,
+	MODIFY `MINIMUMAMOUNT` double DEFAULT NULL,
+	MODIFY `RESULTINGAMOUNT` double DEFAULT NULL;
+	
+ALTER TABLE `exchange_amounts`
+	MODIFY `value` double DEFAULT NULL,
+	MODIFY `scaled_value` double DEFAULT NULL;
+	
+ALTER TABLE `lciaresult`
+	MODIFY `MEANAMOUNT` double DEFAULT NULL;
+	
+ALTER TABLE `lciaresult_amounts`
+	MODIFY `value` double DEFAULT NULL,
+	MODIFY `scaled_value` double DEFAULT NULL;

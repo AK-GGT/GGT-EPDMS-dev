@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+via ui:param:
+	- exchanges
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<p style="font-weight:bold">#{i18n['datasetdetail.epd.indicatorsLifeCycle']}</p>
+	<h:form id="exchangesform">
+		<p:dataTable rendered="#{not empty exchanges}" value="#{exchanges}"  draggableColumns="true" resizableColumns="true" var="exchange" styleClass="epd" sortBy="#{exchange}" sortFunction="#{processHandler.sortExchanges}">
+			<p:column headerText="#{i18n['datasetdetail.epd.indicator']}" sortBy="#{exchange.flowName.value}" styleClass="column-style">
+				<soda:switchLinkOrText
+					outputLinkValue="#{processHandler.getReferenceUrl(exchange.flowReference, url.flow)}"
+					outputLinkTitle="#{i18n['common.flow']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+					outputTextValue="#{exchange.reference.shortDescription.getValueWithFallback(lang)}" styleClass="ourDataListNoBullet"/>
+			</p:column>
+			<p:column headerText="#{i18n['datasetdetail.epd.direction']}" sortBy="#{exchange.exchangeDirection.value}" styleClass="column-style">
+				#{exchange.exchangeDirection.value}
+			</p:column>
+			<p:column headerText="#{i18n['common.unit']}" styleClass="unit column-style" sortBy="#{exchange.unitGroupReference.shortDescription.getValueWithFallback(lang)}" >
+				<soda:switchLinkOrText
+					outputLinkValue="#{processHandler.getReferenceUrl(exchange.unitGroupReference, url.unitGroup)}"
+					outputLinkTitle="#{i18n['common.unitGroup.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+					outputTextValue="#{exchange.unitGroupReference.shortDescription.getValueWithFallback(lang)}" />
+			</p:column>
+			<p:columns value="#{process.declaredModulesScenariosForExchanges}" var="moduleScenario" columnIndexVar="colIndex" styleClass="amount column-style">
+				<f:facet name="header">
+					#{i18n["datasetdetail.epd." += moduleScenario[0] += "_2"]}<br />
+					#{i18n["datasetdetail.epd." += moduleScenario[0] += "_1"]}<br />
+					#{not empty moduleScenario[1] ? process.getScenario(moduleScenario[1]).name.concat(process.getScenario(moduleScenario[1]).default ? ' ('.concat(i18n['datasetdetail.epd.standard']).concat(")") : '') : ''}
+				</f:facet>
+				<p:dataList value="#{empty moduleScenario[1] ? exchange.getAmountByModule(moduleScenario[0]) : exchange.getAmountByModuleScenario(moduleScenario[0], moduleScenario[1])}" var="amount" styleClass="ourDataListNoBullet">
+					<h:outputText value="#{not empty amount.value ? amount.roundedAndFormattedValue : 'ND'}" title="#{not empty amount.value ? amount.value : 'ND'}" />
+				</p:dataList>
+			</p:columns>
+		</p:dataTable>
+	</h:form>
+</ui:composition>

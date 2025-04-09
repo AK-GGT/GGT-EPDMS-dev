@@ -1,0 +1,149 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<ui:composition>
+
+	<div>
+	    <p:outputLabel value="#{i18n['admin.validation.section.results']}" styleClass="boldText" />
+		<div>
+			<div style="float: left; margin-top: 10px;">
+			    <p:commandButton id="resetEvents" value="#{i18n['admin.validation.log.export.reset']}" actionListener="#{automaticQualityCheckHandler.clearEvents}" disabled="#{empty automaticQualityCheckHandler.events}" update="logTable,resetEvents,exportLogs" />
+				<p:commandButton id="clearqualityResultDataTable" value="#{i18n['admin.clearFilters']}" onclick="PF('eventTable').clearFilters()" actionListener="#{automaticQualityCheckHandler.clearAllFilters}" update="logTable">
+					<p:resetInput target="logTable"/>
+				</p:commandButton>
+			</div>
+			<div class="floatRight">
+				<p:commandButton styleClass="" id="exportLogs" value="#{i18n['admin.qualityCheck.log.export']}" disabled="#{empty automaticQualityCheckHandler.events}" update="logTable,resetEvents" ajax="false">
+					<p:dataExporter type="xls" target="logTable" postProcessor="#{qualityCheckResultDocumentView.postProcessXLS}" fileName="quality_check_log_#{qualityCheckResultDocumentView.date}" />
+				</p:commandButton>
+			</div>
+		</div>
+	</div>
+
+
+<p:spacer height="25"/>
+<!-- <style type="text/css"> 
+/*     .warnThreshold { */
+/*         background-color: orange !important; */
+/*         background-image: none !important; */
+/*         color: #000000 !important; */
+/*     } */
+ </style> -->
+	<p:dataTable id="logTable" emptyMessage="" var="event"
+		value="#{automaticQualityCheckHandler.events}" widgetVar="eventTable"
+		tableStyle="width:auto"
+		rowStyleClass="#{event.deviation > automaticQualityCheckHandler.warnThreshold ? 'warnThreshold' : null}">
+
+		<p:column headerText="#{i18n['admin.qualityCheck.processName']}"
+			sortBy="#{event.processName}" filterBy="#{event.processName}" exportable="false" filterMatchMode="contains">
+			<h:outputLink
+				value="#{request.contextPath}#{automaticQualityCheckHandler.goToDataset(event.processUuid, event.version)}"
+				target="_blank">
+				<h:outputText value="#{event.processName}" />
+			</h:outputLink>
+		</p:column>
+		
+		<p:column visible="false" headerText="#{i18n['admin.qualityCheck.processName']}">
+			<h:outputText value="#{event.processName}" />
+		</p:column>
+		
+		<p:column headerText="#{i18n['admin.referenceValue']}" sortBy="#{event.referenceValue}" width="8%">
+			<h:outputText value="#{event.referenceValue}" />
+		</p:column>
+		
+		<p:column headerText="UUID" sortBy="#{event.processUuid}" width="13%" exportable="false">
+			<h:outputLink
+			 	value="#{request.contextPath}#{automaticQualityCheckHandler.goToDataset(event.processUuid, event.version)}"
+				target="_blank">
+					<h:outputText value="#{event.processUuid}" /> 
+			</h:outputLink> 
+		</p:column>
+		
+		<p:column visible="false" headerText="UUID">
+			<h:outputText value="#{event.processUuid}" />
+		</p:column>
+
+		<p:column headerText="#{i18n['admin.proc.version']}" sortBy="#{event.version}" width="4%">
+			<h:outputText value="#{event.version}" />
+		</p:column>
+		
+		<p:column headerText="#{i18n['admin.qualityCheck.category']}" sortBy="#{event.category}" filterBy="#{event.category}" filterMatchMode="in">
+		<f:facet name="filter">
+                <p:selectCheckboxMenu value="#{automaticQualityCheckHandler.selectedCategories}" label="#{i18n['public.proc.list.filter.select']}" onchange="PF('eventTable').filter()" panelStyle="width:500px" scrollHeight="120">
+                    <f:selectItems value="#{automaticQualityCheckHandler.categories}"/>
+                </p:selectCheckboxMenu>
+            </f:facet>
+			<h:outputText value="#{event.category}"/>
+		</p:column>
+				
+		<p:column headerText="#{i18n['admin.qualityCheck.module']}"
+			sortBy="#{event.module}" filterBy="#{event.module}" width="4%" filterMatchMode="in">
+			<f:facet name="filter">
+                <p:selectCheckboxMenu value="#{automaticQualityCheckHandler.selectedModules}" label="#{i18n['public.proc.list.filter.select']}" onchange="PF('eventTable').filter()" panelStyle="width:200px" scrollHeight="120">
+                    <f:selectItems value="#{automaticQualityCheckHandler.modules}" />
+                </p:selectCheckboxMenu>
+            </f:facet>
+			<h:outputText value="#{event.module}" />
+		</p:column>
+
+		<p:column headerText="#{i18n['admin.qualityCheck.indicator']}"
+			sortBy="#{automaticQualityCheckHandler.getAcronym(event.indicatorName)}" filterBy="#{event.indicatorUuid}" filterMatchMode="in" width="4%">
+			<f:facet name="filter">
+                <p:selectCheckboxMenu value="#{automaticQualityCheckHandler.selectedIndicators}" label="#{i18n['public.proc.list.filter.select']}" onchange="PF('eventTable').filter()" panelStyle="width:500px" scrollHeight="120">
+                    <f:selectItems value="#{automaticQualityCheckHandler.indicators}" />
+                </p:selectCheckboxMenu>
+            </f:facet>
+			<h:outputText value="#{automaticQualityCheckHandler.getAcronym(event.indicatorName)}" />
+		</p:column>
+		
+		<p:column headerText="#{i18n['admin.qualityCheck.referenceUnit']}"
+			sortBy="#{event.referenceUnit}" width="8%">
+			<h:outputText value="#{event.referenceUnit}" />
+		</p:column>
+
+		<p:column headerText="#{i18n['admin.qualityCheck.deviation']}"
+			sortBy="#{event.message}" sortFunction="#{automaticQualityCheckHandler.sortByDeviation}">
+			<h:outputText value="#{event.message}" />
+		</p:column>
+		
+		<p:column headerText="#{i18n['admin.qualityCheck.absValue']}"
+			sortBy="#{event.absValue}" width="4%">
+			<h:outputText value="#{event.absValue}" />
+		</p:column>
+
+				<p:column headerText="#{i18n['admin.qualityCheck.minValue']}"
+			sortBy="#{event.minValue}" width="5%">
+			<h:outputText id="minValueId" value="#{automaticQualityCheckHandler.getRoundedValue(event.minValue)}" />
+			<p:tooltip for="minValueId" value="#{event.minValue}" position="top"/>
+		</p:column>
+
+		
+				<p:column headerText="#{i18n['admin.qualityCheck.maxValue']}"
+			sortBy="#{event.maxValue}" width="5%">
+			<h:outputText id="maxValueId" value="#{automaticQualityCheckHandler.getRoundedValue(event.maxValue)}" />
+			<p:tooltip for="maxValueId" value="#{event.maxValue}" position="top"/>
+		</p:column>
+
+		
+				<p:column headerText="#{i18n['admin.qualityCheck.meanValue']}"
+			sortBy="#{event.avgValue}" width="5%">
+			<h:outputText id="avgValueId" value="#{automaticQualityCheckHandler.getRoundedValue(event.avgValue)}" />
+			<p:tooltip for="avgValueId" value="#{event.avgValue}" position="top"/>
+		</p:column>
+		
+		<p:column headerText="#{i18n['admin.qualityCheck.referenceCount']}" sortBy="#{event.referenceCount}" filterBy="#{event.referenceCount}" filterMatchMode="in" width="4%">
+		<f:facet name="filter">
+                <p:selectCheckboxMenu value="#{automaticQualityCheckHandler.selectedReferenceCounts}" label="#{i18n['public.proc.list.filter.select']}" onchange="PF('eventTable').filter()" panelStyle="width:200px" scrollHeight="120">
+                    <f:selectItems value="#{automaticQualityCheckHandler.referenceCounts}"/>
+                </p:selectCheckboxMenu>
+            </f:facet>
+			<h:outputText value="#{event.referenceCount}" />
+		</p:column>
+
+		
+	</p:dataTable>
+</ui:composition>
+</html>

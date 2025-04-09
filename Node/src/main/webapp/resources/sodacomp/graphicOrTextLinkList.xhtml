@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+	example usages:
+
+			<soda:graphicOrTextLinkList
+				dataListValue="#{processHandler.getMultilangWithFallback(lang, reference.shortDescription).value}"
+				outputLinkTitle="#{processHandler.getMultilangWithFallback(lang, reference.shortDescription).value}"
+				outputLinkValue="#{processHandler.getReferenceUrlXml(reference, url.source)}"
+				outputImage="#{processHandler.getDigitalFileUrlXml(reference, url.source)}" />
+			</soda:dataListStyled>
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	
+	<composite:interface>
+		<composite:attribute name="dataListValue" />
+		<composite:attribute name="outputLinkTitle" />
+		<composite:attribute name="outputLinkValue" />
+		<composite:attribute name="outputImage"/>
+	</composite:interface>
+	
+	<composite:implementation>
+		<ui:repeat value="#{cc.attrs.dataListValue}" var="value">
+			<div id="switchInline">
+				<pe:switch id="switch" value="#{not empty cc.attrs.outputLinkValue}">
+					<pe:case value="#{true}">
+						<h:outputLink value="#{cc.attrs.outputLinkValue}" title="#{cc.attrs.outputLinkTitle}">
+							<pe:switch id="switchImage" value="#{not empty cc.attrs.outputImage}"> 
+								<pe:case value="#{true}">
+									<h:graphicImage value="#{cc.attrs.outputImage}" alt="#{cc.attrs.outputLinkTitle} Image" width="100%"/>
+								</pe:case> 
+								<pe:case value="false">
+									<h:outputText value="#{value}"/>
+								</pe:case>
+							</pe:switch>
+						</h:outputLink>
+					</pe:case>
+					<pe:case value="#{false}">
+						<h:outputText value="#{value}"/>
+					</pe:case>
+				</pe:switch>
+			</div>
+		</ui:repeat>
+	</composite:implementation>
+	
+</html>

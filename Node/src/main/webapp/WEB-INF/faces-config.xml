@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<!-- =========== FULL CONFIGURATION FILE ================================== -->
+
+<faces-config version="2.3"
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd">
+
+    <application>
+        <locale-config>
+            <default-locale>en</default-locale>
+            <supported-locale>en</supported-locale>
+            <supported-locale>de</supported-locale>
+            <supported-locale>es</supported-locale>
+            <supported-locale>it</supported-locale>
+            <supported-locale>nl</supported-locale>
+            <supported-locale>da</supported-locale>
+            <supported-locale>ru</supported-locale>
+            <supported-locale>pl</supported-locale>
+            <supported-locale>br</supported-locale>
+            <supported-locale>ja</supported-locale>
+            <supported-locale>sv</supported-locale>
+            <supported-locale>fr</supported-locale>
+            <supported-locale>fi</supported-locale>
+        </locale-config>
+     	<el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
+
+		<!--Deprecated as of Spring 3.2, in favor of the JSF 1.2 based SpringBeanFacesELResolver-->	
+		<!--<variable-resolver>org.springframework.web.jsf.DelegatingVariableResolver</variable-resolver>-->
+        <resource-bundle>
+            <base-name>de.iai.ilcd.util.SodaResourceBundle</base-name>
+            <var>i18n</var>
+        </resource-bundle>
+        <resource-bundle>
+            <base-name>resources.util</base-name>
+            <var>utilStr</var>
+        </resource-bundle>
+    </application>
+    <factory>
+        <exception-handler-factory> de.iai.ilcd.util.FacesExceptionHandlerFactory</exception-handler-factory>
+    </factory>
+
+    <validator>
+        <validator-id>requiredCheckboxValidator</validator-id>
+        <validator-class>de.iai.ilcd.webgui.validators.RequiredCheckboxValidator</validator-class>
+    </validator>
+
+</faces-config>

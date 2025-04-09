@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<p:tab rendered="#{not empty process.exchanges}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+		<f:facet name="title">
+			<h:outputText id="inputsOutputsTabTitle" value="#{i18n['common.inputsOutputs']}" />
+		</f:facet>
+		<f:facet name="title">
+			<h:outputText id="inputOutputsTabTitleRight" value="#{process.quantitativeReference.functionalUnit.getValueWithFallback(lang)}" style="float:right"
+				rendered="#{conf.displayConfig.showProcessesDetailExchangesShowFunctionalUnit and not empty process.quantitativeReference.functionalUnit.getValueWithFallback(lang)}" />
+		</f:facet>
+		<ui:fragment rendered="#{user.hasDatasetDetailRights(process) or conf.enableDatasetdetailsView}">
+			<p>#{i18n['common.inputs']}</p>
+			<ui:include src="./datatableExchanges.xhtml">
+				<ui:param name="exchanges" value="#{process.inputs}" />
+			</ui:include>
+			<p>#{i18n['common.outputs']}</p>
+			<ui:include src="./datatableExchanges.xhtml">
+				<ui:param name="exchanges" value="#{process.outputs}" />
+			</ui:include>
+		</ui:fragment>
+		<ui:fragment rendered="#{!user.hasDatasetDetailRights(process) and !conf.enableDatasetdetailsView}">
+			<h:outputText value="#{i18n['common.accessRestrictedMetadataOnly.info']} " styleClass="ui-state-error" />
+			<h:outputLink value="/registration.xhtml" rendered="#{conf.registrationActivated}">
+				<h:outputText value="#{i18n['common.accessRestrictedMetadataOnly.register']}" styleClass="ui-state-error" />
+			</h:outputLink>
+			<h:outputText value="#{i18n['common.accessRestrictedMetadataOnly.vendor']}" styleClass="ui-state-error" rendered="#{!conf.registrationActivated}" />
+		</ui:fragment>
+	</p:tab>
+</ui:composition>

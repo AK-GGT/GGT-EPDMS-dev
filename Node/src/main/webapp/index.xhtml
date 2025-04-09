@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:body>
+	<ui:composition template="#{conf.templatePath}/frontend.xhtml">
+		<ui:param name="pageTitle" value="#{i18n['common.welcome']}!" />
+		<ui:param name="activeMenu" value="#{Constants.MENU_HOME}" />
+		<ui:param name="indexingAllowed" value="#{true}" />
+		<ui:define name="content">
+			<ui:fragment rendered="#{conf.customIndexPageContentURL == null}">
+				<ui:include src="#{conf.templatePath}/html/home.html" />
+			</ui:fragment>
+			<ui:fragment rendered="#{conf.customIndexPageContentURL != null}">
+				<ui:include src="#{ conf.customIndexPageContentURLMultiLang ? langContentHandler.customIndexPageContentURL : conf.customIndexPageContentURL}" />
+			</ui:fragment>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
+

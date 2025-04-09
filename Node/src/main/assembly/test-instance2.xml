@@ -1,0 +1,37 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+
+	<id>test2</id>
+	<formats>
+		<format>war</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<dependencySets>
+		<dependencySet>
+			<includes>
+				<include>*:war</include>
+			</includes>
+			<unpack>true</unpack>
+			<useProjectArtifact>true</useProjectArtifact>
+		</dependencySet>
+	</dependencySets>
+	<files>
+		<file>
+			<source>${basedir}/src/test/resources/META-INF/persistence-instance2.xml</source>
+			<outputDirectory>WEB-INF/classes/META-INF</outputDirectory>
+			<destName>persistence.xml</destName>
+		</file>
+		<file>
+			<!-- https://tomcat.apache.org/tomcat-8.0-doc/config/context.html -->
+			<source>${basedir}/src/test/resources/META-INF/Context-instance-test2.xml</source>
+      		<outputDirectory>META-INF</outputDirectory>
+      		<destName>context.xml</destName>
+		</file>
+		<file>
+			<source>${basedir}/src/test/resources/app-instance2.properties</source>
+			<outputDirectory>WEB-INF/classes</outputDirectory>
+			<destName>app.properties</destName>
+			<filtered>true</filtered>
+		</file>
+	</files>
+</assembly>

@@ -1,0 +1,938 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp">
+
+<f:metadata>
+	<f:viewParam name="uuid"
+		value="#{lifeCycleModelHandler.dataSetUuidString}" />
+	<f:viewParam name="version"
+		value="#{lifeCycleModelHandler.dataSetVersionString}" />
+	<f:event type="javax.faces.event.PreRenderViewEvent"
+		listener="#{lifeCycleModelHandler.postViewParamInit()}"></f:event>
+</f:metadata>
+
+<h:body>
+	<ui:composition template="./datasetTemplateDetailView.xhtml">
+		<ui:param name="dataset" value="#{lifeCycleModelHandler.lcm}" />
+		<ui:param name="lcm" value="#{lifeCycleModelHandler.lcm}" />
+		<ui:param name="lang" value="#{localeBean.locale.language}" />
+		<ui:param name="pageTitleDatasetName" value="#{lifeCycleModelHandler.getBaseName(lang)}" />
+		<ui:param name="pageTitleDatasetType" value="#{i18n['common.lifecyclemodels']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+		<ui:define name="content">
+			<h:outputStylesheet name="css/datasetdetailWide.css" />
+			
+			<p:accordionPanel id="accPanel" multiple="true"
+				widgetVar="accPanelWidget" activeIndex="0,1,2">
+				<p:tab
+				title="#{i18n['common.lifecyclemodels']}#{i18n['delimiter']}#{i18n['common.info']}"
+				titletip="#{i18n['button.collapse']}"
+				titleStyleClass="ui-state-highlight">
+					<p:panelGrid>
+						<p:row>
+							<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.dataSetInformation']}
+								</p:column>
+						</p:row>
+
+
+						<p:row>
+							<p:column>
+								<soda:outputTextTooltip outputTextId="name"
+									outputTextValue="#{i18n['common.name']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.process.name']}" />
+							</p:column>
+
+							<p:column>
+								<div>
+									<ui:fragment
+										rendered="#{not (empty lcm.treatmentStandardsRoutes and empty lcm.mixAndLocationTypes and empty lcm.functionalUnitFlowProperties)}">
+										<soda:outputTextTooltip outputTextId="baseName"
+											outputTextValue="#{i18n['public.proc.baseName']}"
+											tooltipValue="#{i18n['datasetdetail.tooltip.process.baseName']}" inline="true" />
+									</ui:fragment>
+									<ui:fragment
+										rendered="#{not empty lcm.treatmentStandardsRoutes}">
+										<soda:outputTextTooltip
+											outputTextId="treatmentStandardsRoutes"
+											outputTextValue="; #{i18n['public.proc.nameRoute']}"
+											tooltipValue="#{i18n['datasetdetail.tooltip.process.treatmentStandardsRoutes']}"
+											inline="true" />
+									</ui:fragment>
+									<ui:fragment rendered="#{not empty lcm.mixAndLocationTypes}">
+										<soda:outputTextTooltip outputTextId="mixAndLocationTypes"
+											outputTextValue="; #{i18n['public.proc.nameLocation']}"
+											tooltipValue="#{i18n['datasetdetail.tooltip.process.mixAndLocationTypes']}"
+											inline="true" />
+									</ui:fragment>
+									<ui:fragment
+										rendered="#{not empty lcm.functionalUnitFlowProperties}">
+										<soda:outputTextTooltip
+											outputTextId="functionalUnitFlowProperties"
+											outputTextValue="; #{i18n['public.proc.functionalUnit']}"
+											tooltipValue="#{i18n['datasetdetail.tooltip.process.functionalUnitFlowProperties']}"
+											inline="true" />
+									</ui:fragment>
+								</div>
+					#{lcm.name.getValueWithFallback(lang)}
+								</p:column>
+						</p:row>
+
+						<p:row
+							rendered="#{not empty lifeCycleModelHandler.getUseAdvice(lang)}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="useAdviceForDataSet"
+									outputTextValue="#{i18n['public.dataset.useAdvice']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.process.useAdviceForDataSet']}" />
+							</p:column>
+							<p:column styleClass="highlighted">
+								<h:outputText styleClass="preformatted"
+									value="#{lifeCycleModelHandler.getUseAdvice(lang)}" />
+							</p:column>
+						</p:row>
+
+
+
+						<p:row
+							rendered="#{not empty lifeCycleModelHandler.getGeneralComment(lang)}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="generalComment"
+									outputTextValue="#{i18n['public.dataset.generalComment']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.process.generalComment']}" />
+							</p:column>
+							<p:column>
+								<h:outputText styleClass="preformatted"
+									value="#{lifeCycleModelHandler.getGeneralComment(lang)}" />
+							</p:column>
+						</p:row>
+
+
+
+
+
+
+
+
+						<p:row
+							rendered="#{not empty lcm.administrativeInformation.publicationAndOwnership.copyright}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="copyright"
+									outputTextValue="#{i18n['public.proc.copyright']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.copyright']}" />
+							</p:column>
+							<p:column>
+				#{lcm.administrativeInformation.publicationAndOwnership.copyright ? i18n['common.button.yes'] : i18n['common.button.no']}
+								</p:column>
+						</p:row>
+
+
+						<p:row
+							rendered="#{not empty lcm.administrativeInformation.publicationAndOwnership.referenceToOwnershipOfDataSet}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="referenceToOwnershipOfDataSet"
+									outputTextValue="#{i18n['public.proc.owner']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToOwnershipOfDataSet']}" />
+							</p:column>
+							<p:column>
+								<soda:switchLinkOrText
+									outputLinkValue="#{lifeCycleModelHandler.getReferenceUrl(lcm.administrativeInformation.publicationAndOwnership.referenceToOwnershipOfDataSet, url.contact)}"
+									outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+									outputTextValue="#{lcm.administrativeInformation.publicationAndOwnership.referenceToOwnershipOfDataSet.shortDescription.getValueWithFallback(lang)}" />
+							</p:column>
+						</p:row>
+
+
+
+						<p:row rendered="#{not empty lcm.referenceToResultingProcess}">
+							<p:column styleClass="ui-state-hover transp">
+
+								<soda:outputTextTooltip
+									outputTextId="referenceToResultingProcesstxtID"
+									outputTextValue="#{i18n['common.lifecyclemodel.referenceToResultingProcess']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.lifecyclemodel.define.referenceToReferenceProcess']}" />
+							</p:column>
+							<p:column>
+
+
+								<soda:dataListStyled
+									dataListValue="#{lcm.referenceToResultingProcess}">
+									<ui:param name="ref" value="#{dataListStyledVar}" />
+									<soda:dataListLinkOrText
+										dataListValue="#{ref.shortDescription}"
+										outputLinkValue="#{lifeCycleModelHandler.getReferenceUrlXml2(ref, url.process)}"
+										outputLinkTitle="#{i18n['common.processes']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+								</soda:dataListStyled>
+							</p:column>
+						</p:row>
+
+
+						<p:row
+							rendered="#{not empty lcm.referenceToExternalDocumentation}">
+							<p:column styleClass="ui-state-hover transp">
+
+								<soda:outputTextTooltip
+									outputTextId="referenceToExternalDocmentationtxtID"
+									outputTextValue="#{i18n['common.lifecyclemodel.referenceToExternalDocumentation']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.lifecyclemodel.define.referenceToExternalDocumentation']}" />
+							</p:column>
+							<p:column>
+								<soda:dataListStyled
+									dataListValue="#{lcm.referenceToExternalDocumentation}">
+									<ui:param name="ref" value="#{dataListStyledVar}" />
+									<soda:dataListLinkOrText
+										dataListValue="#{ref.shortDescription}"
+										outputLinkValue="#{lifeCycleModelHandler.getReferenceUrlXml2(ref, url.source)}"
+										outputLinkTitle="#{i18n['common.source']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+								</soda:dataListStyled>
+							</p:column>
+						</p:row>
+
+
+
+
+						<p:row rendered="#{not empty lcm.referenceToDiagram}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="referenceToDiagramtxtID"
+									outputTextValue="#{i18n['common.lifecyclemodel.referenceToDiagram']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.lifecyclemodel.define.referenceToDiagram']}" />
+							</p:column>
+							<p:column>
+								<soda:dataListStyled dataListValue="#{lcm.referenceToDiagram}">
+									<ui:param name="ref" value="#{dataListStyledVar}" />
+									<soda:dataListLinkOrText
+										dataListValue="#{ref.shortDescription}"
+										outputLinkValue="#{lifeCycleModelHandler.getReferenceUrlXml2(ref, url.source)}"
+										outputLinkTitle="#{i18n['common.source']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+								</soda:dataListStyled>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+
+
+					<p:panelGrid>
+
+						<p:row>
+							<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.quantitativeReference']}
+								</p:column>
+						</p:row>
+
+
+
+
+
+						<p:row rendered="#{not empty lcm.referenceToReferenceProcess}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="refrefprocessID"
+									outputTextValue="#{i18n['common.lifecyclemodel.referenceToResultingProcess']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.lifecyclemodel.define.referenceToReferenceProcess']}" />
+							</p:column>
+							<p:column>
+								<soda:switchLinkOrText
+									outputLinkValue="#{lifeCycleModelHandler.getReferenceUrlXml2(lcm.getProcessInstanceByID(lcm.referenceToReferenceProcess).referenceToProcess, url.process)}"
+									outputLinkTitle="#{i18n['common.lifecyclemodels']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+									outputTextValue="#{lcm.getProcessInstanceByID(lcm.referenceToReferenceProcess).referenceToProcess.shortDescription.getValueWithFallback(lang)}" />
+							</p:column>
+						</p:row>
+
+
+
+
+
+					</p:panelGrid>
+
+
+
+
+
+
+					<p:panelGrid>
+
+						<p:row>
+							<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.technologyDescriptionAndIncludedProcesses']}
+								</p:column>
+						</p:row>
+
+
+						<p:row rendered="#{not empty lcm.groups}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="groupDeclations"
+									outputTextValue="#{i18n['common.lifecyclemodel.groupDeclarations']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.lifecyclemodel.define.groupDeclarations']}" />
+							</p:column>
+							<p:column>
+								<p:dataList var="g" value="#{lcm.groups.toArray()}">#{g.groupid}: #{lifeCycleModelHandler.getGroupDetails(g, lang)}</p:dataList>
+
+
+
+
+							</p:column>
+						</p:row>
+
+
+
+
+						<p:row rendered="#{not empty lcm.processes}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="ProcessInstancetxtID"
+									outputTextValue="#{i18n['common.lifecyclemodel.processInstance']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.lifecyclemodel.define.processInstance']}" />
+							</p:column>
+
+
+
+							<p:column>
+
+
+								<h:form id="form">
+
+									<p:treeTable id="processesTree" paginator="true" rows="20"
+										value="#{lifeCycleModelHandler.generateRootNode(lang)}"
+										var="node"
+										styleClass="column-style"
+										resizableColumns="true"
+										style="table-layout: fixed; word-wrap: break-word; text-align:center;">
+
+
+										<f:facet name="header">Processes
+
+											<p:commandButton id="expandAllTree"
+												value="Expand All" style="float:right"
+												action="#{lifeCycleModelHandler.expandAll}"
+												update="accPanel:form" />
+											<p:commandButton id="collapseAllTree"
+												value="Collapse All" style="float:right"
+												action="#{lifeCycleModelHandler.collapseAll}"
+												update="accPanel:form" />
+											<p:commandButton id="toggler" type="button"
+												value="Attributes..." style="float:right" />
+											<p:columnToggler datasource="processesTree" trigger="toggler" />
+
+
+										</f:facet>
+
+
+
+
+
+										<p:column headerText="#{i18n['common.lifecyclemodel.treetable.processInstance']}" sortBy="#{node.title}"
+											style="text-align: left;" width="300">
+
+
+											<ui:fragment rendered="#{node.obj.getClass().getSimpleName() != 'ProcessInstance'}">
+												<h:outputText value="#{node.title}" escape="false" />
+											</ui:fragment>
+
+											<ui:fragment rendered="#{node.obj.getClass().getSimpleName() == 'ProcessInstance'}">
+											<soda:switchLinkOrText
+													outputLinkValue="#{lifeCycleModelHandler.getReferenceUrlXml2(node.obj.referenceToProcess, url.process)}"
+													outputLinkTitle="#{i18n['common.proc']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+													outputTextValue="#{node.obj.referenceToProcess.shortDescription.getValueWithFallback(lang)}" />
+											</ui:fragment>
+
+
+										</p:column>
+
+										<p:column headerText="#{i18n['common.lifecyclemodel.treetable.internalID']}" style="text-align: center;" visible="false">
+											<ui:fragment rendered="#{node.obj.getClass().getSimpleName() != 'ProcessInstance'}">
+												<h:outputText value="-" escape="false" />
+											</ui:fragment>
+
+											<ui:fragment rendered="#{node.obj.getClass().getSimpleName() == 'ProcessInstance'}">
+
+											<h:outputText value="#{node.obj.dataSetInternalID}" escape="false" />
+											</ui:fragment>
+
+										</p:column>
+
+										<p:column headerText="#{i18n['common.lifecyclemodel.treetable.scalingFactor']}" style="text-align: center;" width="25">
+											<ui:fragment rendered="#{node.obj.getClass().getSimpleName() != 'ProcessInstance'}">
+												<h:outputText value="-" escape="false" />
+											</ui:fragment>
+
+											<ui:fragment rendered="#{node.obj.getClass().getSimpleName() == 'ProcessInstance'}">
+
+											<h:outputText value="#{node.obj.scalingFactor}" escape="false" />
+											</ui:fragment>
+
+										</p:column>
+
+										<p:column headerText="#{i18n['common.lifecyclemodel.treetable.multiplicationFactor']}" style="text-align: center;" width="25">
+											<ui:fragment rendered="#{node.obj.getClass().getSimpleName() != 'ProcessInstance'}">
+												<h:outputText value="-" escape="false" />
+											</ui:fragment>
+
+											<ui:fragment rendered="#{node.obj.getClass().getSimpleName() == 'ProcessInstance'}">
+
+											<h:outputText value="#{node.obj.multiplicationFactor}" escape="false" />
+											</ui:fragment>
+
+										</p:column>
+
+
+										<p:column headerText="#{i18n['common.lifecyclemodel.treetable.flowNameUUID']}"
+											style="text-align: center;" width="250">
+
+											<ui:fragment
+												rendered="#{not empty lifeCycleModelHandler.getFlow(node.flowUUID)}">
+
+												<soda:switchLinkOrText
+													outputLinkValue="#{conf.contextPath}#{url.flow.getResourceDetailHtmlWithStock(lifeCycleModelHandler.getFlow(node.flowUUID))}"
+													outputLinkTitle="#{i18n['common.flow']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+													outputTextValue="#{lifeCycleModelHandler.getFlow(node.flowUUID).name.getValueWithFallback(lang)}" />
+												<br />
+											</ui:fragment>
+
+
+
+											<h:outputText value="#{node.flowUUID}" escape="false"
+												style="font-style:italic;" />
+
+										</p:column>
+
+
+										<p:column headerText="#{i18n['common.lifecyclemodel.treetable.parameter']}" width="170" visible="false"
+											style="text-align: center;">
+
+
+											<!-- <h:outputText value="#{node.parameters}"
+												style="font-style:italic;" /> -->
+
+											<p:dataList var="par" value="#{node.parameters.split(',')}"
+												rendered="#{not empty node.parameters}"
+												style="text-align: center;">
+												<h:outputText value="#{par}" escape="false"
+													style="font-style:italic;" />
+											</p:dataList>
+										</p:column>
+
+
+										<p:column headerText="#{i18n['common.lifecyclemodel.treetable.group']}"
+													width="45" filterBy="#{lifeCycleModelHandler.getMemberOf(node.obj)}"
+													filterMatchMode="contains">
+
+											<p:repeat var="g"
+												value="#{lifeCycleModelHandler.getMemberOf(node.obj)}">
+
+												<soda:outputTextTooltip outputTextId="memberOfGroupOutput"
+													outputTextValue="#{g}"
+													tooltipValue="#{lifeCycleModelHandler.getGroupName(g, lang)}" />
+
+												<h:outputText
+													rendered="#{(lifeCycleModelHandler.getMemberOf(node.obj).size() > 0) and (g != lifeCycleModelHandler.getMemberOf(node.obj).get(lifeCycleModelHandler.getMemberOf(node.obj).size() - 1))}">,</h:outputText>
+
+											</p:repeat>
+										</p:column>
+
+
+										<p:column headerText="#{i18n['common.lifecyclemodel.treetable.location']}" width="24" visible="false">
+											<h:outputText value="#{node.location}" />
+										</p:column>
+
+
+
+										<p:column style="width:24px" headerText="#{i18n['common.lifecyclemodel.treetable.more']}" visible="false">
+											<p:commandLink
+												update="accPanel:form:processInstanceDialogPanel"
+												oncomplete="PF('processInstanceDialog').show();"
+												title="View Detail" class="fa fa-search">
+												<f:setPropertyActionListener value="#{node}"
+													target="#{lifeCycleModelHandler.selectedNode}" />...
+											</p:commandLink>
+
+										</p:column>
+
+
+									</p:treeTable>
+
+
+
+									<p:dialog id="dialogID" header="Process Instance Details"
+										showEffect="fade" widgetVar="processInstanceDialog"
+										modal="true" resizable="true">
+										<p:outputPanel id="processInstanceDialogPanel">
+											<p:panelGrid columns="2">
+												<h:outputLabel for="titleDialog" value="Title:" />
+												<h:outputText id="titleDialog" escape="false"
+													value="#{lifeCycleModelHandler.selectedNode.title}"
+													style="font-weight:bold" />
+
+												<h:outputLabel for="flowUUIDDialog" value="FlowUUID:" />
+												<h:outputText id="flowUUIDDialog" escape="false"
+													value="#{lifeCycleModelHandler.selectedNode.flowUUID}"
+													style="font-weight:bold" />
+
+<!-- 												<h:outputLabel for="descDialog" value="Description:" />
+												<h:outputText id="descDialog" escape="false"
+													value="#{lifeCycleModelHandler.selectedNode.title}"
+													style="font-weight:bold" /> -->
+
+
+												<h:outputLabel for="paramsDialog" value="Parameters:"
+													rendered="#{lifeCycleModelHandler.selectedNodeParams}" />
+
+												<p:dataList id="paramsDialog" var="par"
+													value="#{lifeCycleModelHandler.selectedNode.parameters.split(',')}"
+													rendered="#{lifeCycleModelHandler.selectedNodeParams}"
+													style="text-align: center;">
+													<h:outputText value="#{par}" escape="false"
+														style="font-style:italic;" />
+												</p:dataList>
+
+
+											</p:panelGrid>
+										</p:outputPanel>
+									</p:dialog>
+
+
+
+
+								</h:form>
+
+
+
+
+							</p:column>
+						</p:row>
+
+					</p:panelGrid>
+
+				</p:tab>
+
+				<p:tab title="#{i18n['common.modellingValidation']}"
+					titletip="#{i18n['button.collapse']}"
+					rendered="#{not empty lifeCycleModelHandler.getUseAdvice(lang) and
+					not empty lcm.reviews and
+					not empty lcm.complianceSystems
+					}"
+					titleStyleClass="ui-state-highlight">
+					<p:panelGrid>
+						<p:row
+							rendered="#{not empty lifeCycleModelHandler.getUseAdvice(lang)}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="useAdviceForDataSet"
+									outputTextValue="#{i18n['public.dataset.useAdvice']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.useAdviceForDataSet']}" />
+							</p:column>
+							<p:column>
+									#{lifeCycleModelHandler.getUseAdvice(lang)}
+							</p:column>
+						</p:row>
+
+
+						<p:row rendered="#{not empty lcm.reviews}">
+							<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.validation']}
+							</p:column>
+						</p:row>
+
+
+
+						<!-- reviews -->
+						<!-- <p:row rendered="#{not empty lcm.reviews}">
+						<p:column colspan="2">
+							<p:dataTable value="#{xmlLciamethodReview}" var="review" styleClass="lotsofcolumns">
+								<p:column>
+									<f:facet name="header">
+										<soda:outputTextTooltip outputTextId="typeOfReview" outputTextValue="#{i18n['common.typeOfReview']}" tooltipValue="#{i18n['datasetdetail.tooltip.dataset.typeOfReview']}" />
+									</f:facet>
+											#{review.type.value}
+										</p:column>
+								<p:column>
+									<f:facet name="header">
+										<soda:outputTextTooltip outputTextId="scopeMethodsOfReview" outputTextValue="#{i18n['common.scopeMethodsOfReview']}" tooltipValue="#{i18n['datasetdetail.tooltip.dataset.scopeMethodsOfReview']}" />
+									</f:facet>
+									<p:dataTable rendered="#{not empty review.scope}" value="#{review.scope}" var="scope">
+										<p:column>
+											<f:facet name="header">
+														#{i18n['common.scopeName']}
+													</f:facet>
+													#{scope.name.value}
+												</p:column>
+										<p:column>
+											<f:facet name="header">
+														#{i18n['common.methodName']}
+													</f:facet>
+											<soda:dataListStyled dataListValue="#{scope.method}">
+												<ui:param name="method" value="#{dataListStyledVar}" />
+														#{method.name.value}
+													</soda:dataListStyled>
+										</p:column>
+									</p:dataTable>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<soda:outputTextTooltip outputTextId="reviewDetails" outputTextValue="#{i18n['public.proc.reviewDetails']}" tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.reviewDetails']}" />
+									</f:facet>
+											#{lifeCycleModelHandler.getMultilangWithFallback(lang, review.reviewDetails).value}
+										</p:column>
+								<p:column>
+									<f:facet name="header">
+										<soda:outputTextTooltip outputTextId="reviewerNameInstitution" outputTextValue="#{i18n['common.reviewerNameInstitution']}" tooltipValue="#{i18n['datasetdetail.tooltip.dataset.reviewerNameInstitution']}" />
+									</f:facet> <soda:dataListStyled dataListValue="#{review.referenceToNameOfReviewerAndInstitution}">
+										<ui:param name="refReviewer" value="#{dataListStyledVar}" /> <soda:dataListLinkOrText dataListValue="#{lifeCycleModelHandler.getMultilangWithFallback(lang, refReviewer.shortDescription)}" outputLinkValue="#{lifeCycleModelHandler.getReferenceUrlXml2(refReviewer, url.contact)}" outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+									</soda:dataListStyled>
+								</p:column>
+								<p:column>
+									<f:facet name="header">
+										<soda:outputTextTooltip outputTextId="otherReviewDetails" outputTextValue="#{i18n['common.otherReviewDetails']}" tooltipValue="#{i18n['datasetdetail.tooltip.dataset.otherReviewDetails']}" />
+									</f:facet>
+											#{lifeCycleModelHandler.getMultilangWithFallback(lang, review.otherReviewDetails).value}
+										</p:column>
+								<p:column>
+									<f:facet name="header"> <soda:outputTextTooltip outputTextId="referenceToCompleteReviewReport" outputTextValue="#{i18n['common.referenceToCompleteReviewReport']}" tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToCompleteReviewReport']}" />
+									</f:facet> <soda:dataListLinkOrText dataListValue="#{lifeCycleModelHandler.getMultilangWithFallback(lang, review.referenceToCompleteReviewReport.shortDescription)}" outputLinkValue="#{lifeCycleModelHandler.getReferenceUrlXml2(review.referenceToCompleteReviewReport, url.source)}" outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+								</p:column>
+							</p:dataTable>
+						</p:column>
+					</p:row> -->
+
+
+
+
+						<!-- subsection -->
+						<p:row rendered="#{not empty lcm.complianceSystems}">
+							<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.compliance']}
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+
+
+					<ui:repeat value="#{lcm.complianceSystems.toArray()}"
+						var="compliance">
+						<p:panelGrid columns="8">#{i18n['common.compliance']}<h:panelGroup>
+								<div>
+									<soda:outputTextTooltip
+										outputTextId="referenceToComplianceSystem"
+										outputTextValue="#{i18n['common.referenceToComplianceSystem']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToComplianceSystem']}" />
+								</div>
+								<soda:dataListLinkOrText
+									dataListValue="#{compliance.reference.shortDescription}"
+									outputLinkValue="#{handler.getReferenceUrlXml2(compliance.referenceToComplianceSystem, url.source)}"
+									outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+							</h:panelGroup>
+							<h:panelGroup>
+								<div>
+									<soda:outputTextTooltip
+										outputTextId="approvalOfOverallCompliance"
+										outputTextValue="#{i18n['common.approvalOfOverallCompliance']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.approvalOfOverallCompliance']}" />
+								</div>
+								<span class="italic">#{compliance.overallCompliance.value}</span>
+							</h:panelGroup>
+							<h:panelGroup>
+								<div>
+									<soda:outputTextTooltip outputTextId="nomenclatureCompliance"
+										outputTextValue="#{i18n['common.nomenclatureCompliance']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.nomenclatureCompliance']}" />
+								</div>
+								<span class="italic">#{compliance.nomenclatureCompliance.value}</span>
+							</h:panelGroup>
+							<h:panelGroup>
+								<div>
+									<soda:outputTextTooltip outputTextId="methodologicalCompliance"
+										outputTextValue="#{i18n['common.methodologicalCompliance']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.methodologicalCompliance']}" />
+								</div>
+								<span class="italic">#{compliance.methodologicalCompliance.value}</span>
+							</h:panelGroup>
+							<h:panelGroup>
+								<div>
+									<soda:outputTextTooltip outputTextId="reviewCompliance"
+										outputTextValue="#{i18n['common.reviewCompliance']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.reviewCompliance']}" />
+								</div>
+								<span class="italic">#{compliance.reviewCompliance.value}</span>
+							</h:panelGroup>
+							<h:panelGroup>
+								<div>
+									<soda:outputTextTooltip outputTextId="documentationCompliance"
+										outputTextValue="#{i18n['common.documentationCompliance']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.documentationCompliance']}" />
+								</div>
+								<span class="italic">#{compliance.documentationCompliance.value}</span>
+							</h:panelGroup>
+							<h:panelGroup>
+								<div>
+									<soda:outputTextTooltip outputTextId="qualityCompliance"
+										outputTextValue="#{i18n['common.qualityCompliance']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.qualityCompliance']}" />
+								</div>
+								<span class="italic">#{compliance.qualityCompliance.value}</span>
+							</h:panelGroup>
+						</p:panelGrid>
+					</ui:repeat>
+
+				</p:tab>
+
+				<p:tab
+					title="#{i18n['common.administrative']} #{i18n['common.info']}"
+					titletip="#{i18n['button.collapse']}"
+					titleStyleClass="ui-state-highlight">
+					<p:panelGrid>
+						<!-- subsection -->
+						<ui:param name="notEmpty_refToCommissioner"
+							value="#{not empty lcm.administrativeInformation.commissionerAndGoal.referenceToCommissioner}" />
+						<ui:param name="notEmpty_project"
+							value="#{not empty lcm.administrativeInformation.commissionerAndGoal.project}" />
+						<ui:param name="notEmpty_intendedApplications"
+							value="#{not empty lcm.administrativeInformation.commissionerAndGoal.intendedApplications}" />
+						<p:row
+							rendered="#{notEmpty_refToCommissioner
+							or notEmpty_project
+							or notEmpty_intendedApplications}">
+							<p:column colspan="2" styleClass="ui-state-hover">#{i18n['common.commissionerAndGoal']}
+						</p:column>
+						</p:row>
+
+
+
+						<p:row rendered="#{notEmpty_refToCommissioner}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="referenceToCommissioner"
+									outputTextValue="#{i18n['common.referenceToCommissioner']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToCommissioner']}" />
+							</p:column>
+							<p:column>
+								<soda:dataListStyled
+									dataListValue="#{lcm.administrativeInformation.commissionerAndGoal.referenceToCommissioner}">
+									<ui:param name="comRef" value="#{dataListStyledVar}" />
+									<soda:dataListLinkOrText
+										dataListValue="#{comRef.shortDescription}"
+										outputLinkValue="#{lifeCycleModelHandler.getReferenceUrlXml2(comRef, url.contact)}"
+										outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+								</soda:dataListStyled>
+							</p:column>
+						</p:row>
+
+
+
+
+
+						<p:row rendered="#{notEmpty_project}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="project"
+									outputTextValue="#{i18n['common.project']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.project']}" />
+							</p:column>
+							<p:column>
+
+					#{lifeCycleModelHandler.getProject(lang)}
+						</p:column>
+						</p:row>
+						<p:row rendered="#{notEmpty_intendedApplications}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="intendedApplications"
+									outputTextValue="#{i18n['common.intendedApplications']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.intendedApplications']}" />
+							</p:column>
+							<p:column>
+					#{lifeCycleModelHandler.getIntendedApplications(lang)}
+						</p:column>
+						</p:row>
+						<!-- subsection -->
+						<ui:param name="notEmpty_refDataGenerator"
+							value="#{not empty lcm.administrativeInformation.referenceToPersonOrEntityGeneratingTheDataSet}" />
+						<p:row rendered="#{notEmpty_refDataGenerator}">
+							<p:column colspan="2" styleClass="ui-state-hover">
+					#{i18n['common.dataGenerator']}
+						</p:column>
+						</p:row>
+
+						<p:row rendered="#{notEmpty_refDataGenerator}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="dataGenerator"
+									outputTextValue="#{i18n['common.dataSetGeneratorModeller']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToPersonOrEntityGeneratingTheDataSet']}" />
+							</p:column>
+							<p:column>
+								<soda:dataListStyled
+									dataListValue="#{lcm.administrativeInformation.referenceToPersonOrEntityGeneratingTheDataSet}">
+									<ui:param name="generatorRef" value="#{dataListStyledVar}" />
+									<soda:dataListLinkOrText
+										dataListValue="#{generatorRef.shortDescription}"
+										outputLinkValue="#{lifeCycleModelHandler.getReferenceUrlXml2(generatorRef, url.contact)}"
+										outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+								</soda:dataListStyled>
+							</p:column>
+						</p:row>
+
+						<!-- subsection -->
+						<ui:param name="notEmpty_timeStamp"
+							value="#{not empty lcm.administrativeInformation.dataEntryBy.timeStamp}" />
+						<ui:param name="notEmpty_refDataSetFormat"
+							value="#{not empty lcm.administrativeInformation.dataEntryBy.referenceToDataSetFormat}" />
+						<p:row
+							rendered="#{notEmpty_timeStamp
+							or notEmpty_refDataSetFormat}">
+							<p:column colspan="2" styleClass="ui-state-hover">
+					#{i18n['common.dataEntryBy']}
+						</p:column>
+						</p:row>
+						<p:row rendered="#{notEmpty_timeStamp}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="timeStamp"
+									outputTextValue="#{i18n['common.timeStamp']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.timeStamp']}" />
+							</p:column>
+							<p:column>
+					#{lcm.administrativeInformation.dataEntryBy.timeStamp}
+						</p:column>
+						</p:row>
+
+						<p:row rendered="#{notEmpty_refDataSetFormat}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="referenceToDataSetFormat"
+									outputTextValue="#{i18n['common.referenceToDataSetFormat']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToDataSetFormat']}" />
+							</p:column>
+							<p:column>
+								<soda:dataListStyled
+									dataListValue="#{lcm.administrativeInformation.dataEntryBy.referenceToDataSetFormat}">
+									<ui:param name="formatRef" value="#{dataListStyledVar}" />
+									<soda:dataListLinkOrText
+										dataListValue="#{formatRef.shortDescription}"
+										outputLinkValue="#{lifeCycleModelHandler.getReferenceUrlXml2(formatRef, url.source)}"
+										outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+								</soda:dataListStyled>
+							</p:column>
+						</p:row>
+
+
+
+
+
+						<p:row>
+							<p:column colspan="2" styleClass="ui-state-hover">
+					#{i18n['common.publicationAndOwnership']}
+						</p:column>
+						</p:row>
+						<p:row>
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="uuid"
+									outputTextValue="#{i18n['common.uuid']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.uuid']}" />
+							</p:column>
+							<p:column>
+					#{dataset.uuid.uuid}
+						</p:column>
+						</p:row>
+						<p:row>
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="dataSetVersion"
+									outputTextValue="#{i18n['public.proc.datasetVersion']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.dataSetVersion']}" />
+							</p:column>
+							<p:column>
+					#{dataset.dataSetVersion}
+						</p:column>
+						</p:row>
+						<p:row
+							rendered="#{not empty lcm.administrativeInformation.publicationAndOwnership.referenceToPrecedingDataSetVersion}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="referenceToPrecedingDataSetVersion"
+									outputTextValue="#{i18n['common.preceding']} #{i18n['public.proc.datasetVersion']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToPrecedingDataSetVersion']}" />
+							</p:column>
+							<p:column>
+								<soda:dataListStyled
+									dataListValue="#{lcm.administrativeInformation.publicationAndOwnership.referenceToPrecedingDataSetVersion}">
+									<ui:param name="precedingVersionRef"
+										value="#{dataListStyledVar}" />
+									<soda:dataListLinkOrText
+										dataListValue="#{datasetHandler.getMultilangWithFallback(lang, precedingVersionRef.shortDescription)}"
+										outputLinkValue="#{datasetHandler.getReferenceUrlXml2(precedingVersionRef, url.process)}"
+										outputLinkTitle="#{i18n['common.processes']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+								</soda:dataListStyled>
+							</p:column>
+						</p:row>
+						<p:row rendered="#{not empty dataset.permanentUri}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="permanentDataSetURI"
+									outputTextValue="#{i18n['public.lciam.permanentUri']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.permanentDataSetURI']}" />
+							</p:column>
+							<p:column styleClass="linkOverflow">
+								<h:outputLink value="#{dataset.permanentUri}"
+									title="#{dataset.permanentUri}">
+						#{dataset.permanentUri}
+							</h:outputLink>
+							</p:column>
+						</p:row>
+
+						<p:row
+							rendered="#{not empty lcm.administrativeInformation.publicationAndOwnership.referenceToOwnershipOfDataSet}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="referenceToOwnershipOfDataSet"
+									outputTextValue="#{i18n['public.proc.owner']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToOwnershipOfDataSet']}" />
+							</p:column>
+							<p:column>
+								<soda:switchLinkOrText
+									outputLinkValue="#{lifeCycleModelHandler.getReferenceUrl(lcm.administrativeInformation.publicationAndOwnership.referenceToOwnershipOfDataSet, url.contact)}"
+									outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+									outputTextValue="#{lcm.administrativeInformation.publicationAndOwnership.referenceToOwnershipOfDataSet.shortDescription.getValueWithFallback(lang)}" />
+							</p:column>
+						</p:row>
+
+
+						<p:row
+							rendered="#{not empty lcm.administrativeInformation.publicationAndOwnership.copyright}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip outputTextId="copyright"
+									outputTextValue="#{i18n['public.proc.copyright']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.copyright']}" />
+							</p:column>
+							<p:column>
+				#{lcm.administrativeInformation.publicationAndOwnership.copyright ? i18n['common.button.yes'] : i18n['common.button.no']}
+						</p:column>
+						</p:row>
+
+
+
+
+						<p:row
+							rendered="#{not empty lcm.administrativeInformation.publicationAndOwnership.licenseType.value}">
+							<p:column styleClass="ui-state-hover transp">
+				#{i18n['public.proc.licenseType']}
+						</p:column>
+							<p:column>
+				#{lcm.administrativeInformation.publicationAndOwnership.licenseType.value}
+						</p:column>
+						</p:row>
+
+						<p:row
+							rendered="#{not empty lifeCycleModelHandler.getAccessInfo(lang)}">
+							<p:column styleClass="ui-state-hover transp">
+				#{i18n['common.accessRestrictions']}
+						</p:column>
+							<p:column>
+				#{lifeCycleModelHandler.getAccessInfo(lang)}
+						</p:column>
+						</p:row>
+
+
+
+					</p:panelGrid>
+
+
+				</p:tab>
+
+			</p:accordionPanel>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

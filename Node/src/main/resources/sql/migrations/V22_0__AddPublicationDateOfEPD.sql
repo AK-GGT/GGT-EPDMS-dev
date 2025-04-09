@@ -1,0 +1,1 @@
+ALTER TABLE  `process` ADD `publicationDateOfEPD` datetime DEFAULT NULL;

@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:param name="lang" value="#{localeBean.locale.language}" />
+
+    <h:form id="tableForm" style="margin-top: 1em;" prependId="false">
+
+        <p:dataTable id="processTable" var="process"
+                     value="#{lazyDataModelRef}" lazy="true"
+                     paginator="true" rows="10" rowsPerPageTemplate="5,10,15,50"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                     {PreviousPageLink} {PageLinks} {NextPageLink}
+                     {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']}
+                     (&lt;span id=&quot;rowCount&quot;&gt;#{lazyDataModelRef.rowCount}&lt;/span&gt; #{i18n['common.list.total']})"
+                     emptyMessage="#{i18n['common.list.noneFound']}">
+
+            <ui:include src="processListColumns.xhtml" >
+				<ui:param name="filtering" value="#{filtering}" />
+            </ui:include>
+            
+        </p:dataTable>
+
+        <br/>
+        
+        <p:panel rendered="#{!processesSearchHandler.logEmpty}" header="#{i18n['common.dataset.didntRespond']}" >
+        	<p:dataTable var="node" value="#{lazyDataModelRef.log.nodes}"
+				paginator="true" rows="10" lazy="false"
+				paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+				rowsPerPageTemplate="5,10,15" onRowSelectUpdate="display">
+        	    <p:column headerText="#{i18n['common.node.id']}">
+					<h:outputText value="#{node.nodeId}" />
+				</p:column>
+
+				<p:column headerText="#{i18n['admin.node.name']}">
+					<h:outputText value="#{node.name}" />
+				</p:column>
+
+				<p:column headerText="#{i18n['admin.node.baseURL']}">
+					<h:outputText value="#{node.baseUrl}" />
+				</p:column>
+			</p:dataTable>
+        </p:panel>
+    </h:form>
+</ui:composition>

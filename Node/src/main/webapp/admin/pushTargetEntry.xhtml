@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!-- 
+ui:params:
+	- nameEditable: name field editable?
+	- pwShown: show password field
+	- handler: handler to use (must have getPushTarget method)
+ -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:shiro="http://shiro.apache.org/tags">
+    <ui:composition >
+    <p:focus context="generalForm"/>
+    	<p:panel header="#{i18n['admin.pushTarget']}" id="pushTargetName">
+    		<p:panelGrid columns="2">
+    			<p:outputLabel for="pushNameIn" value="#{i18n['admin.pushTarget.name']}" rendered="#{editable}"/>
+    			<p:inputText id="pushNameIn" value="#{pushTargetHandler.pushTarget.name}" required="true" requiredMessage="#{i18n['admin.pushTarget.nameRequired']}" rendered="#{editable}">
+				</p:inputText>
+				<p:outputLabel for="pushNameOut" value="#{i18n['admin.pushTarget.nameInfo']}" rendered="#{not editable}"/>
+				<h:outputText id="pushNameOut" value="#{pushTargetHandler.pushTarget.name}" rendered="#{not editable}"/>
+    		</p:panelGrid>
+    	</p:panel>
+		<p:panel header="#{i18n['admin.pushTarget.node']}" id="pushTargetNode">			
+			<p:panelGrid columns="2" cellspacing="7">
+				<p:outputLabel for="targetUrl" value="#{i18n['admin.pushTarget.targetURL']}" rendered="#{editable}" />
+				<p:inputText id="targetUrl" value="#{pushTargetHandler.pushTarget.targetURL}" rendered ="#{editable}" required="true" requiredMessage="#{i18n['admin.pushTarget.targetURLRequired']}" size="50"/>
+			
+				<p:outputLabel for="nodeOut" value="#{i18n['admin.pushTarget.nodeId']}" rendered="#{not editable}"/>
+				<h:outputText id="nodeOut" value="#{pushTargetHandler.pushTarget.targetID}" rendered="#{not editable}"/>
+				
+				<p:outputLabel for="nodeName" value="#{i18n['admin.pushTarget.nodeName']}"/>
+ 				<h:outputText id="nodeName" value="#{pushTargetHandler.pushTarget.targetName}"/> 
+			
+			    <p:outputLabel value="Login" for="login" rendered="#{editable}"/>
+			    <p:inputText id="login" value="#{pushTargetHandler.pushTarget.login}" maxlength="50" size="50" rendered="#{editable}"/>
+
+			    <p:outputLabel value="Password" for="passw" rendered="#{editable}"/>
+			    <p:password id="passw" value="#{pushTargetHandler.password}" minLength="0" maxlength="50" size="50" feedback="false" rendered="#{editable}"/>
+
+			</p:panelGrid>
+			<p:commandButton id="pushTargetShow" value="#{i18n['admin.pushTarget.showTargetStocks']}" action="#{pushTargetHandler.showStocks}" ajax="false" rendered="#{editable}"/>
+		</p:panel>
+			        
+		<p:panel header="#{i18n['admin.pushTarget.targetDs']}">
+        	<p:panelGrid columns="2" >
+	            <p:outputLabel value="#{i18n['admin.stock.id']}" for="dsID" rendered="#{not editable}"/>
+	            <h:outputText id="dsID" value="#{pushTargetHandler.pushTarget.targetDsName}" rendered="#{not editable}"/>
+	            <p:outputLabel value="#{i18n['admin.stock.uuid']}" for="dsUuid" rendered="#{not editable}"/>
+	            <h:outputText id="dsUuid" value="#{pushTargetHandler.pushTarget.targetDsUuid}" rendered="#{not editable}"/>
+	        </p:panelGrid>
+	
+			<p:dataTable id="targetStockTable"
+	                     var="targetStock"
+	                     value="#{pushTargetHandler.targetStockList}"
+	                     selection="#{pushTargetHandler.selectedTargetStock}"
+	                     rowKey="#{targetStock.dsUuid}" rendered="#{editable}"
+	                     emptyMessage="#{i18n['common.list.noneFound']}">
+	                                 
+	            <p:column style="text-align: center;" selectionMode="single" width="20px;"/>
+							
+				<p:column headerText="#{i18n['admin.stock.id']}">
+					<h:outputText value="#{targetStock.dsName}"/>
+				</p:column>
+							
+	            <p:column headerText="#{i18n['admin.stock.name']}">
+	             	<h:outputText value="#{targetStock.dsDescription}" />
+	            </p:column>
+	                        
+	            <p:column headerText="#{i18n['admin.stock.uuid']}">
+	            	<h:outputText value="#{targetStock.dsUuid}"/>
+	            </p:column>
+	        </p:dataTable>
+	    </p:panel>
+    </ui:composition>
+</html>
+

@@ -1,0 +1,15 @@
+* {
+    font-family: Arial, Helvetica, sans-serif !important;   
+}
+
+body {
+    font-size: 10px;
+}
+
+.ui-button {
+	display: none !important;	
+}
+
+.ui-datatable tbody {
+	font-size: 7px !important;
+}

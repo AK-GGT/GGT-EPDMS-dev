@@ -1,0 +1,1 @@
+ALTER TABLE  `process` ADD `epdFormatVersion` varchar(255) DEFAULT NULL;

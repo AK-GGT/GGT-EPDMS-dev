@@ -1,0 +1,527 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<!--
+	Parameters for this composition:
+	via ui:define:
+		columns
+	via ui:param:
+		stockFilter (empty means no selection shown, list of IDataStockMeta)
+		mostRecentVersionOnlyFilter
+		mostRecentVersionOnlyBackingObject
+		appendToBody
+		includeMessages
+		dataTableId
+		backingBean
+		lazyDataModel
+		selectionProperty
+		nameFilterField
+		nameFilterActionMethod 
+		selectedActionButtonLabel
+		actionDialogHeader
+		actionDialogMessage
+		actionDialogOKLabel
+		actionDialogCancelLabel
+		actionDialogOKActionMethod
+		showDependenciesOption
+		moveControls
+		publicShowFacelet
+		initialRows (optional, default is 15)
+		nameProperty (optional, default is name.defaultValue)
+		namePropertyField (mandatory if nameProperty is declared, else optional and ignored if set)
+		forceRootDsLink
+		exportedFileName
+		datasetType
+	-->
+
+	<!-- CAUTION: This template is being used for: manageXXXXList.xhtml / stockEntry.xhtml (Assigning datasets, 2 times). -->
+	<ui:param name="diaOpenBtnId" value="#{dataTableId}btn" />
+	<ui:param name="clearTemplateDataTable"
+		value="#{dataTableId}clearFilterBtn" />
+	<ui:param name="buttonPanelId" value="#{dataTableId}btns" />
+	<ui:param name="listExportFileName"
+		value="#{conf.contextPath2}_#{stockSelection.currentStockName}_#{fn:replace(datasetType, ' ', '_')}" />
+	<ui:param name="dialogId"
+		value="#{dataTableId}#{actionDialogOKActionMethod}Confirm" />
+
+	<h:panelGroup rendered="#{moveControls}">
+		<ui:include src="confirmDialog.xhtml">
+			<ui:param name="action" value="moveSelected" />
+			<ui:param name="dialogHeader"
+				value="#{i18n['admin.confirmDlg.move']}" />
+			<ui:param name="dialogMessage"
+				value="#{i18n['admin.confirmMsg.move']}" />
+			<ui:param name="allMode" value="false" />
+			<ui:param name="jobCheckbox" value="false" />
+		</ui:include>
+	</h:panelGroup>
+
+	<ui:include src="confirmDialog.xhtml">
+		<ui:param name="action" value="#{actionDialogOKActionMethod}" />
+		<ui:param name="dialogHeader" value="#{actionDialogHeader}" />
+		<ui:param name="dialogMessage" value="#{actionDialogMessage}" />
+		<ui:param name="allMode" value="false" />
+		<ui:param name="jobCheckbox"
+			value="#{actionDialogOKActionMethod == 'deleteSelected' ? 'false' : 'true'}" />
+	</ui:include>
+
+	<div id="tableWithControls">
+
+		<!-- 	Controls - on column of controls on the left hand side, one on the right hand side of the table. -->
+		<h:panelGroup
+			style="display: flex; flex-flow: row nowrap; align-items: flex-end; justify-content: space-between">
+
+			<!-- Panel on the left hand side of the table. -->
+			<div
+				style="display: flex; flex-flow: row wrap; align-items: flex-start; justify-content: flex-end;">
+				<!-- E.g. registered in + register + validate + Delete selected-->
+				<div
+					style="display: flex; flex-flow: row nowrap; align-items: baseline; justify-content: flex-start;">
+					<div id="#{dataTableId}AdditionalButtonsPanelGroup"
+						style="display: flex; flex-flow: row nowrap; align-items: baseline; justify-content: flex-start;">
+						<ui:insert name="additionalButtons" />
+					</div>
+					<!-- Delete selected -->
+					<div
+						style="display: flex; flex-flow: row nowrap; align-items: baseline; justify-content: flex-start;">
+						<p:outputLabel value="#{i18n['admin.selected']} " style="margin-right:3px;"
+							rendered="#{(not lazyDataModel.showDeleteButton) and (not includeActions)}" />
+						<p:commandButton id="#{diaOpenBtnId}" styleClass="#{diaOpenBtnId}"
+							value="#{selectedActionButtonLabel}"
+							onclick="PF('#{dataTableId}#{actionDialogOKActionMethod}Confirm').show()"
+							type="button"
+							disabled="#{lazyDataModel.nothingSelected or (showRegistryControls and applicationInfoBean.showRegistrationControls and not empty processListHandler.registry )}"
+							ajax="false" rendered="#{not lazyDataModel.showDeleteButton}" />
+					</div>
+				</div>
+
+				<!-- Move controls -->
+				<h:panelGroup rendered="#{moveControls}">
+					<ui:include src="moveControls.xhtml" />
+				</h:panelGroup>
+			</div>
+
+
+			<!--  Panel on the right hand side of the table -->
+			<div
+				style="display: flex; flex-flow: row wrap; align-items: flex-end; justify-content: flex-end;">
+	
+				<!-- Stockfilter -->
+				<ui:fragment rendered="#{not empty stockFilter}">
+					<div
+						style="display: flex; flex-flow: row nowrap; align-items: baseline; justify-content: flex-end;">
+						<p:outputLabel value="#{i18n['common.stock.selected']}:"
+							for="#{dataTableId}_stockselection" />
+						<p:selectOneMenu id="#{dataTableId}_stockselection"
+							value="#{lazyDataModel.dataStock}" converter="#{dsMetaConverter}">
+							<f:selectItem itemLabel="#{i18n['common.select.hint']}"
+								noSelectionOption="true" />
+							<f:selectItems value="#{stockFilter}" var="stockItem"
+								itemLabel="#{stockItem.name}" itemValue="#{stockItem}" />
+							<p:ajax update="#{dataTableId}" />
+						</p:selectOneMenu>
+					</div>
+				</ui:fragment>
+			</div>
+		</h:panelGroup>
+
+
+
+
+		<!-- 	<c:if test="#{includeMessages}"> -->
+		<!-- 		<div class="clearLeft bottomclear"> -->
+		<!-- 			<ui:include src="/messages.xhtml" /> -->
+		<!-- 		</div> -->
+		<!-- 	</c:if> -->
+
+		<div class="clearLeft">
+			<p:tooltip />
+			<p:dataTable id="#{dataTableId}" styleClass="#{dataTableId}"
+				var="dataset" value="#{lazyDataModel}" lazy="true"
+				selection="#{selectionProperty}" paginator="true"
+				rows="#{empty initialRows ? 15 : initialRows}"
+				rowsPerPageTemplate="5,10,15,50,100,500,1000,5000,10000"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+			                 {PreviousPageLink} {PageLinks} {NextPageLink}
+			                 {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']} "
+				currentPageReportTemplate="#{i18n['common.list.currentEntries']}: {totalRecords} 
+			        		 (#{countModel.loadTotalElementCount()} #{i18n['common.list.total']})  
+			        		 (#{i18n['common.list.page']} {currentPage} #{i18n['common.list.of']} {totalPages})"
+				emptyMessage="#{i18n['common.list.noneFound']}"
+				resizableColumns="true" draggableColumns="true" sortMode="single" widgetVar="dataTable"
+				style="overflow: auto !important; margin-top:5px !important;">
+
+				<p:ajax event="rowSelectCheckbox" process="@this"
+					update="@(.#{diaOpenBtnId}) @(.#{dialogId}panel)" />
+				<p:ajax event="rowUnselectCheckbox" process="@this"
+					update="@(.#{diaOpenBtnId}) @(.#{dialogId}panel)" />
+				<p:ajax event="toggleSelect" process="@this"
+					update="@(.#{diaOpenBtnId}) @(.#{dialogId}panel)" />
+				<p:ajax event="rowSelect" process="@this"
+					update="@(.#{diaOpenBtnId}) @(.#{dialogId}panel)" />
+				<p:ajax event="rowUnselect" process="@this"
+					update="@(.#{diaOpenBtnId}) @(.#{dialogId}panel)" />
+
+				<f:facet name="header">
+					<div style="display:flex; flex-flow:row nowrap; align-items:center; justify-content: space-between;;">
+
+						<!-- Buttons on the left hand side of the header -->
+						<div
+							style="display: flex; flex-low: row wrap; align-items: baseline; justify-content: flex-end;">
+
+							<!-- Clear filters -->
+							<p:commandButton id="#{clearTemplateDataTable}"
+								value="#{i18n['admin.clearFilters']}"
+								onclick="PF('dataTable').clearFilters()"
+								actionListener="#{backingBean.clearAllFilters}"
+								style="margin-right:3px;">
+								<f:attribute name="update" value="#{dataTableId} #{showRegistryControls and applicationInfoBean.showRegistrationControls ? 'reg' : ''}"/>
+								<p:resetInput target="#{dataTableId}" />
+							</p:commandButton>
+
+							<!-- Most recen versions only checkbox + label -->
+							<!-- align-items of the following flexbox should be center, because the baseline behaviour of the selectBooleanCheckbox is extravagant. -->
+							<div jsf:rendered="#{mostRecentVersionOnlyFilter}"
+								style="display: flex; flex-flow: row nowrap; align-items: center; justify-content: center; margin-left: 3px;">
+								<p:outputLabel style="margin-right:3px; font-weight:normal;"
+									value="#{i18n['common.list.mostrecentversiononly']}: " />
+								<p:selectBooleanCheckbox
+									id="#{dataTableId}MostRecentVersionOnlyCheckbox"
+									value="#{mostRecentVersionOnlyBackingObject.mostRecentVersionOnly}">
+									<p:ajax update="#{dataTableId}" />
+								</p:selectBooleanCheckbox>
+							</div>
+						</div>
+
+						<!-- Buttons on the right hand side of the header -->
+						<div style="display:flex; flex-flow: row wrap; align-items:flex-end; justify-content:flex-end;">
+								
+							<!-- Export -->
+							<p:menuButton id="exportMenuButton" value="#{i18n['admin.export.datasets']}">
+								<p:menuitem id="exportSinglePageAsXLSButton" value="#{i18n['admin.export.datasets.pageOnly']}"
+									update="#{dataTableId}" icon="fa fa-file"
+									ajax="false" immediate="true">
+									<p:dataExporter type="xls" target="#{dataTableId}"
+										postProcessor="#{datasetListDocumentView.postProcessXLS}"
+										fileName="#{listExportFileName}_#{i18n['admin.export.datasets.pageOnly.suffix']}"
+										pageOnly="true" />
+								</p:menuitem>
+								<p:menuitem id="exportAllPagesAsXLSButton"  value="#{i18n['admin.export.datasets.all']}"
+									update="#{dataTableId}" icon="fa fa-file"
+									ajax="false" immediate="true">
+									<p:dataExporter type="xls" target="#{dataTableId}"
+										postProcessor="#{datasetListDocumentView.postProcessXLS}"
+										fileName="#{listExportFileName}_#{i18n['admin.export.datasets.all.suffix']}" />
+								</p:menuitem>
+							</p:menuButton>
+							
+							<!-- Column Toggler -->
+							<!-- The size of the toggler can't be set - It takes its width from the button. -->
+							<p:commandButton id="columnTogglerBtn" type="button"
+								value="#{i18n['button.columnToggler']}" icon="fa fa-ellipsis-v"
+								style="width:200px;"/>
+							<p:columnToggler datasource="#{dataTableId}"
+								trigger="columnTogglerBtn"/>
+						</div>
+					</div>
+				</f:facet>
+
+
+				<p:column style="text-align: center;" selectionMode="multiple"
+					width="15" exportable="false" toggleable="false" />
+
+
+				<!--  		COLUMN BLUEPRINT 
+				<c:set var="id" value="#{'columnName'}" />
+				<p:column id="#{id}" sortBy="" filterBy="" exportable="true"
+					toggleable="true"
+					style="width:4px !important; white-space:pre-line; overflow-wrap:break-word;"
+					visible="true">
+	
+					COLUMN HEADER
+					<f:facet name="header">
+						<h:outputText id="#{id}HeaderText" value="header text"
+							title="tooltip header text" styleClass="ui-column-title" />
+					</f:facet>
+					<f:facet name="filter">
+						<p:inputText id="#{id}HeaderFilterInput" style="max-width:3px"
+							title="tooltip filter input"
+							onkeyup="PF('dataTable').filter();" />
+					</f:facet>
+	
+					COLUMN CONTENT
+					<h:outputText id="#{id}ContentText" value="element content"
+						title="contentText tooltip" />
+				</p:column>
+				-->
+
+
+				<!-- 	Name column -->
+				<c:set var="id" value="#{'nameColumn'}" />
+				<p:column id="#{id}"
+					sortBy="#{dataset.name.getValueWithFallback(lang)}"
+					filterBy="#{dataset.name}" exportable="false" toggleable="true"
+					style="min-width:200px !important; max-width:400px !important; white-space:pre-line; overflow-wrap:break-word;">
+
+					<!-- 	COLUMN HEADER -->
+					<f:facet name="header">
+						<h:outputText id="#{id}HeaderText" value="#{i18n['common.name']}"
+							styleClass="ui-column-title" />
+					</f:facet>
+					<f:facet name="filter">
+						<p:inputText id="#{id}HeaderFilterInput"
+							title="#{i18n['common.name.tooltip']}"
+							onkeyup="PF('dataTable').filter();"
+							style="width:190px">
+						</p:inputText>
+					</f:facet>
+
+					<!-- 	COLUMN CONTENT -->
+					<h:link id="#{id}ContentName" outcome="/#{publicShowFacelet}.xhtml"
+						value="#{empty nameProperty ? dataset.name.defaultValue : dataset[nameProperty][namePropertyField]}"
+						title="#{dataset.uuidAsString}   #{dataset.version}"
+						styleClass="ui-datatable-data tr"
+						style="color:inherit; text-decoration:underline;">
+						<f:param name="uuid" value="#{dataset.uuid.uuid}" />
+						<f:param name="version" value="#{dataset.version}" />
+						<f:param name="stock"
+							value="#{empty forceDs ? stockSelection.currentStockName : (forceDs == '$root$' ? dataset.rootDataStock.name : forceDs)}" />
+					</h:link>
+					<div style="margin: 2px 0; font-size: smaller;">
+						<h:outputLabel id="#{id}ContentUuidLabel" value="UUID: " />
+						<h:outputText id="#{id}ContentUuid" value="#{dataset.uuid.uuid}" />
+					</div>
+				</p:column>
+				<!-- 			Only for export. -->
+				<p:column visible="false"
+					headerText="#{i18n['public.dataset.typeOf']}" exportable="true"
+					toggleable="false">
+					<h:outputText value="#{dataset.dataSetType.value}" />
+				</p:column>
+
+				<p:column visible="false" headerText="#{i18n['common.uuid']}"
+					exportable="true" toggleable="false">
+					<h:outputText value="#{dataset.uuid.uuid}" />
+				</p:column>
+
+				<p:column visible="false" headerText="#{i18n['admin.proc.version']}"
+					sortBy="#{dataset.version}" exportable="true" toggleable="false"
+					width="55">
+					<h:outputText value="#{dataset.version}" />
+				</p:column>
+
+				<p:column visible="false" headerText="#{i18n['common.name']}"
+					exportable="true" toggleable="false">
+					<h:outputText
+						value="#{empty nameProperty ? dataset.name.defaultValue : dataset[nameProperty][namePropertyField]}" />
+				</p:column>
+
+
+
+
+				<ui:insert name="columns">columns</ui:insert>
+
+
+
+
+				<!--	Version column -->
+				<c:set var="id" value="#{'versionColumn'}" />
+				<p:column id="#{id}" sortBy="#{dataset.version}" exportable="false"
+					toggleable="true"
+					style="width:60px !important; white-space:pre-line; overflow-wrap:break-word;"
+					visible="#{conf.displayConfig.showManageDatasetVersion}">
+
+					<!--	COLUMN HEADER -->
+					<f:facet name="header">
+						<h:outputText id="#{id}HeaderText"
+							value="#{i18n['admin.proc.version']}"
+							styleClass="ui-column-title" />
+					</f:facet>
+
+					<!--	COLUMN CONTENT -->
+					<h:outputText id="#{id}ContentVersion" value="#{dataset.version}" />
+				</p:column>
+
+
+
+
+				<!--	Most recent version column -->
+				<c:set var="id" value="#{'mostRecentColumn'}" />
+				<p:column id="#{id}" sortBy="#{dataset.mostRecentVersion}"
+					filterBy="#{dataset.mostRecentVersion}" filterMatchMode="exact"
+					exportable="true" toggleable="true"
+					style="width:55px !important; white-space:pre-line; overflow-wrap:break-word;"
+					visible="#{conf.displayConfig.showManageDatasetMostRecentVersion}">
+
+					<!--	COLUMN HEADER -->
+					<f:facet name="header">
+						<h:outputText id="#{id}HeaderText"
+							value="#{i18n['admin.proc.mostrecent']}"
+							styleClass="ui-column-title" />
+					</f:facet>
+					<f:facet name="filter">
+						<p:selectOneMenu id="#{id}HeaderFilterSelectOneMenu"
+							onchange="PF('dataTable').filter();"
+							style="width:32px !important">
+							<f:converter converterId="javax.faces.Boolean" />
+							<f:selectItem id="#{id}FilterItemAll"
+								itemLabel="#{i18n['common.list.mostrecentversiononly.all']}"
+								itemValue="#{null}" />
+							<f:selectItem id="#{id}FilterItemTrue"
+								itemLabel="#{i18n['common.list.mostrecentversiononly.true']}"
+								itemValue="#{true}" />
+							<f:selectItem id="#{id}FilterItemFalse"
+								itemLabel="#{i18n['common.list.mostrecentversiononly.false']}"
+								itemValue="#{false}" />
+						</p:selectOneMenu>
+					</f:facet>
+
+					<!--	COLUMN CONTENT -->
+					<h:outputText id="#{id}ContentBoolean"
+						value="#{dataset.mostRecentVersion.toString()}" />
+				</p:column>
+
+
+
+
+				<!--	Root stock column. -->
+				<c:set var="id" value="#{'rootStockColumn'}" />
+				<p:column id="#{id}" sortBy="#{dataset.rootDataStock.name}"
+					filterBy="#{dataset.rootDataStock.name}" exportable="false"
+					toggleable="true"
+					style="width:130px !important; white-space:pre-line; overflow-wrap:break-word;"
+					visible="#{conf.displayConfig.showManageDatasetRootStock}">
+
+					<!-- 	COLUMN HEADER -->
+					<f:facet name="header">
+						<h:outputText id="#{id}HeaderText"
+							value="#{i18n['admin.stock.root']}" styleClass="ui-column-title" />
+					</f:facet>
+					<f:facet name="filter">
+						<p:selectOneMenu id="#{id}HeaderFilterSelectOneMenu"
+							onchange="PF('dataTable').filter()" style="width:82px">
+							<f:selectItem
+								itemLabel="#{i18n['public.proc.list.filter.selectone']}"
+								itemValue="#{null}" noSelectionOption="true" />
+							<f:selectItems value="#{backingBean.stockHandler.rootDataStocks}" />
+						</p:selectOneMenu>
+					</f:facet>
+
+					<!-- 	COLUMN CONTENT -->
+					<h:outputLink id="#{id}ContentLink" value="#"
+						title="#{dataset.rootDataStock.longTitle.defaultValue}"
+						styleClass="ui-datatable-data tr"
+						style="color:inherit; text-decoration:underline;">
+						<h:outputText id="#{id}ContentName"
+							value="#{dataset.rootDataStock.name}" />
+					</h:outputLink>
+				</p:column>
+				<!-- 	Only for XLS export -->
+				<!-- 	(because export can't handle h:outputLink) -->
+				<p:column headerText="#{i18n['admin.stock.root']}" visible="false"
+					exportable="true" toggleable="false">
+					<h:outputText value="#{dataset.rootDataStock.name}" />
+				</p:column>
+
+
+
+
+				<!-- 	Containing data stocks column -->
+				<c:set var="id" value="#{'containingDataStocksColumn'}" />
+				<p:column id="#{id}" exportable="true" toggleable="true"
+					style="width:130px !important; white-space:pre-line; overflow-wrap:break-word;"
+					filterBy="#{'containingDataStocksColFilter'}"
+					visible="#{conf.displayConfig.showManageDatasetContainedIn and lazyDataModel.getClass().name.endsWith('AdminLazyDataModel')}"
+					exportFunction="#{stringify.toSimpleList(dataset.containingDataStocksSorted, stock -> stock.name)}">
+
+					<!-- 	COLUMN HEADER -->
+					<f:facet name="header">
+						<h:outputText id="#{id}HeaderText"
+							value="#{i18n['admin.stock.containedIn']}"
+							styleClass="ui-column-title" />
+					</f:facet>
+					<f:facet name="filter">
+						<p:selectCheckboxMenu id="#{id}HeaderFilterSelectOneMenu"
+											  label="#{i18n['public.proc.list.filter.select']}"
+											  onchange="PF('dataTable').filter()" style="width:82px">
+							<f:selectItems value="#{backingBean.stockHandler.visibleLogicalDataStockMDs}" var="md"
+										   itemLabel="#{md.name}" itemValue="#{md.id}"/>
+						</p:selectCheckboxMenu>
+					</f:facet>
+
+					<!--	COLUMN CONTENT -->
+					<ui:repeat id="#{id}ContentList"
+						value="#{dataset.containingDataStocksSorted.toArray()}" var="stock">
+						<ui:fragment
+							rendered="#{stock.name ne dataset.rootDataStock.name}">
+							<h:outputLink id="Link" value="#"
+								title="#{stock.longTitle.defaultValue}"
+								styleClass="ui-datatable-data tr"
+								style="color:inherit; text-decoration:underline;">
+								<h:outputText id="Name" value="#{stock.name}" />
+								<br />
+							</h:outputLink>
+						</ui:fragment>
+					</ui:repeat>
+				</p:column>
+
+
+
+
+				<!-- 	Import Date Column -->
+				<!-- 	Can't be toggleable because of the tooltip in the header. -->
+				<c:set var="id" value="#{'importDateColumn'}" />
+				<p:column id="#{id}" sortBy="#{dataset.importDate}"
+					filterBy="#{dataset.importDate}" exportable="false"
+					toggleable="false"
+					style="width:100px; white-space:pre-line; overflow-wrap:break-word;"
+					visible="#{conf.displayConfig.showManageDatasetImportDate}">
+
+					<!-- 	HEADER -->
+					<f:facet name="header">
+						<h:outputText id="#{id}HeaderText"
+							value="#{i18n['common.importDate']}" styleClass="ui-column-title" />
+							
+						<!-- The tooltip for the filter may not be placed anywhere but here. -->
+						<!-- Otherwise it is either not shown or interaction with any (!) filter breaks the view. -->
+						<p:tooltip escape="false"
+							value="#{i18n['common.importDate.tooltip']} &lt;br /&gt;
+								#{i18n['common.importDate.tooltip.byYear']} &lt;br /&gt;
+								#{i18n['common.importDate.tooltip.byMonth']} &lt;br /&gt;
+								#{i18n['common.importDate.tooltip.byDay']} &lt;br /&gt;
+								#{i18n['common.importDate.tooltip.description']}"
+							for="#{id}HeaderFilterInput" />
+					</f:facet>
+					<f:facet name="filter">
+						<p:inputText id="#{id}HeaderFilterInput"
+							style="width:80px !important"
+							onkeyup="PF('dataTable').filter();" />
+					</f:facet>
+
+					<!--	COLUMN CONTENT -->
+					<h:outputText id="#{id}ContentDate" value="#{dataset.importDate}">
+						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+					</h:outputText>
+				</p:column>
+				<!--	Only for exports, -->
+				<!--	because export can't handle p:tooltip -->
+				<p:column visible="false" headerText="#{i18n['common.importDate']}"
+					exportable="true" toggleable="false">
+					<h:outputText value="#{dataset.importDate}">
+						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+					</h:outputText>
+				</p:column>
+
+
+			</p:dataTable>
+		</div>
+	</div>
+
+</ui:composition>

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <tag ID="1" name="pre-existingTag" description="This tag has already been assigned to a process."/>
+  <tag ID="2" name="existingTag" description="This tag exists."/>
+  <process_tag process_ID="4" tag_ID="1" />
+  <stock_access_right ID="30" access_right_type="User" stock_id="2" ug_id="8" value="919"/>
+ </dataset>

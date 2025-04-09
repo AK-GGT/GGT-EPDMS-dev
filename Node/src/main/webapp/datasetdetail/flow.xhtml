@@ -1,0 +1,359 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+Parameters for this composition:
+	via ui:param:
+		flowHandler
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	template="./datasetTemplateDetailView.xhtml">
+	
+	<ui:param name="dataset" value="#{flowHandler.flow}" />
+	<ui:param name="flow" value="#{flowHandler.flow}" />
+	<ui:param name="xmlFlowInfo" value="#{flowHandler.xmlDataset.flowInformation}" />
+	<ui:param name="lang" value="#{localeBean.locale.language}" />
+	<ui:param name="pageTitleDatasetName" value="#{flow.name.getValueWithFallback(lang)}" />
+	<ui:param name="pageTitleDatasetType" value="#{flow.elementaryFlow ? i18n['common.elementaryFlow'] : i18n['common.productFlow']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+
+	<ui:define name="content">
+		<p:accordionPanel id="accPanel" multiple="true" widgetVar="accPanelWidget" activeIndex="0,1,2,3">
+			<!-- section -->
+			<p:tab title="#{i18n['common.flow']}#{i18n['delimiter']}#{i18n['common.info']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+				<div role="region" aria-label="#{i18n['common.flow']}#{i18n['delimiter']}#{i18n['common.info']}">
+					<p:panelGrid>
+						<!-- subsection -->
+						<p:row>
+							<p:column colspan="2" styleClass="ui-state-hover">
+								#{i18n['public.dataset']}#{i18n['delimiter']}#{i18n['common.info']}
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="name"
+									outputTextValue="#{i18n['common.name']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.name']}" />
+							</p:column>
+							<p:column>
+								#{flow.name.getValueWithFallback(lang)}
+							</p:column>
+						</p:row>
+						<p:row rendered="#{not empty flow.synonyms.getValueWithFallback(lang)}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="synonyms"
+									outputTextValue="#{i18n['public.dataset.synonyms']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.synonyms']}" />
+							</p:column>
+							<p:column>
+								#{flow.synonyms.getValueWithFallback(lang)}
+							</p:column>
+						</p:row>
+						<p:row rendered="#{not empty xmlFlowInfo.dataSetInformation.classificationInformation.classification or not empty xmlFlowInfo.dataSetInformation.classificationInformation.elementaryFlowCategorization}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="classification"
+									outputTextValue="#{i18n['common.dataset.classif']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.classification']}" />
+							</p:column>
+							<p:column>
+								<div>
+									<soda:outputTextTooltip
+										outputTextId="className"
+										outputTextValue="#{i18n['common.className']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.className']}"
+										inline="true" />
+									<h:outputText value=": " />
+									<soda:outputTextTooltip
+										outputTextId="classLevel"
+										outputTextValue="#{i18n['common.hierarchyLevel']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.classLevel']}"
+										inline="true" />
+								</div>
+								<soda:dataListStyled dataListValue="#{xmlFlowInfo.dataSetInformation.classificationInformation.classification}">
+									<ui:param name="flowClass" value="#{dataListStyledVar}" />
+									#{flowClass.name}:
+									<ui:repeat value="#{flowClass.clazz}" var="clazz" varStatus="clazzStatus">
+										#{clazz.value}
+										<h:outputText value=" / " rendered="#{not clazzStatus.last}" />
+									</ui:repeat>
+								</soda:dataListStyled>
+								<soda:dataListStyled dataListValue="#{xmlFlowInfo.dataSetInformation.classificationInformation.elementaryFlowCategorization}">
+									<ui:param name="flowCat" value="#{dataListStyledVar}" />
+									#{flowCat.name}:
+									<ui:repeat value="#{flowCat.category}" var="cat" varStatus="catStatus">
+										#{cat.value}
+										<h:outputText value=" / " rendered="#{not catStatus.last}" />
+									</ui:repeat>
+								</soda:dataListStyled>
+							</p:column>
+						</p:row>
+						<p:row rendered="#{not empty flow.casNumber}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="CASNumber"
+									outputTextValue="#{i18n['public.flow.casNo']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.CASNumber']}" />
+							</p:column>
+							<p:column>
+								#{flow.casNumber}
+							</p:column>
+						</p:row>
+						<p:row rendered="#{not empty flow.ecNumber}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="ECNumber"
+									outputTextValue="#{i18n['public.flow.ecNo']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.ECNumber']}" />
+							</p:column>
+							<p:column>
+								#{flow.ecNumber}
+							</p:column>
+						</p:row>
+						<p:row rendered="#{not empty flow.sumFormula}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="sumFormula"
+									outputTextValue="#{i18n['public.flow.sumFormula']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.sumFormula']}" />
+							</p:column>
+							<p:column>
+								#{flow.sumFormula}
+							</p:column>
+						</p:row>
+						<p:row rendered="#{not empty flow.description.getValueWithFallback(lang)}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="generalComment"
+									outputTextValue="#{i18n['public.dataset.comment']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.generalComment']}" />
+							</p:column>
+							<p:column>
+								#{flow.description.getValueWithFallback(lang)}
+							</p:column>
+						</p:row>
+
+						<h:panelGroup rendered="#{flow.type eq 'PRODUCT_FLOW'}">
+							<ui:insert name="product_isAReferences" />
+						</h:panelGroup>
+
+						<h:panelGroup rendered="#{flow.type eq 'PRODUCT_FLOW'}">
+							<ui:insert name="product_materialProperties" />
+						</h:panelGroup>
+
+						<!-- subsection -->
+						<p:row rendered="#{not empty flow.referenceFlowProperty.flowPropertyRef}">
+							<p:column colspan="2" styleClass="ui-state-hover">
+								#{i18n['common.quantitativeReference']}
+							</p:column>
+						</p:row>
+						<p:row rendered="#{not empty flow.referenceFlowProperty.flowPropertyRef}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="referenceToReferenceFlowProperty"
+									outputTextValue="#{i18n['public.flow.refFlowProperty']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.referenceToReferenceFlowProperty']}" />
+							</p:column>
+							<p:column>
+								<soda:switchLinkOrText
+									outputLinkValue="#{flowHandler.getReferenceUrl(flow.referenceFlowProperty.flowPropertyRef, url.flowProperty)}"
+									outputLinkTitle="#{i18n['common.flowProperty.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+									outputTextValue="#{flow.referenceFlowProperty.flowPropertyName.getValueWithFallback(lang)}"
+									outputTextValueUnit="#{flow.referenceFlowProperty.defaultUnit}" />
+							</p:column>
+						</p:row>
+						<!-- subsection -->
+						<p:row rendered="#{not empty flowHandler.getMultilangWithFallback(lang, xmlFlowInfo.geography.locationOfSupply).value}">
+							<p:column colspan="2" styleClass="ui-state-hover">
+								#{i18n['common.geography']}
+							</p:column>
+						</p:row>
+						<p:row rendered="#{not empty flowHandler.getMultilangWithFallback(lang, xmlFlowInfo.geography.locationOfSupply).value}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="locationOfSupply"
+									outputTextValue="#{i18n['common.locationSupply']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.locationOfSupply']}" />
+							</p:column>
+							<p:column>
+								#{flowHandler.getMultilangWithFallback(lang, xmlFlowInfo.geography.locationOfSupply).value}
+							</p:column>
+						</p:row>
+						<!-- subsection -->
+						<p:row rendered="#{not empty flowHandler.getMultilangWithFallback(lang, xmlFlowInfo.technology.technologicalApplicability).value} or not empty xmlFlowInfo.technology.referenceToTechnicalSpecification">
+							<p:column colspan="2" styleClass="ui-state-hover">
+								#{i18n['common.technologicalRepresentativeness']}
+							</p:column>
+						</p:row>
+						<p:row rendered="#{not empty flowHandler.getMultilangWithFallback(lang, xmlFlowInfo.technology.technologicalApplicability).value}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="technologicalApplicability"
+									outputTextValue="#{i18n['common.flow.technologicalApplicability']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.technologicalApplicability']}" />
+							</p:column>
+							<p:column>
+								#{flowHandler.getMultilangWithFallback(lang, xmlFlowInfo.technology.technologicalApplicability).value}
+							</p:column>
+						</p:row>
+						<p:row rendered="#{not empty xmlFlowInfo.technology.referenceToTechnicalSpecification}">
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="referenceToTechnicalSpecification"
+									outputTextValue="#{i18n['common.referenceToTechnicalSpecification']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.referenceToTechnicalSpecification']}" />
+							</p:column>
+							<p:column>
+								<soda:dataListStyled dataListValue="#{xmlFlowInfo.technology.referenceToTechnicalSpecification}">
+									<ui:param name="ref" value="#{dataListStyledVar}" />
+									<soda:dataListLinkOrText
+										dataListValue="#{flowHandler.getMultilangWithFallback(lang, ref.shortDescription)}"
+										outputLinkValue="#{flowHandler.getReferenceUrlXml(ref, url.source)}"
+										outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+										repeatValue="#{ref.subReference}" />
+								</soda:dataListStyled>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+				</div>
+			</p:tab>
+			<!-- section -->
+			<p:tab title="#{i18n['common.modellingValidation']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+				<div role="region" aria-label="#{i18n['common.modellingValidation']}">
+					<p:panelGrid>
+						<!-- subsection -->
+						<p:row>
+							<p:column colspan="2" styleClass="ui-state-hover">
+								#{i18n['common.lciMethod']}
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column styleClass="ui-state-hover transp">
+								<soda:outputTextTooltip
+									outputTextId="typeOfDataSet"
+									outputTextValue="#{i18n['common.typeOfFlow']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.typeOfDataSet']}" />
+							</p:column>
+							<p:column>
+								#{flow.type.value}
+							</p:column>
+						</p:row>
+
+						<h:panelGroup rendered="#{flow.type eq 'PRODUCT_FLOW'}">
+							<ui:insert name="product_vendorSourceSpecific" />
+						</h:panelGroup>
+
+						<!-- subsection -->
+						<p:row rendered="#{not empty flowHandler.xmlDataset.modellingAndValidation.complianceDeclarations.compliance}">
+							<p:column colspan="2" styleClass="ui-state-hover">
+								#{i18n['public.proc.compliance.tooltip.headline']}
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<ui:include src="./include/compliance.xhtml">
+						<ui:param name="xmlCompliances" value="#{flowHandler.xmlDataset.modellingAndValidation.complianceDeclarations.compliance}" />
+						<ui:param name="handler" value="#{flowHandler}" />
+					</ui:include>
+				</div>
+			</p:tab>
+
+			<ui:include src="./include/tab_administrative.xhtml">
+				<ui:param name="dataset" value="#{flow}" />
+				<ui:param name="datasetHandler" value="#{flowHandler}" />
+				<ui:param name="datasetTitle" value="#{i18n['common.flow']}" />
+				<ui:param name="urlBeanDataset" value="#{url.flow}" />
+			</ui:include>
+			
+			<!-- section -->
+			<p:tab rendered="#{not empty flow.propertyDescriptions}" title="#{i18n['common.flowProperties']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+				<div role="region" aria-label="#{i18n['common.flowProperties']}">
+					<p:dataTable value="#{flow.propertyDescriptions.toArray()}" var="flowPropDesc" styleClass="lotsofcolumns">
+						<p:column headerText="#{i18n['common.flowProperty.wrapped']}">
+							<soda:switchLinkOrText
+								outputLinkValue="#{flowHandler.getReferenceUrl(flowPropDesc.flowPropertyRef, url.flowProperty)}"
+								outputLinkTitle="#{i18n['common.flowProperty.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+								outputTextValue="#{flowPropDesc.flowPropertyRef.shortDescription.getValueWithFallback(lang)}" />
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<soda:outputTextTooltip
+									outputTextId="meanValue"
+									outputTextValue="#{i18n['common.meanValue']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.meanValue']}" />
+							</f:facet>
+							#{flowPropDesc.meanValue}
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<soda:outputTextTooltip
+									outputTextId="minimumValue"
+									outputTextValue="#{i18n['common.minimumValue']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.minimumValue']}" />
+							</f:facet>
+							#{flowPropDesc.minValue}
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<soda:outputTextTooltip
+									outputTextId="maximumValue"
+									outputTextValue="#{i18n['common.maximumValue']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.maximumValue']}" />
+							</f:facet>
+							#{flowPropDesc.maxValue}
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<soda:outputTextTooltip
+									outputTextId="uncertaintyDistributionType"
+									outputTextValue="#{i18n['common.uncertaintyDistributionType.wrapped']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.uncertaintyDistributionType']}" />
+							</f:facet>
+							#{flowPropDesc.uncertaintyType}
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<soda:outputTextTooltip
+									outputTextId="relativeStandardDeviation95In"
+									outputTextValue="#{i18n['common.relativeStdDev.wrapped']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.dataset.relativeStandardDeviation95In']}" />
+							</f:facet>
+							#{flowPropDesc.standardDeviation} %
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<soda:outputTextTooltip
+									outputTextId="dataDerivationTypeStatus"
+									outputTextValue="#{i18n['common.dataDerivationTypeStatus.wrapped']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.dataDerivationTypeStatus']}" />
+							</f:facet>
+							#{flowPropDesc.derivationType}
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<soda:outputTextTooltip
+									outputTextId="flowPropDescGeneralComment"
+									outputTextValue="#{i18n['public.dataset.comment.wrapped']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.flow.generalComment']}" />
+							</f:facet>
+							#{flowPropDesc.description.getValueWithFallback(lang)}
+						</p:column>
+					</p:dataTable>
+				</div>
+			</p:tab>
+		</p:accordionPanel>
+		
+		<ui:fragment rendered="#{conf.displayConfig.showBackLinks}">
+			<ui:include src="./include/backLinks.xhtml">
+				<ui:param name="linkDetailOutcome" value="#{url.flow.getDetail(flow)}" />
+				<ui:param name="linkListOutcome" value="#{url.flow.getWrappedList(flow)}" />
+				<ui:param name="linkValue" value="#{flow.elementaryFlow ? i18n['common.elementaryFlow'] : i18n['common.productFlow']}" />
+			</ui:include>
+		</ui:fragment>
+	</ui:define>
+</ui:composition>

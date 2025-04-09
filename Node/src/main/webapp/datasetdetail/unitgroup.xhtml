@@ -1,0 +1,155 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp">
+	
+	<f:metadata>
+		<f:viewParam name="uuid" value="#{unitgroupHandler.dataSetUuidString}" />
+		<f:viewParam name="version" value="#{unitgroupHandler.dataSetVersionString}" />
+		<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{unitgroupHandler.postViewParamInit(true)}" />
+	</f:metadata>
+
+	<h:body>
+		<ui:composition template="./datasetTemplateDetailView.xhtml">
+			<ui:param name="dataset" value="#{unitgroupHandler.unitgroup}" />
+			<ui:param name="unitGroup" value="#{unitgroupHandler.unitgroup}" />
+			<ui:param name="xmlUnitGroupModelValid" value="#{unitgroupHandler.xmlDataset.modellingAndValidation}" />
+			<ui:param name="lang" value="#{localeBean.locale.language}" />
+			<ui:param name="pageTitleDatasetName" value="#{unitGroup.name.getValueWithFallback(lang)}" />
+			<ui:param name="pageTitleDatasetType" value="#{i18n['common.unitGroup.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+			<ui:define name="content">
+				<p:accordionPanel id="accPanel" multiple="true" widgetVar="accPanelWidget" activeIndex="0,1,2,3">
+					<!-- section -->
+					<p:tab title="#{i18n['common.unitGroup.inflected']}#{i18n['delimiter']}#{i18n['common.info']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+						<p:panelGrid>
+							<!-- subsection -->
+							<p:row>
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['public.dataset']}#{i18n['delimiter']}#{i18n['common.info']}
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="name"
+										outputTextValue="#{i18n['common.name']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.unitgroup.name']}" />
+								</p:column>
+								<p:column>
+									#{unitGroup.name.getValueWithFallback(lang)}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty unitgroupHandler.xmlDataset.unitGroupInformation.dataSetInformation.classificationInformation.classification}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="classification"
+										outputTextValue="#{i18n['common.dataset.classif']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.classification']}" />
+								</p:column>
+								<p:column>
+									<ui:include src="./include/classNameLevel.xhtml">
+										<ui:param name="xmlClassification" value="#{unitgroupHandler.xmlDataset.unitGroupInformation.dataSetInformation.classificationInformation.classification}" />
+									</ui:include>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty unitGroup.description.getValueWithFallback(lang)}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="generalComment"
+										outputTextValue="#{i18n['public.dataset.comment']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.unitgroup.generalComment']}" />
+								</p:column>
+								<p:column>
+									#{unitGroup.description.getValueWithFallback(lang)}
+								</p:column>
+							</p:row>
+							<!-- subsection -->
+							<p:row rendered="#{not empty unitGroup.defaultUnit}">
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.quantitativeReference']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty unitGroup.defaultUnit}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToReferenceUnit"
+										outputTextValue="#{i18n['common.dataset.defaultUnit']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.unitgroup.referenceToReferenceUnit']}" />
+								</p:column>
+								<p:column>
+									#{unitGroup.defaultUnit}
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:tab>
+					<!-- section -->
+					<p:tab rendered="#{not empty xmlUnitGroupModelValid}" title="#{i18n['common.modellingValidation']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+						<p:panelGrid rendered="#{not empty xmlUnitGroupModelValid.complianceDeclarations.compliance}">
+							<!-- subsection -->
+							<p:row>
+								<p:column styleClass="ui-state-hover">
+									#{i18n['public.proc.compliance.tooltip.headline']}
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						<ui:include src="./include/compliance.xhtml">
+							<ui:param name="xmlCompliances" value="#{xmlUnitGroupModelValid.complianceDeclarations.compliance}" />
+							<ui:param name="handler" value="#{unitgroupHandler}" />
+						</ui:include>
+					</p:tab>
+					<ui:include src="./include/tab_administrative.xhtml">
+						<ui:param name="dataset" value="#{unitGroup}" />
+						<ui:param name="datasetHandler" value="#{unitgroupHandler}" />
+						<ui:param name="datasetTitle" value="#{i18n['common.unitGroup.inflected']}" />
+						<ui:param name="urlBeanDataset" value="#{url.unitGroup}" />
+					</ui:include>
+					
+					<!-- section -->
+					<p:tab rendered="#{not empty unitGroup.unitsAsList}" title="#{i18n['common.units']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+						<p:dataTable value="#{unitGroup.unitsAsList}" var="unit">
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="unitName"
+										outputTextValue="#{i18n['common.name']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.unit.name']}" />
+								</f:facet>
+								#{unit.name}
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="unitMeanValue"
+										outputTextValue="#{i18n['common.meanValue']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.unit.meanValue']}" />
+								</f:facet>
+								#{unit.meanValue}
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="unitGeneralComment"
+										outputTextValue="#{i18n['common.comment']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.unit.generalComment']}" />
+								</f:facet>
+								#{unit.description.getValueWithFallback(lang)}
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+				</p:accordionPanel>
+				
+				<ui:fragment rendered="#{conf.displayConfig.showBackLinks}">
+					<ui:include src="./include/backLinks.xhtml">
+						<ui:param name="linkDetailOutcome" value="#{url.unitGroup.getDetail(unitGroup)}" />
+						<ui:param name="linkListOutcome" value="#{url.unitGroup.list}" />
+						<ui:param name="linkValue" value="#{i18n['common.unitGroup.inflected']}" />
+					</ui:include>
+				</ui:fragment>
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</html>

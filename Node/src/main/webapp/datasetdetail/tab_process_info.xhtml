@@ -1,0 +1,567 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+via ui:param:
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp">
+
+	<!-- section -->
+	<p:tab title="#{i18n['common.proc']}#{i18n['delimiter']}#{i18n['common.info']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+		<div role="region" aria-label="#{i18n['common.proc']}#{i18n['delimiter']}#{i18n['common.info']}">
+			<p:panelGrid>
+				<!-- subsection -->
+				<p:row>
+					<p:column colspan="2" styleClass="ui-state-hover">
+						#{i18n['common.dataSetInformation']}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty process.geography.location}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="location"
+							outputTextValue="#{i18n['common.dataset.location']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.location']}" />
+					</p:column>
+					<p:column>
+						#{process.geography.location}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty process.geography.description.getValueWithFallback(lang)}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="descriptionOfRestrictions"
+							outputTextValue="#{i18n['common.descriptionOfRestrictions']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.descriptionOfRestrictions']}" />
+					</p:column>
+					<p:column>
+						#{process.geography.description.getValueWithFallback(lang)}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty process.timeInformation.referenceYear}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="referenceYear"
+							outputTextValue="#{i18n['common.dataset.refYear']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.referenceYear']}" />
+					</p:column>
+					<p:column>
+						#{process.timeInformation.referenceYear}
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="name"
+							outputTextValue="#{i18n['common.name']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.name']}" />
+					</p:column>
+					<p:column>
+						<div>
+							<ui:fragment rendered="#{not (empty process.nameRoute.value and empty process.nameLocation.value and empty process.nameUnit.value)}">
+								<soda:outputTextTooltip
+									outputTextId="baseName"
+									outputTextValue="#{i18n['public.proc.baseName']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.process.baseName']}"
+									inline="true" />
+							</ui:fragment>
+							<ui:fragment rendered="#{not empty process.nameRoute.value}">
+								<soda:outputTextTooltip
+									outputTextId="treatmentStandardsRoutes"
+									outputTextValue="; #{i18n['public.proc.nameRoute']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.process.treatmentStandardsRoutes']}"
+									inline="true" />
+							</ui:fragment>
+							<ui:fragment rendered="#{not empty process.nameLocation.value}">
+								<soda:outputTextTooltip
+									outputTextId="mixAndLocationTypes"
+									outputTextValue="; #{i18n['public.proc.nameLocation']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.process.mixAndLocationTypes']}"
+									inline="true" />
+							</ui:fragment>
+							<ui:fragment rendered="#{not empty process.nameUnit.value}">
+								<soda:outputTextTooltip
+									outputTextId="functionalUnitFlowProperties"
+									outputTextValue="; #{i18n['public.proc.nameUnit']}"
+									tooltipValue="#{i18n['datasetdetail.tooltip.process.functionalUnitFlowProperties']}"
+									inline="true" />
+							</ui:fragment>
+						</div>
+						#{process.name.getValueWithFallback(lang)}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty xmlProcessInfo.dataSetInformation.identifierOfSubDataSet}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="identifierOfSubDataSet"
+							outputTextValue="Identifier of sub-data set"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.identifierOfSubDataSet']}" />
+					</p:column>
+					<p:column>
+						#{xmlProcessInfo.dataSetInformation.identifierOfSubDataSet}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty process.useAdvice.getValueWithFallback(lang)}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="useAdviceForDataSet"
+							outputTextValue="#{i18n['public.dataset.useAdvice']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.useAdviceForDataSet']}" />
+					</p:column>
+					<p:column styleClass="highlighted">
+						<h:outputText styleClass="preformatted" value="#{process.useAdvice.getValueWithFallback(lang)}"/>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessInfo.technology.technologicalApplicability).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="technologicalApplicability"
+							outputTextValue="#{i18n['common.proc.technologicalApplicability']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.technologicalApplicability']}" />
+					</p:column>
+					<p:column>
+						<h:outputText styleClass="preformatted" value="#{processHandler.getMultilangWithFallback(lang, xmlProcessInfo.technology.technologicalApplicability).value}"/>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty process.synonyms.getValueWithFallback(lang)}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="synonyms"
+							outputTextValue="#{i18n['public.dataset.synonyms']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.dataset.synonyms']}" />
+					</p:column>
+					<p:column>
+						#{process.synonyms.getValueWithFallback(lang)}
+					</p:column>
+				</p:row>
+
+				<ui:insert name="row_epd_classificationNumber" />
+
+				<p:row rendered="#{not empty xmlProcessInfo.dataSetInformation.complementingProcesses.referenceToComplementingProcess}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="complementingProcesses"
+							outputTextValue="#{i18n['common.complementingProcesses']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.complementingProcesses']}" />
+					</p:column>
+					<p:column>
+						<soda:dataListStyled dataListValue="#{xmlProcessInfo.dataSetInformation.complementingProcesses.referenceToComplementingProcess}">
+							<ui:param name="refProc" value="#{dataListStyledVar}" />
+							<soda:dataListLinkOrText
+								dataListValue="#{processHandler.getMultilangWithFallback(lang, refProc.shortDescription)}"
+								outputLinkValue="#{processHandler.getReferenceUrlXml(refProc, url.process)}"
+								outputLinkTitle="#{i18n['common.proc']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+						</soda:dataListStyled>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty xmlProcessInfo.dataSetInformation.classificationInformation.classification}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="classification"
+							outputTextValue="#{i18n['common.dataset.classif']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.dataset.classification']}" />
+					</p:column>
+					<p:column>
+						<ui:include src="./include/classNameLevel.xhtml">
+							<ui:param name="xmlClassification" value="#{xmlProcessInfo.dataSetInformation.classificationInformation.classification}" />
+						</ui:include>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty process.description.getValueWithFallback(lang)}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="generalComment"
+							outputTextValue="#{i18n['public.dataset.generalComment']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.generalComment']}" />
+					</p:column>
+					<p:column>
+						<h:outputText styleClass="preformatted" value="#{process.description.getValueWithFallback(lang)}"/>
+					</p:column>
+				</p:row>
+
+				<ui:insert name="row_epd_safetyMargins" />
+
+				<ui:insert name="row_epd_scenarios" />
+
+				<p:row rendered="#{not empty process.accessInformation.copyright}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="copyright"
+							outputTextValue="#{i18n['public.proc.copyright']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.dataset.copyright']}" />
+					</p:column>
+					<p:column>
+						#{process.accessInformation.copyright ? i18n['common.button.yes'] : i18n['common.button.no']}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getReferenceUrl(process.ownerReference, url.contact)}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="ownerReference"
+							outputTextValue="#{i18n['public.proc.owner']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToOwnershipOfDataSet']}" />
+					</p:column>
+					<p:column>
+						<soda:switchLinkOrText
+							outputLinkValue="#{processHandler.getReferenceUrl(process.ownerReference, url.contact)}"
+							outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+							outputTextValue="#{process.ownerReference.shortDescription.getValueWithFallback(lang)}" />
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty xmlProcessInfo.dataSetInformation.referenceToExternalDocumentation}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="referenceToExternalDocumentation"
+							outputTextValue="#{i18n['common.referenceToExternalDocumentation']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.referenceToExternalDocumentation']}" />
+					</p:column>
+					<p:column>
+						<soda:dataListStyled dataListValue="#{xmlProcessInfo.dataSetInformation.referenceToExternalDocumentation}">
+							<ui:param name="refExtDoc" value="#{dataListStyledVar}" />
+							<soda:dataListLinkOrText
+								dataListValue="#{processHandler.getMultilangWithFallback(lang, refExtDoc.shortDescription)}"
+								outputLinkValue="#{processHandler.getReferenceUrlXml(refExtDoc, url.source)}"
+								outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+								repeatValue="#{refExtDoc.subReference}" />
+						</soda:dataListStyled>
+					</p:column>
+				</p:row>
+
+				<p:row rendered="#{ processHandler.displaysContentDeclaration()}">
+					<p:column styleClass="ui-state-hover transp" style="font-style:bold !important;">
+						<h:outputText value="#{i18n['epd.contentDeclaration']}"/>
+					</p:column>
+					<p:column>
+						<p:treeTable id="cdTree" value="#{processHandler.getContentDeclarationRoot(lang)}" var="element"
+							style="table-layout:fixed; word-wrap: break-word; white-space:normal;">
+							<p:column  headerText="#{i18n['epd.contentDeclaration.name']}" style="width:20%; white-space:normal;">
+								<h:outputText value="#{element.name}"/>
+							</p:column>
+							<p:column headerText="#{i18n['epd.contentDeclaration.massPercentage']}" style="text-align:right;">
+								<h:outputText value="#{element.massPercentage}"/>
+							</p:column>
+							<p:column headerText="#{i18n['epd.contentDeclaration.mass']}" style="text-align:right">
+								<h:outputText value="#{element.mass}"/>
+							</p:column>
+							<p:column headerText="#{i18n['epd.contentDeclaration.renewable']}" style="text-align:right">
+								<h:outputText value="#{element.renewable}"/>
+							</p:column>
+							<p:column headerText="#{i18n['epd.contentDeclaration.recyclable']}" style="text-align:right">
+								<h:outputText value="#{element.recyclable}"/>
+							</p:column>
+							<p:column headerText="#{i18n['epd.contentDeclaration.recycled']}" style="text-align:right">
+								<h:outputText value="#{element.recycled}"/>
+							</p:column>
+							<p:column headerText="#{i18n['epd.contentDeclaration.casNumber']}" style="text-align:right;">
+								<h:outputText value="#{element.casNumber}"/>
+							</p:column>
+							<p:column headerText="#{i18n['epd.contentDeclaration.ecNumber']}" style="text-align:right">
+								<h:outputText value="#{element.ecNumber}"/>
+							</p:column>
+							<p:column headerText="#{i18n['epd.contentDeclaration.comment']}" style="width:13%; text-align:left; white-space:normal;">
+								<h:outputText value="#{element.comment}"/>
+							</p:column>
+						</p:treeTable>
+					</p:column>
+				</p:row>
+				<!-- subsection -->
+				<p:row rendered="#{not empty process.quantitativeReference.referenceFlows or not empty process.quantitativeReference.functionalUnit.getValueWithFallback(lang)}">
+					<p:column colspan="2" styleClass="ui-state-hover">
+						#{i18n['common.quantitativeReference']}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty process.quantitativeReference.referenceFlows}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="referenceToReferenceFlow"
+							outputTextValue="#{i18n['public.proc.refFlows']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.referenceToReferenceFlow']}" />
+					</p:column>
+					<p:column>
+						<soda:dataListStyled dataListValue="#{process.referenceExchanges}">
+							<ui:param name="refExchange" value="#{dataListStyledVar}" />
+							<soda:switchLinkOrText
+								outputLinkValue="#{processHandler.getReferenceUrl(refExchange.flowReference, url.flow)}"
+								outputLinkTitle="#{i18n['common.flow']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+								outputTextValue="#{refExchange.flowName.getValueWithFallback(lang)}" />
+							- #{refExchange.meanAmount} * #{processHandler.referenceProductFlowPropMeanAmount!=null ? processHandler.referenceProductFlowPropMeanAmount : '(not available)'} #{refExchange.referenceUnit}
+							<h:outputText rendered="#{not empty refExchange.flowPropertyName.getValueWithFallback(lang)}" value=" (#{refExchange.flowPropertyName.getValueWithFallback(lang)})" />
+							<p:row rendered="#{refExchange.flow.materialProperties.size() > 0}">
+								<p:column styleClass="ui-state-hover transp">
+									#{i18n['common.productFlow.materialPropertiesOfRefFlow']}
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{process.referenceExchanges}">
+										<ui:param name="refExchange" value="#{dataListStyledVar}" />
+										<p:dataList value="#{refExchange.flow.materialProperties.toArray()}" var="matProp" styleClass="#{refExchange.flow.materialProperties.size() == 1 ? 'ourDataListNoBullet' : 'ourDataList'}">
+											<h:outputText value="#{fn:startsWith(i18n[processHandler.getValueFromMatPropKey(matProp.definition.name)], '???') ? matProp.definition.name : i18n[processHandler.getValueFromMatPropKey(matProp.definition.name)] }: #{matProp.value} #{matProp.definition.unit}" />
+										</p:dataList>
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+						</soda:dataListStyled>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty process.getCarbogenics()}">
+					<p:column styleClass="ui-state-hover transp">
+						#{i18n['common.productFlow.biogenicCarbonContent']}
+					</p:column>
+					<p:column>
+						<p:dataList var="carbogenicExchange" value="#{process.getCarbogenics()}" styleClass="#{process.getCarbogenics().size() == 1 ? 'ourDataListNoBullet' : 'ourDataList'}">
+								<h:outputText value="#{carbogenicExchange.flowPropertyRef.shortDescription.getValueWithFallback(lang) }: #{empty carbogenicExchange.meanValue ? 'ND' : carbogenicExchange.meanValue} kg" />
+						</p:dataList>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty process.quantitativeReference.functionalUnit.getValueWithFallback(lang)}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="functionalUnitOrOther"
+							outputTextValue="#{i18n['public.proc.functionalUnit']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.functionalUnitOrOther']}" />
+					</p:column>
+					<p:column>
+						#{process.quantitativeReference.functionalUnit.getValueWithFallback(lang)}
+					</p:column>
+				</p:row>
+				<!-- subsection -->
+				<p:row rendered="#{not empty process.timeInformation.validUntil or not empty process.timeInformation.description.getValueWithFallback(lang)}">
+					<p:column colspan="2" styleClass="ui-state-hover">
+						#{i18n['common.timeRepresentativeness']}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty process.timeInformation.validUntil}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="dataSetValidUntil"
+							outputTextValue="#{i18n['common.dataSetValidUntil']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.dataSetValidUntil']}" />
+					</p:column>
+					<p:column>
+						#{process.timeInformation.validUntil}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty process.timeInformation.description.getValueWithFallback(lang)}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="timeRepresentativenessDescription"
+							outputTextValue="#{i18n['common.timeRepresentativenessDescription']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.timeRepresentativenessDescription']}" />
+					</p:column>
+					<p:column>
+						<h:outputText styleClass="preformatted" value="#{process.timeInformation.description.getValueWithFallback(lang)}"/>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{ (not empty processHandler.process.publicationDateOfEPD) and ( processHandler.isEPD()) }" >
+					<p:column styleClass="ui-state-hover transp">
+						<h:outputLabel>#{i18n['common.epd.publicationDate']}</h:outputLabel>
+					</p:column>
+					<p:column>
+						<h:outputLabel value="#{processHandler.process.publicationDateOfEPD}">
+							<f:convertDateTime pattern="MM-dd-yyyy"/>
+						</h:outputLabel>
+					</p:column>
+				</p:row>
+				<!-- subsection -->
+				<p:row rendered="#{not empty xmlProcessInfo.geography.subLocationOfOperationSupplyOrProduction}">
+					<p:column colspan="2" styleClass="ui-state-hover">
+						#{i18n['common.geographicalRepresentativeness']}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty xmlProcessInfo.geography.subLocationOfOperationSupplyOrProduction}">
+					<p:column colspan="2">
+						<p:dataTable value="#{xmlProcessInfo.geography.subLocationOfOperationSupplyOrProduction}" var="subLocation">
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="sublocation"
+										outputTextValue="#{i18n['common.sublocation']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.process.subLocation']}" />
+								</f:facet>
+								#{subLocation.subLocation}
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="descriptionOfRestrictions2"
+										outputTextValue="#{i18n['common.descriptionOfRestrictions']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.process.descriptionOfRestrictions']}" />
+								</f:facet>
+								<h:outputText styleClass="preformatted" value="#{processHandler.getMultilangWithFallback(lang, subLocation.descriptionOfRestrictions).value}"/>
+							</p:column>
+						</p:dataTable>
+					</p:column>
+				</p:row>
+				<!-- subsection -->
+				<p:row>
+					<p:column colspan="2" styleClass="ui-state-hover">
+						#{i18n['common.technologicalRepresentativeness']}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessInfo.technology.technologyDescriptionAndIncludedProcesses).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="technologyDescriptionAndIncludedProcesses"
+							outputTextValue="#{i18n['common.technologyDescriptionAndIncludedProcesses']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.technologyDescriptionAndIncludedProcesses']}" />
+					</p:column>
+					<p:column>
+						<h:outputText styleClass="preformatted" value="#{processHandler.getMultilangWithFallback(lang, xmlProcessInfo.technology.technologyDescriptionAndIncludedProcesses).value}"/>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty xmlProcessInfo.technology.referenceToIncludedProcesses}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="referenceToIncludedProcesses"
+							outputTextValue="#{i18n['common.referenceToIncludedProcesses']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.referenceToIncludedProcesses']}" />
+					</p:column>
+					<p:column>
+						<soda:dataListStyled dataListValue="#{xmlProcessInfo.technology.referenceToIncludedProcesses}">
+							<ui:param name="refInclProc" value="#{dataListStyledVar}" />
+							<soda:dataListLinkOrText
+								dataListValue="#{processHandler.getMultilangWithFallback(lang, refInclProc.shortDescription)}"
+								outputLinkValue="#{processHandler.getReferenceUrlXml(refInclProc, url.process)}"
+								outputLinkTitle="#{i18n['common.proc']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+						</soda:dataListStyled>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessInfo.technology.referenceToTechnologyPictogramme.shortDescription)}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="referenceToTechnologyPictogramme"
+							outputTextValue="#{i18n['common.referenceToTechnologyPictogramme']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.referenceToTechnologyPictogramme']}" />
+					</p:column>
+					<p:column>
+						<soda:dataListLinkOrText
+							dataListValue="#{processHandler.getMultilangWithFallback(lang, xmlProcessInfo.technology.referenceToTechnologyPictogramme.shortDescription)}"
+							outputLinkValue="#{processHandler.getReferenceUrlXml(xmlProcessInfo.technology.referenceToTechnologyPictogramme, url.source)}"
+							outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty xmlProcessInfo.technology.referenceToTechnologyFlowDiagrammOrPicture}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="referenceToTechnologyFlowDiagrammOrPicture"
+							outputTextValue="#{i18n['common.referenceToTechnologyFlowDiagrammOrPicture']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.referenceToTechnologyFlowDiagrammOrPicture']}" />
+					</p:column>
+					<p:column>
+						<soda:dataListStyled dataListValue="#{xmlProcessInfo.technology.referenceToTechnologyFlowDiagrammOrPicture}">
+							<ui:param name="refDiaPic" value="#{dataListStyledVar}" />
+							<soda:graphicOrTextLinkList
+								dataListValue="#{processHandler.getMultilangWithFallback(lang, refDiaPic.shortDescription).value}"
+								outputLinkTitle="#{processHandler.getMultilangWithFallback(lang, refDiaPic.shortDescription).value}"
+								outputLinkValue="#{processHandler.getReferenceUrlXml(refDiaPic, url.source)}"
+								outputImage="#{processHandler.getDigitalFileUrlXml(refDiaPic, url.source)}" />
+						</soda:dataListStyled>
+					</p:column>
+				</p:row>
+				<!-- subsection -->
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessInfo.mathematicalRelations.modelDescription).value or not empty xmlProcessInfo.mathematicalRelations.variableParameter}">
+					<p:column colspan="2" styleClass="ui-state-hover">
+						#{i18n['common.mathematicalModel']}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessInfo.mathematicalRelations.modelDescription).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="modelDescription"
+							outputTextValue="#{i18n['common.modelDescription']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.modelDescription']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessInfo.mathematicalRelations.modelDescription).value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty xmlProcessInfo.mathematicalRelations.variableParameter}">
+					<p:column colspan="2">
+						<ui:fragment rendered="#{user.hasDatasetDetailRights(process)}">
+							<p:dataTable
+								value="#{xmlProcessInfo.mathematicalRelations.variableParameter}"
+								var="varPar" styleClass="lotsofcolumns">
+								<p:column>
+									<f:facet name="header">
+										<soda:outputTextTooltip outputTextId="variableParameter"
+											outputTextValue="#{i18n['common.variableParameter']}"
+											tooltipValue="#{i18n['datasetdetail.tooltip.process.variableParameter']}" />
+									</f:facet>
+										#{varPar.name}
+									</p:column>
+								<p:column>
+									<f:facet name="header">
+										<soda:outputTextTooltip outputTextId="formula"
+											outputTextValue="#{i18n['common.formula']}"
+											tooltipValue="#{i18n['datasetdetail.tooltip.process.formula']}" />
+									</f:facet>
+										#{varPar.formula}
+									</p:column>
+								<p:column>
+									<f:facet name="header">
+										<soda:outputTextTooltip outputTextId="meanValue"
+											outputTextValue="#{i18n['common.meanValue']}"
+											tooltipValue="#{i18n['datasetdetail.tooltip.process.meanValue']}" />
+									</f:facet>
+										#{varPar.meanValue}
+									</p:column>
+								<p:column>
+									<f:facet name="header">
+										<soda:outputTextTooltip outputTextId="minimumValue"
+											outputTextValue="#{i18n['common.minimumValue.wrapped']}"
+											tooltipValue="#{i18n['datasetdetail.tooltip.process.minimumValue']}" />
+									</f:facet>
+										#{varPar.minimumValue}
+									</p:column>
+								<p:column>
+									<f:facet name="header">
+										<soda:outputTextTooltip outputTextId="maximumValue"
+											outputTextValue="#{i18n['common.maximumValue.wrapped']}"
+											tooltipValue="#{i18n['datasetdetail.tooltip.process.maximumValue']}" />
+									</f:facet>
+										#{varPar.maximumValue}
+									</p:column>
+								<p:column>
+									<f:facet name="header">
+										<soda:outputTextTooltip
+											outputTextId="uncertaintyDistributionType"
+											outputTextValue="#{i18n['common.uncertaintyDistributionType.wrapped']}"
+											tooltipValue="#{i18n['datasetdetail.tooltip.process.uncertaintyDistributionType']}" />
+									</f:facet>
+										#{varPar.uncertaintyDistributionType}
+									</p:column>
+								<p:column>
+									<f:facet name="header">
+										<soda:outputTextTooltip
+											outputTextId="relativeStandardDeviation95In"
+											outputTextValue="#{i18n['common.relativeStdDev.wrapped']}"
+											tooltipValue="#{i18n['datasetdetail.tooltip.dataset.relativeStandardDeviation95In']}" />
+									</f:facet>
+										#{varPar.relativeStandardDeviation95In} %
+									</p:column>
+								<p:column>
+									<f:facet name="header">
+										<soda:outputTextTooltip outputTextId="generalComment"
+											outputTextValue="#{i18n['public.dataset.comment.wrapped']}"
+											tooltipValue="#{i18n['datasetdetail.tooltip.process.generalComment']}" />
+									</f:facet>
+										<h:outputText styleClass="preformatted" value="#{processHandler.getMultilangWithFallback(lang, varPar.comment).value}"/>
+								</p:column>
+							</p:dataTable>
+						</ui:fragment>
+						<ui:fragment rendered="#{!user.hasDatasetDetailRights(process)}">
+							<h:outputText value="#{i18n['common.accessRestrictedMetadataOnly.info']} " styleClass="ui-state-error" />
+							<h:outputLink value="/registration.xhtml" rendered="#{conf.registrationActivated}">
+								<h:outputText value="#{i18n['common.accessRestrictedMetadataOnly.register']}" styleClass="ui-state-error" />
+							</h:outputLink>
+							<h:outputText value="#{i18n['common.accessRestrictedMetadataOnly.vendor']}" styleClass="ui-state-error" rendered="#{!conf.registrationActivated}" />
+						</ui:fragment>
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</div>
+	</p:tab>
+</ui:composition>

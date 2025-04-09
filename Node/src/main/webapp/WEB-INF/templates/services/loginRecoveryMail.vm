@@ -1,0 +1,22 @@
+<html>
+<head><title></title></head>
+<body>
+<p>
+#if ( "$!user.getFirstName()" == "" and "$!user.getLastName()" == "" )
+	Dear user,<br/>
+#else
+	Dear $user.getFirstName() $user.getLastName(),<br/>
+#end
+<br/>
+someone (probably you) has requested to retrieve your login name at $siteName . Please find it below.</p>
+<p>
+<b>Login</b>: $user.getUserName()<br/>
+</p>
+<p>
+You can change your profile information after logging in using the "My profile" menu item.
+</p>
+<p>
+Your $siteName team
+</p>
+</body>
+</html>

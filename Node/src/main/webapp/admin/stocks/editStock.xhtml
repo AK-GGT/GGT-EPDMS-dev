@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+      
+	<f:metadata>
+		<f:viewParam name="stockId" value="#{stockHandler.entryIdString}" />
+		<f:viewParam name="tabId" value="#{stockHandler.activeTabIndex}" />
+		<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{stockHandler.postViewParamInit}" />
+        <f:event type="javax.faces.event.PreRenderViewEvent" listener="#{stockHandler.displayCachedMessage}"/>
+	</f:metadata>
+	
+    <h:body>
+        <ui:composition template="/admin/layout/adminDesign.xhtml">
+            <ui:param name="pageTitle" value="#{stockHandler.entry.root ? i18n['admin.rootStock.edit'] : i18n['admin.stock.edit']}: #{stockHandler.entry.name} #{stockHandler.entry.longTitle.defaultValue ne '' ?  '('.concat(stockHandler.entry.longTitle.defaultValue).concat(')') : '' }" />
+            <ui:define name="content">
+                <p>#{i18n['common.mandatoryFields']}</p>
+                <h:form id="generalForm" prependId="false">
+
+                    <ui:include src="/messages.xhtml" />
+                    
+                    <ui:include src="include/stockEntry.xhtml">
+                    	<ui:param name="stock" value="#{stockHandler.entry}" />
+                    	<ui:param name="sHandler" value="#{stockHandler}" />
+                    	<ui:param name="renderDataTabView" value="true" />
+                    	<ui:param name="tabId" value="#{stockHandler.activeTabIndex}" />
+                    	<ui:param name="forceDs" value="#{stockHandler.entry.name}" />
+                    </ui:include>
+
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

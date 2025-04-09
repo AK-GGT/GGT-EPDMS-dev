@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:body>
+	<ui:composition template="/admin/layout/adminDesign.xhtml">
+		<ui:param name="pageTitle" value="#{i18n['admin.compareDatasets']}" />
+		<ui:param name="lang" value="#{localeBean.locale.language}" />
+		<ui:define name="content">
+			<style type="text/css">
+				#compareDatasetsTable td {
+					vertical-align: top;
+				}
+			</style>
+			<h:form prependId="false">
+				<p:panelGrid id="compareDatasetsTable">
+					<!-- Selection of data stocks -->
+					<p:row>
+						<p:column style="vertical-align:middle">
+							<p:outputLabel value="#{i18n['common.stock']}:" for="selectTargetDataStock" />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu id="selectTargetDataStock" value="#{pqaSelHandler.target.selectedDsMetaName}">
+								<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+								<f:selectItems value="#{availableStocks.allStocksMeta}" var="stock" itemLabel="#{stock.name}" itemValue="#{stock.name}" />
+								<p:ajax update="@form" listener="#{pqaSelHandler.targetDatastockSelected}"/>
+							</p:selectOneMenu>
+						</p:column>
+						<p:column style="vertical-align:middle">
+							<p:outputLabel value="#{i18n['common.stock']}:" for="selectChoiceDataStock" />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu id="selectChoiceDataStock" value="#{pqaSelHandler.choice.selectedDsMetaName}" disabled="#{empty pqaSelHandler.target.selectedProcess}">
+								<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+								<f:selectItems value="#{availableStocks.allStocksMeta}" var="stock" itemLabel="#{stock.name}" itemValue="#{stock.name}" />
+								<p:ajax update="@form" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:row>
+					<!-- Selection of data sets -->
+					<p:row>
+						<p:column style="vertical-align:middle">
+							<p:outputLabel value="#{i18n['public.dataset']} A:" for="selectTargetDataSet" />
+						</p:column>
+						<p:column style="width:300px">
+							<p:autoComplete id="selectTargetDataSet" value="#{pqaSelHandler.target.selectedProcess}" dropdown="true" completeMethod="#{pqaSelHandler.target.completeProcesses}" var="ds"
+								itemLabel="#{pqaSelHandler.getLStrWithFallback(lang,ds.baseName).value}" itemValue="#{ds}" converter="processConverter" forceSelection="true" panelStyle="width:400px" size="30"
+								scrollHeight="200" disabled="#{empty pqaSelHandler.target.processes}">
+								<p:ajax event="itemSelect" listener="#{pqaSelHandler.targetProcessSelected}" update="@form" />
+							</p:autoComplete>
+						</p:column>
+						<p:column style="vertical-align:middle">
+							<p:outputLabel value="#{i18n['public.dataset']} B:" for="selectChoiceDataSet" />
+						</p:column>
+						<p:column style="width:300px">
+							<p:autoComplete id="selectChoiceDataSet" value="#{pqaSelHandler.choice.selectedProcess}" dropdown="true" completeMethod="#{pqaSelHandler.choice.completeProcesses}" var="ds"
+								itemLabel="#{pqaSelHandler.getLStrWithFallback(lang,ds.baseName).value}" itemValue="#{ds}" converter="processConverter" forceSelection="true" panelStyle="width:400px" size="30"
+								scrollHeight="200" disabled="#{empty pqaSelHandler.target.selectedProcess or empty pqaSelHandler.choice.processes}">
+								<p:ajax event="itemSelect" update="@form" />
+							</p:autoComplete>
+						</p:column>
+					</p:row>
+					<!-- Selection of versions -->
+					<p:row>
+						<p:column style="vertical-align:middle">
+							<p:outputLabel value="#{i18n['public.proc.datasetVersion']}:" for="selectTargetDataSetVersion" />
+						</p:column>
+						<p:column style="width:300px">
+							<p:selectOneMenu id="selectTargetDataSetVersion" value="#{pqaSelHandler.target.selectedProcess}" converter="processConverter">
+								<f:selectItems value="#{pqaSelHandler.target.availableVersions}" var="p" itemLabel="#{p.dataSetVersion}" itemValue="#{p}" />
+								<p:ajax update="@form" />
+							</p:selectOneMenu>						
+						</p:column>
+						<p:column style="vertical-align:middle">
+							<p:outputLabel value="#{i18n['public.proc.datasetVersion']}:" for="selectChoiceDataSetVersion" />
+						</p:column>
+						<p:column style="width:300px">
+							<p:selectOneMenu id="selectChoiceDataSetVersion" value="#{pqaSelHandler.choice.selectedProcess}" converter="processConverter">
+								<f:selectItems value="#{pqaSelHandler.choice.availableVersions}" var="p" itemLabel="#{p.dataSetVersion}" itemValue="#{p}" />
+								<p:ajax update="@form" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:row>
+					<!-- Display category -->
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{i18n['public.dataset.cat']}:" for="selectTargetDataSetCategory" />&nbsp;
+						</p:column>
+						<p:column>
+							 <h:panelGrid id="selectTargetDataSetCategory" columns="1">
+								<h:outputText value="#{pqaSelHandler.target.selectedProcess.classification.name}" />
+								<h:outputText value="#{pqaSelHandler.target.selectedProcess.classification.classHierarchyAsString}" />
+							</h:panelGrid>
+						</p:column>
+						<p:column>
+							<p:outputLabel value="#{i18n['public.dataset.cat']}:" />
+						</p:column>
+						<p:column>
+							<p:outputPanel id="selectChoiceDataSetCategory">
+								<ui:repeat var="sel" value="#{pqaSelHandler.categorySelections}">
+									<p:selectOneMenu value="#{sel.selected}">
+										<f:selectItem itemLabel="------" noSelectionValue="true" />
+										<f:selectItems value="#{sel.items}"/>
+										<p:ajax update="@form" listener="#{sel.postSelection}"/>
+									</p:selectOneMenu>
+									<br />
+								</ui:repeat>
+							</p:outputPanel>
+						</p:column>
+					</p:row>
+					<!-- display reference values and material properties, if any -->
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{i18n['admin.referenceValue']}" for="refUnitTarget" />
+						</p:column>
+						<p:column>
+							<p:dataList id="refUnitTarget" value="#{pqaSelHandler.target.refFlowsMeta}" styleClass="ourDataListNoBullet" var="refFlowMeta" emptyMessage="">
+								#{pqaSelHandler.getLStrWithFallback(lang,refFlowMeta.refFlow.flowName).value} - #{refFlowMeta.refFlow.meanValue} #{refFlowMeta.refFlow.unit} (#{pqaSelHandler.getLStrWithFallback(lang,refFlowMeta.refFlow.flowPropertyName).value})
+								<div style="padding:10px">
+									<h:outputText rendered="#{not empty refFlowMeta.matProps}" value="#{i18n['common.productFlow.materialProperties']}:" />
+									<p:dataList rendered="#{not empty refFlowMeta.matProps}" value="#{refFlowMeta.matProps.toArray()}" var="matProp" styleClass="#{refFlowMeta.matProps.size() == 1 ? 'ourDataListNoBullet' : 'ourDataList'}">
+										#{i18n[pqaSelHandler.getValueFromMatPropKey(matProp.definition.name)]}: #{matProp.value} #{matProp.definition.unit}
+									</p:dataList>
+								</div>
+							</p:dataList>
+						</p:column>
+						<p:column>
+							<p:outputLabel value="#{i18n['admin.referenceValue']}" for="refUnitChoice" />
+						</p:column>
+						<p:column>
+							<p:dataList id="refUnitChoice" value="#{pqaSelHandler.choice.refFlowsMeta}" styleClass="ourDataListNoBullet" var="refFlowMeta" emptyMessage="">
+								#{pqaSelHandler.getLStrWithFallback(lang,refFlowMeta.refFlow.flowName).value} - #{refFlowMeta.refFlow.meanValue} #{refFlowMeta.refFlow.unit} (#{pqaSelHandler.getLStrWithFallback(lang,refFlowMeta.refFlow.flowPropertyName).value})
+								<div style="padding:10px">
+									<h:outputText rendered="#{not empty refFlowMeta.matProps}" value="#{i18n['common.productFlow.materialProperties']}:"/>
+									<p:dataList rendered="#{not empty refFlowMeta.matProps}" value="#{refFlowMeta.matProps.toArray()}" var="matProp" styleClass="#{refFlowMeta.matProps.size() == 1 ? 'ourDataListNoBullet' : 'ourDataList'}">
+										#{i18n[pqaSelHandler.getValueFromMatPropKey(matProp.definition.name)]}: #{matProp.value} #{matProp.definition.unit}
+									</p:dataList>
+								</div>
+							</p:dataList>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				
+				<div class="buttonLeft">
+					<p:commandButton id="compareBtn" value="#{i18n['admin.button.startComparingDatasets']}" ajax="false" action="#{pqaSelHandler.startCompare}" disabled="#{empty pqaSelHandler.target.selectedProcess}" />
+				</div>
+				
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

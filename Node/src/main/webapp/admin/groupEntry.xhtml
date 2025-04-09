@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:shiro="http://shiro.apache.org/tags"
+      xmlns:pe="http://primefaces.org/ui/extensions">
+    <ui:composition>
+        <p:panel header="#{i18n['admin.group.nameOrgInfo']}">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{i18n['admin.group.name']}:" for="groupName" />
+                <p:inputText id="groupName"
+                             value="#{groupHandler.group.groupName}"
+                             maxlength="80"
+                             required="true"
+                             requiredMessage="#{i18n['admin.group.requiredMsg.name']}"
+                             size="20" />
+                             
+                <shiro:hasPermission name="*:*:*">
+                    <p:outputLabel for="org" value="#{i18n['admin.org']}:" />
+                    <p:selectOneMenu id="org" value="#{groupHandler.group.organization}" converter="orgConverter">
+                        <f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+                        <f:selectItems value="#{groupHandler.allOrganizations}" var="o" itemLabel="#{o.name}" itemValue="#{o}" />
+                    </p:selectOneMenu>
+                </shiro:hasPermission>
+                <shiro:lacksPermission name="*:*:*">
+                    <p:outputLabel for="org" value="#{i18n['admin.org']}:" />
+                    <h:outputText id="org" value="#{groupHandler.group.organization.name}" />
+                </shiro:lacksPermission>
+            </h:panelGrid>
+        </p:panel>
+        <p:panel header="#{i18n['admin.assigningUsers']} #{i18n['admin.toThisGroup']}" rendered="#{not groupHandler.createView}">
+            <p:pickList value="#{groupHandler.dualUserAssignmentList}"
+                        var="u" converter="userConverter"
+                        itemLabel="#{u.userName}"
+                        itemValue="#{u}"
+                        addLabel="#{i18n['common.picklist.add']}" addAllLabel="#{i18n['common.picklist.addAll']}"
+                        removeLabel="#{i18n['common.picklist.remove']}" removeAllLabel="#{i18n['common.picklist.removeAll']}">
+
+                <f:facet name="sourceCaption">#{i18n['admin.picklist.sourceUsers']}</f:facet>
+                <f:facet name="targetCaption">#{i18n['admin.picklist.targetUsers']}</f:facet>
+            </p:pickList>
+        </p:panel>
+    </ui:composition>
+</html>
+

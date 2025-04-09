@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp">
+
+	<f:metadata>
+		<f:viewParam name="uuid" value="#{pFlowHandler.dataSetUuidString}" />
+		<f:viewParam name="version" value="#{pFlowHandler.dataSetVersionString}" />
+		<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{pFlowHandler.postViewParamInit(true)}" />
+	</f:metadata>
+
+	<h:body>
+		<ui:decorate template="flow.xhtml">
+			<ui:param name="flowHandler" value="#{pFlowHandler}" />
+	
+			<ui:define name="product_vendorSourceSpecific">
+				<p:row rendered="#{flow.specificProduct}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip outputTextId="specificProduct" outputTextValue="EPD herstellerspezifisches Produkt"
+							tooltipValue="specificProduct" />
+					</p:column>
+					<p:column>
+						#{i18n['common.button.yes']}
+				</p:column>
+				</p:row>
+				<p:row rendered="#{not empty flow.vendorReference}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip outputTextId="vendorReference" outputTextValue="EPD Hersteller"
+							tooltipValue="vendorReference" />
+					</p:column>
+					<p:column>
+						<soda:switchLinkOrText outputLinkValue="#{flowHandler.getReferenceUrl(flow.vendorReference, url.contact)}"
+							outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+							outputTextValue="#{flow.vendorReference.shortDescription.getValueWithFallback(lang)}" />
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty flow.sourceReference}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip outputTextId="sourceReference" outputTextValue="EPD Quelle" tooltipValue="sourceReference" />
+					</p:column>
+					<p:column>
+						<soda:switchLinkOrText outputLinkValue="#{flowHandler.getReferenceUrl(flow.sourceReference, url.source)}"
+							outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+							outputTextValue="#{flow.sourceReference.shortDescription.getValueWithFallback(lang)}" />
+					</p:column>
+				</p:row>
+			</ui:define>
+	
+			<ui:define name="product_isAReferences">
+				<p:row rendered="#{not empty flow.isAReference}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip outputTextId="isA" outputTextValue="#{i18n['common.productFlow.isA']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.flow.isA']}" />
+					</p:column>
+					<p:column>
+						<soda:switchLinkOrText outputLinkValue="#{flowHandler.getReferenceUrl(flow.isAReference, url.flow)}"
+							outputLinkTitle="#{i18n['common.flow']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+							outputTextValue="#{flow.isAReference.shortDescription.getValueWithFallback(lang)}" />
+					</p:column>
+				</p:row>
+			</ui:define>
+	
+			<ui:define name="product_materialProperties">
+				<p:row rendered="#{not empty flow.materialProperties}">
+					<p:column styleClass="ui-state-hover transp">
+								#{i18n['common.productFlow.materialProperties']}
+							</p:column>
+					<p:column>
+						<p:dataList value="#{flow.materialProperties.toArray()}" var="matProp"
+							styleClass="#{flow.materialProperties.size() == 1 ? 'ourDataListNoBullet' : 'ourDataList'}">
+							<h:outputText
+								value="#{fn:startsWith(i18n[flowHandler.getValueFromMatPropKey(matProp.definition.name)], '???') ? matProp.definition.name : i18n[flowHandler.getValueFromMatPropKey(matProp.definition.name)] }: #{matProp.value} #{matProp.definition.unit}" />
+						</p:dataList>
+					</p:column>
+				</p:row>
+			</ui:define>
+		</ui:decorate>
+	
+	</h:body>
+</html>
+

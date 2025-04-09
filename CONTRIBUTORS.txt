@@ -1,0 +1,39 @@
+Initial design and implementation by Karlsruhe Institute of Technology (KIT),
+Institute for Applied Computer Science (http://www.iai.kit.edu/)
+	Clemens Düpmeier
+	Oliver Kusche
+	Christian Schmitt
+	Claudia Greceanu
+	Nikolas Weins (logo design)
+	
+
+Registry networking features and documentation donated by the European
+Commission's Joint Research Center (JRC), Institute for Environment and
+Sustainability
+	Maciej Skrzyszewski (ATOS)
+	Konrad Szarowolec (ATOS)
+	Edyta Paterek (ATOS)
+	Krzysztof Zagrodny (ATOS)
+
+
+Other contributors
+	Marco Guaita (JRC)
+	Mark Szábo (KIT)
+	Kowshik Krishnegowda (KIT)
+	Hugues Tamatcho Sontia (ok*worx)
+	Fabio Kazahaya (IBICT)
+	Vilmantas Baranauskas (thinkstep)
+	Sarai Eilebrecht (ok*worx)
+    Alagukumarappan Ramasamy (ok*worx)
+	Michael Srocka (GreenDelta)
+	Dominik Ehrler (ok*worx)
+	Alhajras Algdairy (ok*worx)
+	Frank Ling (ok*worx)
+	Mahmoud Khaled (ok*worx)
+	Patrick Laun (ok*worx)
+	Anna-Lena Klöckner (ok*worx)
+	Mahmoud Kounyahli (ok*worx)
+	Huimin Chang (Tsinghua University)
+	Jianchuan Qi (Tsinghua University)
+	Nan Li (Tsinghua University)
+	Ming Xu (Tsinghua University)

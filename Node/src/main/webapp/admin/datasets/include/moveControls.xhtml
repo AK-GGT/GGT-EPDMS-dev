@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:panelGroup rendered="#{stockSelection.currentStock.root}">
+
+		<p:hotkey bind="ctrl+shift+m" actionListener="#{backingBean.invokeMove(dataTableId)}" />
+		<p:hotkey bind="cmd+shift+m" actionListener="#{backingBean.invokeMove(dataTableId)}" />
+
+		<p:confirmDialog widgetVar="#{dataTableId}MoveWarningDlg" showEffect="fade" hideEffect="fade" severity="alert">
+			<f:facet name="header">
+				<h:outputText value="#{i18n['admin.stock.move.datasets']}" />
+			</f:facet>
+			<f:facet name="message">
+				<h:outputText value="#{i18n['admin.stock.move.warning.pt1']}" style="white-space: pre-wrap" />
+				<h:outputText value="#{i18n['admin.stock.move.warning.pt2']}" style="white-space: pre-wrap" />
+			</f:facet>
+			<p:commandButton value="#{i18n['common.button.no']}" type="button" styleClass="ui-confirmdialog-no"
+				icon="fa fa-ban" onclick="PF('#{dataTableId}MoveWarningDlg').hide();" />
+			<p:commandButton value="#{i18n['common.button.yes']}" type="button" styleClass="ui-confirmdialog-yes #{diaOpenBtnId}"
+				icon="fa fa-check"
+				onclick="PF('#{dataTableId}MoveWarningDlg').hide(); PF('#{dataTableId}moveSelectedConfirm').show();" />
+		</p:confirmDialog>
+	</h:panelGroup>
+
+</ui:composition>

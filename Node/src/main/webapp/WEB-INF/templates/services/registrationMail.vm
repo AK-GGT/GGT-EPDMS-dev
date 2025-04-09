@@ -1,0 +1,36 @@
+<html>
+<head><title></title></head>
+<body>
+<p>
+#if ( "$!user.getFirstName()" == "" and "$!user.getLastName()" == "" )
+	Dear user,<br/>
+#else
+	Dear $user.getFirstName() $user.getLastName(),<br/>
+#end
+</p>
+<p>
+thank you for registering at $siteName.<br/>
+<br/>
+Before you can log in to our site, your account has to be
+activated by our administration staff before you can login. This might take up to one working day. Once your access is 
+approved we will contact you via email. Please stay tuned. If you don't get a response,
+please send an email to <a href="mailto:${registrationAddress}">${registrationAddress}</a>.
+</p>
+<p>
+When our administration has notified you that your account is activated, you can log in to our site with the following credentials:
+</p>
+<p>
+<b>Login</b>: $user.getUserName()<br/>
+<b>Password</b>: $plainPassword
+</p>
+<p>
+Please save this email for later use.<br/>
+You can change your auto generated password after logging in using the "Change password" link on the bottom of the page and 
+other profile information using the "My profile" link.
+</p>
+<p>
+Thank you for registration,<br/>
+Your $siteName team
+</p>
+</body>
+</html>

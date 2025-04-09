@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+  xmlns:p="http://primefaces.org/ui"
+  xmlns:f="http://java.sun.com/jsf/core"
+  xmlns:ui="http://java.sun.com/jsf/facelets">
+<!-- 
+ui:params:
+	- countries: country list
+	- chosenCountry: chosen country
+	- address: address instance
+ -->
+<ui:param name="backingBean" value="#{contactListHandler}" />
+    <p:panel header="#{i18n['admin.user.addrInfo']}">
+        <h:panelGrid columns="2">
+            <p:outputLabel value="#{i18n['admin.user.country']}:" for="country" />
+            <!-- Fix with 150px due to problems with tabs: (usage with orgEntry)
+                 dynamic=true for tabs ==> null value set for selectOneMenu
+                 dynamic=false ==> selectOneMenu styling bug, set manually -->
+            <p:selectOneMenu style="width:150px" id="country" value="#{chosenCountry}" converter="geoAreaConverter" required="#{conf.requireAddressForRegistration}" requiredMessage="#{i18n['common.user.requiredMsg.address']}">
+                <f:selectItem itemLabel="#{i18n['common.select.hint']}" itemValue="0" />
+                <f:selectItems value="#{countries}" var="country" itemLabel="#{country.name}" itemValue="#{country}" />
+            </p:selectOneMenu>
+        </h:panelGrid>
+        <h:panelGrid columns="4">
+            <p:outputLabel value="#{i18n['admin.user.zipCode']}:" for="zipCode" />
+            <p:inputText id="zipCode" value="#{address.zipCode}" maxlength="50" size="10"  required="#{conf.requireAddressForRegistration}" requiredMessage="#{i18n['common.user.requiredMsg.address']}"/>
+            <p:outputLabel value="#{i18n['admin.user.city']}:" for="city" />
+            <p:inputText id="city" value="#{address.city}" maxlength="50" size="30" required="#{conf.requireAddressForRegistration}" requiredMessage="#{i18n['common.user.requiredMsg.address']}"/>
+        </h:panelGrid>
+        <h:panelGrid>
+            <p:outputLabel value="#{i18n['admin.user.streetAddr']}:" for="streetAddr" />
+            <p:inputTextarea id="streetAddr" value="#{address.streetAddress}" cols="72" rows="3" maxlength="255"  required="#{conf.requireAddressForRegistration}" requiredMessage="#{i18n['common.user.requiredMsg.address']}"/>
+        </h:panelGrid>
+    </p:panel>
+</ui:composition>

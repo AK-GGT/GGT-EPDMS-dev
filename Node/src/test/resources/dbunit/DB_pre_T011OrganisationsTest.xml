@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <user ID="1" EMAIL="admin@admin.admin" PASSWORD_HASH="8800cc078f01fe328c838ef40245671ae9ddb41ecefc2cff9b25546d0de77d18bdefeb4cdac5e120e094b9b0c9b0439be4166cbd1924d7f9c9ddf2c4b9959473" PASSWORD_HASH_SALT="wqugu4btwsqau!6bb6ie" super_admin_permission="1" USERNAME="admin" organization="1"/>
+  <organization id="1" name="Default Organization"/>
+</dataset>

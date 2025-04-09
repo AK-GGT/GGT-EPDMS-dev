@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+<!-- The column entry BASEURL must contain the entry "${nodeurl}" (during preprocessing the data set in setup, the entry String will be replaced by the target site URL) -->
+  <datastock_contact contacts_ID="1" containingDataStocks_ID="5"/>
+  <datastock_contact contacts_ID="2" containingDataStocks_ID="5"/>
+  <datastock_contact contacts_ID="3" containingDataStocks_ID="5"/>
+  <datastock_contact contacts_ID="5" containingDataStocks_ID="5"/>
+  <datastock_flow_elementary elementaryFlows_ID="7" containingDataStocks_ID="5"/>
+  <datastock_flow_elementary elementaryFlows_ID="8" containingDataStocks_ID="5"/>
+  <datastock_flow_product productFlows_ID="1" containingDataStocks_ID="5"/>
+  <datastock_flow_product productFlows_ID="3" containingDataStocks_ID="5"/>
+  <datastock_flowproperty flowProperties_ID="1"  containingDataStocks_ID="5"/>
+  <datastock_flowproperty flowProperties_ID="2" containingDataStocks_ID="5"/>
+  <datastock_flowproperty flowProperties_ID="3" containingDataStocks_ID="5"/>
+  <datastock_lciamethod lciaMethods_ID="1" containingDataStocks_ID="5"/>
+  <datastock_lciamethod lciaMethods_ID="2" containingDataStocks_ID="5"/>
+  <datastock_process processes_ID="1" containingDataStocks_ID="5"/>
+  <datastock_process processes_ID="3" containingDataStocks_ID="5"/>
+  <datastock_process processes_ID="4" containingDataStocks_ID="5"/>
+  <datastock_source sources_ID="2" containingDataStocks_ID="5"/>
+  <datastock_source sources_ID="3" containingDataStocks_ID="5"/>
+  <datastock_source sources_ID="6" containingDataStocks_ID="5"/>
+  <datastock_unitgroup unitGroups_ID="1" containingDataStocks_ID="5"/>
+  <datastock_unitgroup unitGroups_ID="2" containingDataStocks_ID="5"/>
+  <datastock_unitgroup unitGroups_ID="11" containingDataStocks_ID="5"/>
+  <stock_access_right ID="22" access_right_type="User" stock_id="5" ug_id="6" value="9"/>
+  <stock_access_right ID="23" access_right_type="User" stock_id="5" ug_id="3" value="0"/>
+  <stock_access_right ID="24" access_right_type="User" stock_id="5" ug_id="5" value="5"/>
+  <stock_access_right ID="25" access_right_type="User" stock_id="5" ug_id="8" value="406"/>
+  <stock_access_right ID="26" access_right_type="User" stock_id="5" ug_id="10" value="511"/>
+  <stock_access_right ID="27" access_right_type="User" stock_id="5" ug_id="7" value="13"/>
+  <stock_access_right ID="28" access_right_type="User" stock_id="5" ug_id="4" value="1"/>
+  <stock_access_right ID="29" access_right_type="User" stock_id="5" ug_id="2" value="406"/>
+</dataset>

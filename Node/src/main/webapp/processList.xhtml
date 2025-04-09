@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<h:body>
+		<ui:composition template="#{conf.templatePath}/frontend.xhtml">
+			<ui:param name="pageTitle" value="#{i18n['common.proc']}#{i18n['delimiter']}#{i18n['public.datasets']}" />
+			<ui:param name="activeMenu" value="#{Constants.MENU_PROCESS}" />
+			<ui:define name="content">
+				<div class="floatRight">
+					<h:form id="filterForm" prependId="false">
+						<p:accordionPanel id="filterPanel" dynamic="true" cache="true" activeIndex="-1">
+							<p:tab title="#{i18n['public.proc.list.filter']}">
+								<h:panelGrid columns="2">
+									<p:outputLabel value="#{i18n['public.proc.list.search.nameDesc']}:" for="nameFilter" />
+									<p:inputText value="#{processesHandler.nameFilter}" id="nameFilter" />
+									<p:outputLabel value="#{i18n['public.proc.list.search.classes']}:" for="classesFilter" />
+									<h:panelGroup>
+										<p:selectManyMenu value="#{processesHandler.selectedClasses}" id="classesFilter" style="width:250px;" scrollHeight="70">
+											<f:selectItems value="#{processesHandler.all2ndLevelClasses}" />
+										</p:selectManyMenu>
+										<pe:tooltip for="classesFilter" mouseTracking="true" adjustX="10" adjustY="10" value="#{i18n['public.proc.hint.select']}" />
+									</h:panelGroup>
+								</h:panelGrid>
+								<div class="buttonCenter">
+									<p:commandButton ajax="false" action="#{processesHandler.doFilter}" update="processTable" value="#{i18n['public.proc.list.filter']}" />
+								</div>
+							</p:tab>
+						</p:accordionPanel>
+					</h:form>
+				</div>
+				<div class="clearRight">
+					<ui:include src="processListDisplay.xhtml">
+						<ui:param name="lazyDataModelRef" value="#{processesHandler.lazyDataModel}" />
+						<ui:param name="registry" value="" />
+						<ui:param name="filtering" value="true" />
+					</ui:include>
+				</div>
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</html>

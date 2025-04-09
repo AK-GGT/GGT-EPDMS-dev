@@ -1,0 +1,42 @@
+<html>
+<head><title></title></head>
+<body>
+<p>
+#if ( "$!user.getFirstName()" == "" and "$!user.getLastName()" == "" )
+	Dear user,<br/>
+#else
+	Dear $user.getFirstName() $user.getLastName(),<br/>
+#end
+<br/>
+thank you for registering at $siteName.
+</p>
+<p>
+To complete your registration and activate your account, please click on the following link
+or copy it to your browser and follow the link.
+</p>
+<p>
+<a href="${activationUrl}?user=$escape.url($user.getUserName())&amp;activationKey=$escape.url($user.getRegistrationKey())">${activationUrl}?user=$escape.url($user.getUserName())&amp;activationKey=$escape.url($user.getRegistrationKey())</a>
+</p>
+<p>
+Afterwards, your account should be activated and you can log in to our site with the following credentials:
+</p>
+<p>
+<b>Login</b>: $user.getUserName()<br/>
+<b>Password</b>: $plainPassword
+</p>
+<p>
+For security reasons, you will be asked to change your password upon first login.
+You can change your password at any time after logging in using the <a href="${changePwUrl}">"Change password"</a> link on the bottom of the page.
+</p>
+<p>
+You can edit your profile information
+#if ("$user.isApiKeyAllowed()")
+	(including generating an API key)
+#end
+on the <a href="${profileUrl}">"My profile"</a> page which is also linked on the bottom of the page.
+</p>
+<p>
+Your $siteName team
+</p>
+</body>
+</html>

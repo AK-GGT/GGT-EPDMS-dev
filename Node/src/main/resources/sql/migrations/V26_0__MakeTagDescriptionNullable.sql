@@ -1,0 +1,1 @@
+ALTER TABLE tag MODIFY description varchar(255) NULL;

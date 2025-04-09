@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+Parameters for this composition:
+	via ui:param:
+		sar: the stock access right wrapper instance
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+		xmlns:ui="http://java.sun.com/jsf/facelets"
+		xmlns:p="http://primefaces.org/ui">
+
+		<p:column headerText="READ">
+			<p:selectBooleanCheckbox value="#{sar.read.value}" />
+		</p:column>
+		<p:column headerText="WRITE">
+			<p:selectBooleanCheckbox value="#{sar.write.value}" />
+		</p:column>
+		<p:column headerText="IMPORT">
+			<p:selectBooleanCheckbox value="#{sar.import.value}" />
+		</p:column>
+		<p:column headerText="EXPORT">
+			<p:selectBooleanCheckbox value="#{sar.export.value}" />
+		</p:column>
+		<p:column headerText="CHECKIN">
+			<p:selectBooleanCheckbox value="#{sar.checkin.value}" />
+		</p:column>
+		<p:column headerText="CHECKOUT">
+			<p:selectBooleanCheckbox value="#{sar.checkout.value}" />
+		</p:column>
+		<p:column headerText="RELEASE">
+			<p:selectBooleanCheckbox value="#{sar.release.value}" />
+		</p:column>
+		<p:column headerText="CREATE">
+			<p:selectBooleanCheckbox value="#{sar.create.value}" />
+		</p:column>
+		<p:column headerText="DELETE">
+			<p:selectBooleanCheckbox value="#{sar.delete.value}" />
+		</p:column>
+		<p:column headerText="TAG">
+			<p:selectBooleanCheckbox value="#{sar.tag.value}"/>
+		</p:column>
+</ui:composition>

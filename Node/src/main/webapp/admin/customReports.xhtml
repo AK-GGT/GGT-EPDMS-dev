@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:body>
+        <ui:composition template="/admin/layout/adminDesign.xhtml">
+            <ui:param name="pageTitle" value="#{i18n['admin.customReports']}" />
+            <ui:define name="content">
+
+                <h:form id="generalForm" prependId="false">
+
+                    <p:focus context="generalForm" />
+                   
+					<p:dataGrid  var="item" widgetvar="itemGrid" value="#{customReportsBean.reportConfigs}" layout="grid" columns="5" styleClass="reportConfigsDataGrid">
+							<p:commandButton value="#{item.name}" icon="#{item.icon}" ajax="false" escape="false" rendered="#{item.type == 'sqlquery' and item.icon != null}" styleClass="reportConfigs">
+								<p:fileDownload value="#{customReportsBean.executeSQL(item)}" />
+							</p:commandButton>
+							<p:commandButton value="#{item.name}" ajax="false" escape="false" rendered="#{item.type == 'sqlquery' and item.icon == null}" styleClass="reportConfigs">
+								<p:fileDownload value="#{customReportsBean.executeSQL(item)}"/>
+							</p:commandButton>
+							<p:button value="#{item.name}" icon="#{item.icon}" href="#{item.function}" target="_blank" escape="false" rendered="#{item.type == 'url' and item.icon != null}" styleClass="reportConfigs"/> 
+							<p:button value="#{item.name}" href="#{item.function}" target="_blank" escape="false" rendered="#{item.type == 'url' and item.icon == null}" styleClass="reportConfigs"/>
+					</p:dataGrid>											
+                    <ui:include src="/messages.xhtml" />
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html> 

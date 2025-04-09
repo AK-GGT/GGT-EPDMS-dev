@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+	example usages:
+	
+	<soda:dataListStyled dataListValue="#{lciamethod.methodology}">
+		<ui:param name="methodology" value="#{dataListStyledVar}" />
+		#{methodology}
+	</soda:dataListStyled>
+
+	<soda:dataListStyled dataListValue="#{dsAdminInfo.dataEntryBy.referenceToDataSetFormat}">
+		<ui:param name="formatRef" value="#{dataListStyledVar}" />
+		<soda:dataListLinkOrText
+			dataListValue="#{datasetHandler.getMultilangWithFallback(lang, formatRef.shortDescription)}"
+			outputLinkValue="#{datasetHandler.getReferenceUrlXml(formatRef, url.source)}"
+			outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+	</soda:dataListStyled>
+
+	<soda:dataListStyled dataListValue="#{xmlClassification}">
+		<ui:param name="class" value="#{dataListStyledVar}" />
+		#{class.name}:
+		<ui:fragment rendered="#{DataSetType.PROCESS == process.dataSetType}">
+			<h:outputText rendered="#{class.name.equalsIgnoreCase('OEKOBAU.DAT')}" value="#{processHandler.getLastElementOfList(class.clazz).classId}" />
+		</ui:fragment>
+		<ui:repeat value="#{class.clazz}" var="clazz" varStatus="clazzStatus">
+			#{clazz.value}
+			<h:outputText value=" / " rendered="#{not clazzStatus.last}" />
+		</ui:repeat>
+	</soda:dataListStyled>
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+	
+	<composite:interface>
+		<composite:attribute name="dataListValue" />
+	</composite:interface>
+	
+	<composite:implementation>
+		<p:dataList value="#{cc.attrs.dataListValue}" var="dataListStyledVar" styleClass="#{cc.attrs.dataListValue.size() == 1 ? 'ourDataListNoBullet' : 'ourDataList'}">
+			<composite:insertChildren />
+		</p:dataList>
+	</composite:implementation>
+</html>

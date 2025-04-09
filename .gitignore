@@ -1,0 +1,15 @@
+/target/
+/soda4LCA_*.*/
+/soda4LCA_*.zip
+**/.DS_Store
+**/.settings
+**/.classpath
+**/.project
+**/.externalToolBuilders
+/*.war
+**/pom.xml.releaseBackup
+**/release.properties
+/.idea/
+**/*.iml
+/.run/*.*
+**/.java-version

@@ -1,0 +1,119 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:body>
+	<ui:composition template="/admin/layout/adminDesign.xhtml">
+		<ui:param name="pageTitle" value="#{i18n['admin.compareDatasets']}  #{utilStr['unicodeChar.dash']} #{i18n['admin.compareDatasets.charts']}" />
+		<ui:define name="content">
+			<script type="text/javascript">
+			//<![CDATA[
+				// extend chart with low level jqplot options
+				// set in model's extender property
+				function chart_style_extender() {
+					this.cfg.highlighter.tooltipAxes = 'y'; // display only value of y axis --> get rid of "1, "
+					this.cfg.highlighter.useAxesFormatters = false; // required that tooltipFormatString is used
+					this.cfg.highlighter.tooltipFormatString = '<span style="font-family: monospace !important; font-size: 1.3em; font-weight: bold;">%s</span>'; // perl-like sprintf syntax, output value as it has been read
+					this.cfg.seriesDefaults.breakOnNull = true; // required for breaks in line chart / statistics
+					this.cfg.seriesDefaults.rendererOptions.fillToZero = true; // chart where lines or bars are filled down or up toward the zero axis line
+ 					this.cfg.axes.yaxis.rendererOptions = {'forceTickAt0': true }; // force start at 0
+					
+					var self = this;
+ 					// span for percentage value
+					var lbl = jQuery('<span></span>').css({'font-weight':'bold','position':'absolute','display':'none','z-index':9999});
+					
+					// jqplotDataHighlight + jqplotDataUnhighlight only works with bar charts => no further filtering for line chart required
+					this.jq.bind('jqplotDataHighlight', 
+						function (event,seriesIdx,dataIdx,data) {
+							if ( self.plot.data ){
+								lbl.appendTo(self.jq); // add always -> required for zooming
+								lbl.css( {'top': self.plot._gridPadding.top + 'px', 'right': (self.plot._gridPadding.right + 3) + 'px','display':'inline' } );
+								
+								var refVal = self.plot.data[0][dataIdx];
+								var currVal = self.plot.data[seriesIdx][dataIdx];
+								
+								if ( !isNaN(refVal) && !isNaN(currVal) && refVal != null && currVal != null && refVal != 0 ){
+									// calc the value: ref = 3, cur = 2 => display -33,33% because "3 - 33,33% == 2" 
+									var result = -(1-(currVal/refVal)) * 100;
+									lbl.text( (result>=0?'+':'') + (Math.round(result * 100) / 100).toString() + " %" );
+								} else {
+									lbl.text( "-- %" );
+								}
+							}
+						});
+
+					this.jq.bind('jqplotDataUnhighlight', 
+							function (event,seriesIdx,dataIdx,data) {
+								lbl.css('display','none');
+						});
+					
+				}
+				//]]>
+			</script>
+			<style type="text/css">
+				#admin_content.minMax {
+					max-width: none;
+				}
+				#selectedList {
+					display: inline-block;
+				}
+				#selectedList ol {
+					padding-left: 20px;
+					padding-right: 5px;
+				}
+				.jqplot-x2axis {
+					display: none; /* remove x2 axis that is shown when zooming */
+				}
+				.jqplot-title {
+					font-weight: bold;
+					font-size: 1em;
+				}
+				.jqplot-highlight-canvas {
+					display: none;	/* remove data marker bubble when hovering bar */
+				}
+			</style>
+
+			<p>#{i18n['admin.compareDatasets.chart.hint']}</p>
+			
+			<p:dataList id="selectedList" value="#{pqaHandler.processes}" var="p" type="ordered">
+				<f:facet name="header">#{i18n['admin.proc.selectedComparison']}</f:facet>
+				<h:link outcome="#{url.process.getDetail(p)}" value="#{pqaHandler.getLStrWithFallback(lang,p.baseName).value} (#{p.dataSetVersion})" title="#{i18n['public.proc.fullName']}: #{pqaHandler.getLStrWithFallback(lang,p.name).value}" />
+			</p:dataList>
+			
+			<ui:fragment rendered="#{pqaHandler.doLciaResultCharts}">
+				<h3>#{i18n['datasetdetail.epd.indicatorsImpactAssessment']} #{utilStr['unicodeChar.dash']} #{i18n['common.lciaResults']}</h3>
+				<ui:repeat var="chart" value="#{pqaHandler.allLciaResultCharts}">
+					<ui:param name="chartPanelWidth" value="#{chart.seriesCount*chart.countPerSeries*50+200}" />
+					<p:panel style="width:#{chartPanelWidth}px;min-width:350px;max-width:900px;float:left;margin:5px;">
+						<p:chart type="bar" model="#{chart}" />
+					</p:panel>
+				</ui:repeat>
+			</ui:fragment>
+			
+			<ui:fragment rendered="#{pqaHandler.doExchangeCharts}">
+				<h3 style="clear:left;padding-top:3em;">#{i18n['datasetdetail.epd.indicatorsLifeCycle']} #{utilStr['unicodeChar.dash']} #{i18n['common.inputs']}</h3>
+				<ui:repeat var="chart" value="#{pqaHandler.allExchangesInCharts}">
+					<ui:param name="chartPanelWidth" value="#{chart.seriesCount*chart.countPerSeries*50+200}" />
+					<p:panel style="width:#{chartPanelWidth}px;min-width:350px;max-width:900px;float:left;margin:5px;">
+						<p:chart type="bar" model="#{chart}" />
+					</p:panel>
+				</ui:repeat>
+				
+				<h3 style="clear:left;padding-top:3em;">#{i18n['datasetdetail.epd.indicatorsLifeCycle']} #{utilStr['unicodeChar.dash']} #{i18n['common.outputs']}</h3>
+				<ui:repeat var="chart" value="#{pqaHandler.allExchangesOutCharts}">
+					<ui:param name="chartPanelWidth" value="#{chart.seriesCount*chart.countPerSeries*50+200}" />
+					<p:panel style="width:#{chartPanelWidth}px;min-width:350px;max-width:900px;float:left;margin:5px;">
+						<p:chart type="bar" model="#{chart}" />
+					</p:panel>
+				</ui:repeat>
+			</ui:fragment>
+
+			<div style="clear:left;"></div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

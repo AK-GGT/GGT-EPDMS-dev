@@ -1,0 +1,76 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:body>
+        <ui:composition template="/admin/layout/adminDesign.xhtml">
+            <ui:param name="pageTitle" value="#{i18n['admin.node.manageList']}" />
+            <ui:define name="content">
+                <h:form id="tableForm" prependId="false">
+               	
+                    <p:commandButton id="deleteBtn"
+                                     value="#{i18n['admin.deleteSelected']}"
+                                     onclick="PF('confirmDelete').show()"
+                                     type="button"
+                                     disabled="#{nodeListHandler.nothingSelected}" />
+                    <p:confirmDialog message="#{i18n['admin.confirmMsg.deleteSelected']}?"
+                                     header="#{i18n['admin.confirmDlg.delete']}"
+                                     severity="alert"
+                                     widgetVar="confirmDelete">
+                        <div class="confirmDlgButtons">
+                            <p:commandButton value="#{i18n['admin.cancel']}"
+                                             type="button"
+                                             onclick="PF('confirmDelete').hide()" />
+                            <p:commandButton value="#{i18n['admin.ok']}"
+                                             action="#{nodeListHandler.deleteSelected}"
+                                             oncomplete="PF('confirmDelete').hide()"
+                                             ajax="false"
+                                             update="messages nodeTable" />
+                        </div>
+                    </p:confirmDialog>
+
+                    <ui:include src="/messages.xhtml" />
+
+                    <p:dataTable id="nodeTable"
+                                 var="node" 
+                                 value="#{nodeListHandler.lazyModel}"
+                                 lazy="true"
+                                 paginator="true"
+                                 rows="15" rowsPerPageTemplate="5,10,15,50"
+                                 selection="#{nodeListHandler.selectedNodes}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                                 {PreviousPageLink} {PageLinks} {NextPageLink}
+                                 {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']}
+                                 (#{nodeListHandler.lazyModel.rowCount} #{i18n['common.list.total']})"
+                                 emptyMessage="#{i18n['common.list.noneFound']}">
+                        
+                        <p:ajax event="rowSelectCheckbox" process="@this" update="@(#deleteBtn)" />
+                        <p:ajax event="rowUnselectCheckbox" process="@this" update="@(#deleteBtn)" />
+                        <p:ajax event="toggleSelect" process="@this" update="@(#deleteBtn)" />
+                                 
+                        <p:column style="text-align: center;" selectionMode="multiple" />
+
+                        <p:column headerText="#{i18n['common.node.id']}">
+                            <h:link outcome="#{url.node.edit}" value="#{node.nodeId}">
+                                <f:param name="nodeId" value="#{node.id}" />
+                            </h:link>
+                        </p:column>
+
+                        <p:column headerText="#{i18n['common.name']}">
+                            <h:outputText value="#{node.name}" />
+                        </p:column>
+
+                        <p:column headerText="#{i18n['admin.node.baseURL']}">
+                            <h:outputText value="#{node.baseUrl}" />
+                        </p:column>
+                    </p:dataTable>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

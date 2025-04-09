@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+	example usages:
+	
+	<soda:outputTextTooltip
+		outputTextId="name"
+		outputTextValue="#{i18n['common.name']}"
+		tooltipValue="#{i18n['datasetdetail.tooltip.contact.name']}" />
+		
+	<soda:outputTextTooltip
+		outputTextId="baseName"
+		outputTextValue="Base name;"
+		tooltipValue="#{i18n['datasetdetail.tooltip.dataset.baseName']}"
+		inline="true" />
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	
+	<composite:interface>
+		<composite:attribute name="outputTextId" />
+		<composite:attribute name="outputTextValue" />
+		<composite:attribute name="tooltipValue" />
+		<composite:attribute name="inline" />
+	</composite:interface>
+	
+	<composite:implementation>
+		<span class="#{cc.attrs.inline ? 'ui-state-hover transp' : ''}">
+			<h:outputText id="#{cc.attrs.outputTextId}" value="#{cc.attrs.outputTextValue}" />
+			<pe:tooltip for="#{cc.attrs.outputTextId}" mouseTracking="true" adjustX="10" adjustY="10" value="#{cc.attrs.tooltipValue}" />
+		</span>
+	</composite:implementation>
+</html>

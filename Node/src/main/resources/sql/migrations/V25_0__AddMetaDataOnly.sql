@@ -1,0 +1,1 @@
+ALTER TABLE  `process` ADD `metaDataOnly` boolean DEFAULT false;

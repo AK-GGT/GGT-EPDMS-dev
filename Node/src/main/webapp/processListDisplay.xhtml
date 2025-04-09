@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:param name="lang" value="#{localeBean.locale.language}" />
+	
+    <h:form id="tableForm" style="margin-top: 1em;" prependId="false">
+
+        <p:dataTable id="processTable" var="process" lazy="true"
+                     value="#{lazyDataModelRef}"
+                     paginator="true" rows="10" rowsPerPageTemplate="5,10,15,50"
+                     paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                     		 {PreviousPageLink} {PageLinks} {NextPageLink}
+                     		 {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']}"
+                     currentPageReportTemplate="#{i18n['common.list.currentEntries']}: {totalRecords}
+                     		 (#{lazyDataModelRef.loadTotalElementCount()} #{i18n['common.list.total']})  
+                     		 (#{i18n['common.list.page']} {currentPage} #{i18n['common.list.of']} {totalPages})"
+                     emptyMessage="#{i18n['common.list.noneFound']}">
+
+            <ui:include src="processListColumns.xhtml" >
+   				<ui:param name="filtering" value="#{filtering}" />
+            </ui:include>
+            
+        </p:dataTable>
+    </h:form>
+</ui:composition>

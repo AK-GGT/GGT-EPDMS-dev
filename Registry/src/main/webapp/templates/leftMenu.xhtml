@@ -1,0 +1,25 @@
+<!-- Workaround due to p:menu bugs and lack of functionality -->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+
+	<h:form>
+		<p:menu>
+			<p:menuitem value="#{msg.menu_home}" url="#{request.contextPath}/secured/main.xhtml" ajax="false"/>
+			<p:submenu label="#{msg.menu_nodesManagement}">
+				<p:menuitem value="#{msg.menu_registeredNodes}" url="#{request.contextPath}/secured/nodes.xhtml?approved=true" ajax="false"/>
+				<p:menuitem value="#{msg.menu_nodesToApprove}" url="#{request.contextPath}/secured/nodes.xhtml?approved=false" ajax="false"/>
+			</p:submenu>
+			<p:submenu label="#{msg.menu_datasetsManagement}">
+				<p:menuitem value="#{msg.menu_registeredDataSets}" url="#{request.contextPath}/secured/datasets.xhtml?approved=true" ajax="false"/>
+				<p:menuitem value="#{msg.menu_datasetsToApprove}" url="#{request.contextPath}/secured/datasets.xhtml?approved=false" ajax="false"/>
+			</p:submenu>
+			<p:submenu label="Logout">
+				<p:menuitem value="#{msg.menu_logout}" actionListener="#{loginBean.logout}" ajax="false"/>
+			</p:submenu>
+		</p:menu>
+	</h:form>
+
+</ui:composition>

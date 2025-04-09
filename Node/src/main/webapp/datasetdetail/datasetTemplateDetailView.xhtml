@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:a="http://xmlns.jcp.org/jsf/core"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core" lang="#{localeBean.locale}">
+	
+	<f:view contentType="text/html" locale="#{localeBean.locale}">
+
+		<c:set var="pageAndPanelTitleLong" value="#{pageTitleDatasetType}: #{pageTitleDatasetName} (#{lang})" />
+		<c:set var="pageAndPanelTitleShort" value="#{pageTitleDatasetName} (#{lang})" />
+		<c:set var="pageAndPanelTitle" value="#{conf.displayConfig.datasetDetailShortTitle ? pageAndPanelTitleShort : pageAndPanelTitleLong}" />
+
+		<h:head>
+			<title>#{pageAndPanelTitle} - #{conf.applicationTitle}</title>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+			<h:outputStylesheet name="css/datasetdetail.css" />
+			<h:outputScript name="js/datasetdetail.js" />
+			<h:outputScript name="js/retina.min.js" rendered="#{conf.logoHighRes}" target="body"/>
+			<link type="text/css" rel="stylesheet" href="#{conf.contextPath}#{conf.templatePath}/css/site.css" media="all" />  
+			<link type="text/css" rel="stylesheet" href="#{conf.contextPath}#{conf.templatePath}/css/print.css" media="print" />
+			<ui:fragment rendered="#{not conf.templatePath.endsWith('default')}">
+	            <link type="text/css" rel="stylesheet" href="#{conf.contextPath}#{conf.templatePath}/css/skin.css" media="all" />
+			</ui:fragment>
+		</h:head>
+	
+		<h:body>
+			<p:importEnum type="de.iai.ilcd.model.common.DataSetType" var="DataSetType" />
+			<p:panel id="datasetdetailPanel">
+				<f:facet name="header">
+					<div>
+						<div>
+							<h:outputLink value="#{conf.landingPageURL}" rendered="#{conf.datasetDetailLogoProvided}">
+								<h:graphicImage rendered="#{conf.datasetDetailLogoProvided and !conf.logoHighRes}"
+									value="#{conf.datasetDetailLogoPath}" styleClass="datasetDetailLogo" alt="#{conf.applicationTitle} Logo" />
+								<h:graphicImage rendered="#{conf.datasetDetailLogoProvided and conf.logoHighRes}"
+									value="#{conf.datasetDetailLogoPath}" styleClass="datasetDetailLogo" alt="#{conf.applicationTitle} Logo">
+									<a:passThroughAttribute name="data-rjs" value="2" />
+								</h:graphicImage>
+							</h:outputLink>
+						</div>
+	
+						<div style="float: right; width: 30%;">
+							<ui:fragment rendered="#{conf.showDatasetDetailCloseOption}">
+								<a id="closeButton" href="javascript:close();" style="float: right;" tabindex="4"
+									class="expanded ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">#{i18n['button.close']}</a>
+							</ui:fragment>
+
+							<ui:fragment rendered="#{conf.showDatasetDetailBackOption}">
+								<a id="backButton" href="javascript:history.back();" style="float: right;" tabindex="3"
+									class="expanded ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">#{i18n['button.back']}</a>
+							</ui:fragment>
+
+							<a id="toggleFakeButton" href="javascript:void(0);" tabindex="2"
+								class="expanded ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+								data-collapseAll="#{i18n['button.collapseAll']}" data-collapse="#{i18n['button.collapse']}"
+								data-expandAll="#{i18n['button.expandAll']}" data-expand="#{i18n['button.expand']}">#{i18n['button.collapseAll']}</a>
+
+						</div>
+						<div class="#{conf.datasetDetailLogoProvided ? 'datasetTitleOverflow' : ''}">
+							<h:outputText id="datasetdetailPanelHeader" value="#{pageAndPanelTitle}" />
+							<ui:repeat value="#{dataset.supportedLanguages.toArray()}" var="language">
+								<h:outputText value=" " />
+								<h:link value="#{language.languageCode}" outcome="#{view.viewId}" includeViewParams="true" styleClass="italic" tabindex="1">
+									<f:param name="lang" value="#{language.languageCode}" />
+								</h:link>
+							</ui:repeat>
+						</div>
+					</div>
+				</f:facet>
+
+				<ui:insert name="content" />
+				
+			</p:panel>
+		</h:body>
+	</f:view>
+</html>

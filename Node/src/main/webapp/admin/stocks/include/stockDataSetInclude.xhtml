@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+Parameters for this composition:
+	via ui:param:
+		dsType: data set type string for IDs (no whitespaces!)
+		listInclude: which list to include from ../../datasets/include/ directory
+		sHandler: stock handler
+		dsWrapper: data set wrapper instance
+		tabTitleKey: i18n key for title of the tab
+		typeKey: i18n key for data set type (singular)
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<p:tab title="#{i18n[tabTitleKey]}" titletip="#{dsWrapper.contentModel.rowCount} #{i18n[tabTitleKey]}">
+		<ui:fragment rendered="#{not sHandler.entry.root}">
+			<div style="display:flex; justify-content:flex-end">
+				<p:commandButton id="assignDataSetBtn#{dsType}" value="#{i18n['admin.assign']} #{utilStr['unicodeChar.hellip']}" onclick="PF('assign#{dsType}Dlg').show();" type="button" />
+			</div>
+		</ui:fragment>
+		<p:dialog id="assign#{dsType}Dialog" widgetVar="assign#{dsType}Dlg" dynamic="true" modal="true" height="500">
+			<f:facet name="header">
+				<h:outputFormat value="#{i18n['admin.assignDataSets']}">
+					<f:param value="#{i18n[typeKey]}" />
+				</h:outputFormat>				
+			</f:facet>
+			<ui:include src="../../datasets/include/#{listInclude}">
+				<ui:param name="dtId" value="ad#{dsType}DataTable" />
+				<ui:param name="appendToBody" value="true" />
+				<ui:param name="backingBean" value="#{dsWrapper}" />
+				<ui:param name="lazyDataModel" value="#{dsWrapper.candidateModel}" />
+				<ui:param name="countModel" value="#{dsWrapper.candidateModel}"/>
+				<ui:param name="selectionProperty" value="#{dsWrapper.candidateModel.selectedItems}" />
+				<ui:param name="selectedActionButtonLabel" value="#{i18n['admin.assignSelected']}" />
+				<ui:param name="actionDialogHeader" value="#{i18n['admin.confirmDlg.assign']}" />
+				<ui:param name="actionDialogMessage" value="#{i18n['admin.confirmMsg.assignSelected']}?" />
+				<ui:param name="actionDialogCancelLabel" value="#{i18n['admin.cancel']}" />
+				<ui:param name="actionDialogOKLabel" value="#{i18n['admin.ok']}" />
+				<ui:param name="actionDialogOKActionMethod" value="attachSelectedToStock" />
+				<ui:param name="showDependenciesOption" value="true" />				
+				<ui:param name="moveControls" value="false" />
+				<ui:param name="includeMessages" value="false" />
+				<ui:param name="omitForm" value="true" />
+				<ui:param name="closeDialog" value="assign#{dsType}Dlg" />
+				<ui:param name="updateAlso" value="ct#{dsType}DataTable" />
+				<ui:param name="stockFilter" value="#{stockHandler.candidateStocks}" />
+				<ui:param name="mostRecentVersionOnlyFilter" value="true" />
+				<ui:param name="mostRecentVersionOnlyBackingObject" value="#{sHandler}" />
+				<ui:param name="forceDs" value="$root$" />
+			</ui:include>
+		</p:dialog>
+			
+		<ui:include src="../../datasets/include/#{listInclude}">
+			<ui:param name="dtId" value="ct#{dsType}DataTable" />
+			<ui:param name="appendToBody" value="false" />
+			<ui:param name="backingBean" value="#{dsWrapper}" />
+			<ui:param name="lazyDataModel" value="#{dsWrapper.contentModel}" />
+			<ui:param name="countModel" value="#{dsWrapper.contentModel}"/>				
+			<ui:param name="selectionProperty" value="#{dsWrapper.contentModel.selectedItems}" />
+			<ui:param name="selectedActionButtonLabel" value="#{sHandler.entry.root ? i18n['admin.deleteSelected'] : i18n['admin.removeSelected']}" />
+			<ui:param name="actionDialogHeader" value="#{sHandler.entry.root ? i18n['admin.confirmDlg.delete'] : i18n['admin.confirmDlg.remove']}" />
+			<ui:param name="actionDialogMessage" value="#{sHandler.entry.root ? i18n['admin.confirmMsg.deleteSelected'] : i18n['admin.confirmMsg.removeSelected']}?" />
+			<ui:param name="actionDialogCancelLabel" value="#{i18n['admin.cancel']}" />
+			<ui:param name="actionDialogOKLabel" value="#{i18n['admin.ok']}" />
+			<ui:param name="actionDialogOKActionMethod" value="#{sHandler.entry.root ? 'deleteSelected' : 'detachSelectedFromStock'}" />
+			<ui:param name="showDependenciesOption" value="true" />
+			<ui:param name="moveControls" value="false" />
+			<ui:param name="includeMessages" value="false" />
+			<ui:param name="omitForm" value="true" />
+			<ui:param name="mostRecentVersionOnlyFilter" value="true" />
+			<ui:param name="mostRecentVersionOnlyBackingObject" value="#{sHandler}" />
+		</ui:include>
+	</p:tab>
+
+</ui:composition>
+

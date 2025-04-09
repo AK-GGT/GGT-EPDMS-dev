@@ -1,0 +1,1 @@
+ALTER TABLE `networknode` ADD `datastockID` varchar(255) DEFAULT null AFTER `ACCESSPASSWORD`;

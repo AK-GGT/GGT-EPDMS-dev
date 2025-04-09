@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+<!-- The column entry BASEURL must contain the entry "${nodeurl}" (during preprocessing the data set in setup, the entry String will be replaced by the target site URL) -->
+  <stock_access_right ID="22" access_right_type="User" stock_id="5" ug_id="6" value="9"/>
+  <stock_access_right ID="23" access_right_type="User" stock_id="5" ug_id="3" value="0"/>
+  <stock_access_right ID="24" access_right_type="User" stock_id="5" ug_id="5" value="5"/>
+  <stock_access_right ID="25" access_right_type="User" stock_id="5" ug_id="8" value="406"/>
+  <stock_access_right ID="26" access_right_type="User" stock_id="5" ug_id="10" value="511"/>
+  <stock_access_right ID="27" access_right_type="User" stock_id="5" ug_id="7" value="13"/>
+  <stock_access_right ID="28" access_right_type="User" stock_id="5" ug_id="4" value="1"/>
+  <stock_access_right ID="29" access_right_type="User" stock_id="5" ug_id="2" value="406"/>
+  <user ID="14" DSPURPOSE="" EMAIL="SimpleStock1_reader@soda4LCA.ok" FIRSTNAME="" JOBPOSITION="" LASTNAME="" PASSWORD_HASH="fbacd7a1306aa5459ba59a090856b7ede10e5146c96cb2347b849d7fefd47dff6cb69e7f17f790c1bf9397d046492ded58d6dbc92ba93ede0f3e2b2453e0a5d4" PASSWORD_HASH_SALT="pUcxzwPMhyni0h9SDmBp" apikeyallowed="1" super_admin_permission="0" TITLE="" USERNAME="SimpleStock1_reader" CITY="" COUNTRY="" STREETADDRESS="" ZIPCODE="" password_expired="0"/>
+  <stock_access_right ID="31" access_right_type="User" stock_id="5" ug_id="14" value="1"/>
+</dataset>

@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://java.sun.com/jsf/html">
+
+    <h:form>
+		<p:menu id="mainmenu_container">
+ 			<p:menuitem value="#{i18n['public.home']}" styleClass="#{activeMenu == Constants.MENU_HOME ? 'ui-state-active' : ''}" url="#{conf.contextPath}#{url.index}" />
+			<p:menuitem rendered="#{user.hasAdminAreaAccessRight()}" value="#{i18n['admin.adminArea']}" url="#{conf.contextPath}#{url.adminIndex}" />
+	        <p:submenu label="#{i18n['public.browseDatasets']}">
+	            <p:menuitem value="#{i18n['common.processes']}" rendered="#{feature.browseProcesses}" styleClass="#{activeMenu == Constants.MENU_PROCESS ? 'ui-state-active' : ''}" url="#{conf.contextPath}#{url.process.list}" />
+	            <p:menuitem value="#{i18n['common.lciaMethods']}" rendered="#{feature.browseLCIAMethods}" styleClass="#{activeMenu == Constants.MENU_LCIAMETHOD ? 'ui-state-active' : ''}" url="#{conf.contextPath}#{url.lciaMethod.list}" />
+	            <p:menuitem value="#{i18n['common.elementaryFlows']}" rendered="#{feature.browseFlows}" styleClass="#{activeMenu == Constants.MENU_ELEMENTARY_FLOW ? 'ui-state-active' : ''}" url="#{conf.contextPath}#{url.eflow.list}" />
+	            <p:menuitem value="#{i18n['common.productFlows']}" rendered="#{feature.browseFlows}" styleClass="#{activeMenu == Constants.MENU_PRODUCT_FLOW ? 'ui-state-active' : ''}" url="#{conf.contextPath}#{url.pflow.list}" />
+	            <p:menuitem value="#{i18n['common.flowProperties']}" rendered="#{feature.browseFlowProperties}" styleClass="#{activeMenu == Constants.MENU_FLOWPROPERTY ? 'ui-state-active' : ''}" url="#{conf.contextPath}#{url.flowProperty.list}" />
+	            <p:menuitem value="#{i18n['common.unitGroups']}" rendered="#{feature.browseUnitGroups}" styleClass="#{activeMenu == Constants.MENU_UNITGROUP ? 'ui-state-active' : ''}" url="#{conf.contextPath}#{url.unitGroup.list}" />
+	            <p:menuitem value="#{i18n['common.sources']}" rendered="#{feature.browseSources}" styleClass="#{activeMenu == Constants.MENU_SOURCE ? 'ui-state-active' : ''}" url="#{conf.contextPath}#{url.source.list}" />
+	            <p:menuitem value="#{i18n['common.contacts']}" rendered="#{feature.browseContacts}" styleClass="#{activeMenu == Constants.MENU_CONTACT ? 'ui-state-active' : ''}" url="#{conf.contextPath}#{url.contact.list}" />
+	            <p:menuitem value="#{i18n['common.lifecyclemodels']}" rendered="#{feature.browseLifeCycleModels}" styleClass="#{activeMenu == Constants.MENU_LIFECYCLEMODEL ? 'ui-state-active' : ''}" url="#{conf.contextPath}#{url.lifecyclemodel.list}" />
+	        </p:submenu>
+	        <p:submenu label="#{i18n['public.searchDatasets']}">
+	            <p:menuitem value="#{i18n['public.search']} #{i18n['common.processes']}" styleClass="#{activeMenu == Constants.MENU_SEARCHPROCESS ? 'ui-state-active' : ''}" rendered="#{feature.searchProcesses}" url="#{conf.contextPath}#{url.process.searchForm}" />
+	        </p:submenu>
+			<p:submenu rendered="#{user.hasAnyImportRight()}" label="#{i18n['admin.fileUpload.import']}">
+				<p:menuitem value="#{i18n['admin.fileUpload.upload']}" styleClass="#{activeMenu == Constants.MENU_UPLOAD ? 'ui-state-active' : ''}" url="#{conf.contextPath}/upload.xhtml"/>
+			</p:submenu>
+	    </p:menu>
+    </h:form>
+
+</ui:composition>

@@ -1,0 +1,25 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<!--
+	Parameters for this composition:
+		via ui:param:
+			handler
+	-->
+
+	<p:panel header="#{i18n['common.privacyPolicy']}" rendered="#{conf.acceptPrivacyPolicy}">
+		<h:panelGrid columns="3" id="privacyPolicy">
+
+			<p:selectBooleanCheckbox id="acceptPrivacyPolicy" value="#{handler.privacyPolicyAccepted}" required="true"
+				requiredMessage="#{i18n['admin.user.acceptPrivacyPolicyRequired']}">
+				<f:validator validatorId="requiredCheckboxValidator" />
+			</p:selectBooleanCheckbox>
+			<p:spacer width="5px" />
+			<p:outputLabel value="#{i18n['admin.user.acceptPrivacyPolicy']}" for="acceptPrivacyPolicy">
+				<ui:include src="/admin/common/include/privacyPolicyLinkExternal.xhtml"/>
+				<ui:include src="/admin/common/include/privacyPolicyLinkInternal.xhtml"/>
+				<h:outputText value="#{i18n['common.privacyPolicy']}" rendered="#{conf.privacyPolicyURL == null}" />
+			</p:outputLabel>
+		</h:panelGrid>
+	</p:panel>
+</ui:composition>

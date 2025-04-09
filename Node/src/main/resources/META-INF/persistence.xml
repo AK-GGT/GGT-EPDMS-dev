@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="soda4LCADBPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <non-jta-data-source>java:comp/env/jdbc/soda4LCAdbconnection</non-jta-data-source>
+    <class>de.iai.ilcd.model.common.Category</class>
+    <class>de.iai.ilcd.model.common.CategoryDefinition</class>
+    <class>de.iai.ilcd.model.common.CategorySystem</class>
+    <class>de.iai.ilcd.model.common.ClClass</class>
+    <class>de.iai.ilcd.model.common.Classification</class>
+    <class>de.iai.ilcd.model.common.ConfigurationItem</class>
+    <class>de.iai.ilcd.model.common.DataSet</class>
+    <class>de.iai.ilcd.model.common.DataSetVersion</class>
+    <class>de.iai.ilcd.model.common.DigitalFile</class>
+    <class>de.iai.ilcd.model.common.GeographicalArea</class>
+    <class>de.iai.ilcd.model.common.GlobalReference</class>
+    <class>de.iai.ilcd.model.common.JobMetaData</class>
+    <class>de.iai.ilcd.model.common.Language</class>
+    <class>de.iai.ilcd.model.common.PushConfig</class>
+    <class>de.iai.ilcd.model.common.PushTarget</class>
+    <class>de.iai.ilcd.model.common.Uuid</class>
+    <class>de.iai.ilcd.model.common.XmlFile</class>
+    <class>de.iai.ilcd.model.contact.Contact</class>
+    <class>de.iai.ilcd.model.datastock.AbstractDataStock</class>
+    <class>de.iai.ilcd.model.datastock.DataStock</class>
+    <class>de.iai.ilcd.model.datastock.DisplayProperties</class>
+    <class>de.iai.ilcd.model.datastock.ExportTag</class>
+    <class>de.iai.ilcd.model.datastock.RootDataStock</class>
+    <class>de.iai.ilcd.model.flow.ElementaryFlow</class>
+    <class>de.iai.ilcd.model.flow.Flow</class>
+    <class>de.iai.ilcd.model.flow.FlowPropertyDescription</class>
+    <class>de.iai.ilcd.model.flow.MaterialProperty</class>
+    <class>de.iai.ilcd.model.flow.MaterialPropertyDefinition</class>
+    <class>de.iai.ilcd.model.flow.ProductFlow</class>
+    <class>de.iai.ilcd.model.flowproperty.FlowProperty</class>
+    <class>de.iai.ilcd.model.lciamethod.LCIAMethod</class>
+    <class>de.iai.ilcd.model.lciamethod.LCIAMethodCharacterisationFactor</class>
+    <class>de.iai.ilcd.model.lciamethod.TimeInformation</class>
+    <class>de.iai.ilcd.model.lifecyclemodel.AdministrativeInformation</class>
+    <class>de.iai.ilcd.model.lifecyclemodel.CommissionerAndGoal</class>
+    <class>de.iai.ilcd.model.lifecyclemodel.DataEntryBy</class>
+    <class>de.iai.ilcd.model.lifecyclemodel.DownstreamProcess</class>
+    <class>de.iai.ilcd.model.lifecyclemodel.LifeCycleModel</class>
+    <class>de.iai.ilcd.model.lifecyclemodel.OutputExchange</class>
+    <class>de.iai.ilcd.model.lifecyclemodel.ProcessInstance</class>
+    <class>de.iai.ilcd.model.lifecyclemodel.PublicationAndOwnership</class>
+    <class>de.iai.ilcd.model.lifecyclemodel.TechnologyGroup</class>
+    <class>de.iai.ilcd.model.nodes.NetworkNode</class>
+    <class>de.iai.ilcd.model.process.AccessInformation</class>
+    <class>de.iai.ilcd.model.process.Amount</class>
+    <class>de.iai.ilcd.model.process.ComplianceSystem</class>
+    <class>de.iai.ilcd.model.process.DataQualityIndicator</class>
+    <class>de.iai.ilcd.model.process.Exchange</class>
+    <class>de.iai.ilcd.model.process.Geography</class>
+    <class>de.iai.ilcd.model.process.InternalQuantitativeReference</class>
+    <class>de.iai.ilcd.model.process.LCIMethodInformation</class>
+    <class>de.iai.ilcd.model.process.LciaResult</class>
+    <class>de.iai.ilcd.model.process.LciaResultClClassStats</class>
+    <class>de.iai.ilcd.model.process.Process</class>
+    <class>de.iai.ilcd.model.process.Review</class>
+    <class>de.iai.ilcd.model.process.SafetyMargins</class>
+    <class>de.iai.ilcd.model.process.Scenario</class>
+    <class>de.iai.ilcd.model.process.ScopeOfReview</class>
+    <class>de.iai.ilcd.model.process.TimeInformation</class>
+    <class>de.iai.ilcd.model.registry.DataSetRegistrationData</class>
+    <class>de.iai.ilcd.model.registry.DatasetDeregistrationReason</class>
+    <class>de.iai.ilcd.model.registry.RegistrationData</class>
+    <class>de.iai.ilcd.model.registry.Registry</class>
+    <class>de.iai.ilcd.model.security.Address</class>
+    <class>de.iai.ilcd.model.security.IndustrialSector</class>
+    <class>de.iai.ilcd.model.security.Organization</class>
+    <class>de.iai.ilcd.model.security.User</class>
+    <class>de.iai.ilcd.model.security.UserGroup</class>
+    <class>de.iai.ilcd.model.source.Source</class>
+    <class>de.iai.ilcd.model.tag.Tag</class>
+    <class>de.iai.ilcd.model.unitgroup.Unit</class>
+    <class>de.iai.ilcd.model.unitgroup.UnitGroup</class>
+    <class>de.iai.ilcd.security.StockAccessRight</class>
+    <class>de.iai.ilcd.service.glad.GLADDatabaseProperties</class>
+    <class>de.iai.ilcd.service.glad.GLADRegistrationData</class>
+    <class>eu.europa.ec.jrc.lca.commons.domain.RegistryCredentials</class>
+    <class>eu.europa.ec.jrc.lca.commons.domain.NodeCredentials</class>
+    <class>eu.europa.ec.jrc.lca.commons.domain.Nonce</class>
+    <exclude-unlisted-classes>true</exclude-unlisted-classes>
+    <shared-cache-mode>ALL</shared-cache-mode>
+    <properties>
+      <property name="eclipselink.cache.type.default" value="Weak"/>
+      <property name="javax.persistence.nonJtaDataSource" value="java:comp/env/jdbc/soda4LCAdbconnection"/>
+      <property name="eclipselink.session.customizer" value="de.iai.ilcd.persistence.JPAEclipseLinkSessionCustomizer"/>
+      <property name="eclipselink.target-database" value="MySQL"/>
+      <property name="eclipselink.weaving" value="static"/>
+      <!--      <property name="eclipselink.cache.shared.default" value="false"/>-->
+
+      <!--       <property name="eclipselink.ddl-generation" value="create-tables" />
+            <property name="eclipselink.ddl-generation.output-mode" value="sql-script"/>
+            <property name="eclipselink.create-ddl-jdbc-file-name" value="soda_ddl1.sql" />
+            <property name="eclipselink.application-location" value="/home/soda/Desktop/" />
+            <property name="eclipselink.logging.level" value="WARNING"/>
+             -->
+
+      <!--       <property name="eclipselink.ddl-generation" value="create-tables" />
+            <property name="eclipselink.ddl-generation.output-mode" value="database"/>
+            <property name="eclipselink.logging.level" value="WARNING"/> -->
+
+    </properties>
+  </persistence-unit>
+</persistence>

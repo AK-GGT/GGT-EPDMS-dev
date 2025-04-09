@@ -1,0 +1,205 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp">
+	
+	<f:metadata>
+		<f:viewParam name="uuid" value="#{contactHandler.dataSetUuidString}" />
+		<f:viewParam name="version" value="#{contactHandler.dataSetVersionString}" />
+		<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{contactHandler.postViewParamInit(true)}" />
+	</f:metadata>
+	
+	<h:body>
+		<ui:composition template="./datasetTemplateDetailView.xhtml">
+			<ui:param name="dataset" value="#{contactHandler.contact}" />
+			<ui:param name="contact" value="#{contactHandler.contact}" />
+			<ui:param name="xmlContactDataSetInfo" value="#{contactHandler.xmlDataset.contactInformation.dataSetInformation}" />
+			<ui:param name="lang" value="#{localeBean.locale.language}" />
+			<ui:param name="pageTitleDatasetName" value="#{not empty contact.shortName.getValueWithFallback(lang) ? contact.shortName.getValueWithFallback(lang) : contact.name.getValueWithFallback(lang)}" />
+			<ui:param name="pageTitleDatasetType" value="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+			<ui:define name="content">
+				<p:accordionPanel id="accPanel" multiple="true" widgetVar="accPanelWidget" activeIndex="0,1">
+					<!-- section -->
+					<p:tab title="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['common.info']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+						<p:panelGrid>
+							<!-- subsection -->
+							<p:row>
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['public.dataset']}#{i18n['delimiter']}#{i18n['common.info']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty contact.shortName.getValueWithFallback(lang)}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="shortName"
+										outputTextValue="#{i18n['public.dataset.shortName']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.contact.shortName']}" />
+								</p:column>
+								<p:column>
+									#{contact.shortName.getValueWithFallback(lang)}
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="name"
+										outputTextValue="#{i18n['common.name']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.contact.name']}" />
+								</p:column>
+								<p:column>
+									#{contact.name.getValueWithFallback(lang)}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty xmlContactDataSetInfo.classificationInformation.classification}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="classification"
+										outputTextValue="#{i18n['common.dataset.classif']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.classification']}" />
+								</p:column>
+								<p:column>
+									<ui:include src="./include/classNameLevel.xhtml">
+										<ui:param name="xmlClassification" value="#{xmlContactDataSetInfo.classificationInformation.classification}" />
+									</ui:include>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty contact.contactAddress}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="contactAddress"
+										outputTextValue="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.contact.address']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.contact.contactAddress']}" />
+								</p:column>
+								<p:column>
+									#{contact.contactAddress}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty contact.phone}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="telephone"
+										outputTextValue="#{i18n['common.telephone']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.contact.telephone']}" />
+								</p:column>
+								<p:column>
+									#{contact.phone}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty contact.fax}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="telefax"
+										outputTextValue="#{i18n['common.telefax']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.contact.telefax']}" />
+								</p:column>
+								<p:column>
+									#{contact.fax}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty contact.email}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="email"
+										outputTextValue="#{i18n['common.email']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.contact.email']}" />
+								</p:column>
+								<p:column>
+									<h:outputLink value="mailto:#{contact.email}" rendered="#{contactHandler.isValidEMailAddress(contact.email)}">
+										#{contact.email}
+									</h:outputLink>
+									<h:outputText value="#{contact.email}" rendered="#{not contactHandler.isValidEMailAddress(contact.email)}" />
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty contact.www}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="wwwAddress"
+										outputTextValue="#{i18n['common.wwwAddress']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.contact.wwwAddress']}" />
+								</p:column>
+								<p:column>
+									<h:panelGroup rendered="#{not empty contact.www}">
+										<h:outputLink value="#{contactHandler.fixWwwAddress(contact.www)}" target="_blank" rendered="#{not empty contactHandler.fixWwwAddress(contact.www)}">
+											#{contact.www}
+										</h:outputLink>
+										<h:outputText value="#{contact.www}" rendered="#{empty contactHandler.fixWwwAddress(contact.www)}" />
+									</h:panelGroup>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty contact.centralContactPoint}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="centralContactPoint"
+										outputTextValue="#{i18n['common.centralContactPoint']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.contact.centralContactPoint']}" />
+								</p:column>
+								<p:column>
+									#{contact.centralContactPoint}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty contact.description.getValueWithFallback(lang)}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="contactDescriptionOrComment"
+										outputTextValue="#{i18n['common.contactDescriptionOrComment']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.contact.contactDescriptionOrComment']}" />
+								</p:column>
+								<p:column>
+									#{contact.description.getValueWithFallback(lang)}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty xmlContactDataSetInfo.referenceToContact}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToContact"
+										outputTextValue="#{i18n['common.referenceToContact']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToContact']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{xmlContactDataSetInfo.referenceToContact}">
+										<ui:param name="contactRef" value="#{dataListStyledVar}" />
+										<soda:dataListLinkOrText
+											dataListValue="#{contactHandler.getMultilangWithFallback(lang, contactRef.shortDescription)}"
+											outputLinkValue="#{contactHandler.getReferenceUrlXml(contactRef, url.contact)}"
+											outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty xmlContactDataSetInfo.referenceToLogo}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToLogo"
+										outputTextValue="#{i18n['common.referenceToLogo']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToLogo']}" />
+								</p:column>
+								<p:column>
+									#{contactHandler.getDigitalFileUrlXml(xmlContactDataSetInfo.referenceToLogo, url.source)}
+									<ui:param name="logoDesc" value="#{not empty xmlContactDataSetInfo.referenceToLogo.shortDescription ? contactHandler.getMultilangWithFallback(lang, xmlContactDataSetInfo.referenceToLogo.shortDescription) : 'logo'}" />
+									<h:graphicImage value="#{contactHandler.getDigitalFileUrlXml(xmlContactDataSetInfo.referenceToLogo, url.source)}" alt="#{logoDesc}" title="#{logoDesc}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:tab>
+					<ui:include src="./include/tab_administrative.xhtml">
+						<ui:param name="dataset" value="#{contact}" />
+						<ui:param name="datasetHandler" value="#{contactHandler}" />
+						<ui:param name="datasetTitle" value="#{i18n['common.contact']}" />
+						<ui:param name="urlBeanDataset" value="#{url.contact}" />
+					</ui:include>
+				</p:accordionPanel>
+
+				<ui:fragment rendered="#{conf.displayConfig.showBackLinks}">
+					<ui:include src="./include/backLinks.xhtml">
+						<ui:param name="linkDetailOutcome" value="#{url.contact.getDetail(contact)}" />
+						<ui:param name="linkListOutcome" value="#{url.contact.list}" />
+						<ui:param name="linkValue" value="#{i18n['common.contact']}" />
+					</ui:include>
+				</ui:fragment>
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</html>

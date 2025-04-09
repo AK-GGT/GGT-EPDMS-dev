@@ -1,0 +1,3 @@
+CREATE TABLE process_reference_to_publisher (process_ID BIGINT NOT NULL, globalreference_ID BIGINT NOT NULL, PRIMARY KEY (process_ID, globalreference_ID));
+ALTER TABLE process_reference_to_publisher ADD CONSTRAINT FK_process_reference_to_publisher_globalreference_ID FOREIGN KEY (globalreference_ID) REFERENCES globalreference (ID) ON DELETE CASCADE;
+ALTER TABLE process_reference_to_publisher ADD CONSTRAINT FK_process_reference_to_publisher_process_ID FOREIGN KEY (process_ID) REFERENCES process (ID) ON DELETE CASCADE;

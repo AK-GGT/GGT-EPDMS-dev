@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <organization id="1" name="Default Organization"/>
+  <organization id="2" name="Organization1" ORGANISATIONUNIT="test" CITY="Budapest" COUNTRY="HU" STREETADDRESS="Müegyetem rkp. 9-11." ZIPCODE="1111" SECTOR_ID="7"/>
+  <organization id="3" name="Organization2" ORGANISATIONUNIT="test" CITY="Budapest" COUNTRY="HU" STREETADDRESS="Müegyetem rkp. 9-11." ZIPCODE="1111" SECTOR_ID="3"/>
+  <organization id="4" name="Organization3" ORGANISATIONUNIT="test" CITY="Budapest" COUNTRY="HU" STREETADDRESS="Müegyetem rkp. 9-11." ZIPCODE="1111" SECTOR_ID="1"/>
+  <user ID="1" EMAIL="admin@admin.admin" PASSWORD_HASH="8800cc078f01fe328c838ef40245671ae9ddb41ecefc2cff9b25546d0de77d18bdefeb4cdac5e120e094b9b0c9b0439be4166cbd1924d7f9c9ddf2c4b9959473" PASSWORD_HASH_SALT="wqugu4btwsqau!6bb6ie" super_admin_permission="1" USERNAME="admin" organization="1"/>
+</dataset>

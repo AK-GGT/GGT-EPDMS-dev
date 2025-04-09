@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet version="1.0" href="../../stylesheets/contact2html.xsl" type="text/xsl"?>
+<contactDataSet xmlns="http://lca.jrc.it/ILCD/Contact" xmlns:common="http://lca.jrc.it/ILCD/Common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://lca.jrc.it/ILCD/Contact ../../schemas/ILCD_ContactDataSet.xsd" version="1.1">
+  <contactInformation>
+    <dataSetInformation>
+      <common:UUID>aa0a2faf-0bcf-428f-9fdf-c74d7e6a5136</common:UUID>
+      <common:shortName xml:lang="en">EuLA</common:shortName>
+      <common:name xml:lang="en">European Lime Association</common:name>
+      <classificationInformation>
+        <common:classification name="GaBiCategories" classes="../GaBiCategories.xml">
+          <common:class level="0" classId="dc0407c0-c183-4ad6-9e13-c198470b26e4">Organisations</common:class>
+          <common:class level="1" classId="7ad3b7ef-536f-4fb3-a5df-a4e2fc89848e">Non-governmental org.</common:class>
+        </common:classification>
+      </classificationInformation>
+    </dataSetInformation>
+  </contactInformation>
+  <administrativeInformation>
+    <dataEntryBy>
+      <common:timeStamp>2011-05-30T18:38:46+01:00</common:timeStamp>
+      <common:referenceToDataSetFormat refObjectId="a97a0155-0234-4b87-b4ce-a45da52f2a40" version="01.00.000" type="source data set" uri="../sources/a97a0155-0234-4b87-b4ce-a45da52f2a40.xml">
+        <common:shortDescription xml:lang="en">ILCD format 1.1</common:shortDescription>
+      </common:referenceToDataSetFormat>
+    </dataEntryBy>
+    <publicationAndOwnership>
+      <common:dataSetVersion>03.00.000</common:dataSetVersion>
+    </publicationAndOwnership>
+  </administrativeInformation>
+</contactDataSet>

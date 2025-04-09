@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp">
+		
+	<ui:include src="./include/tag.xhtml">
+		<ui:param name="showInvisibleTags" value="false"/>
+	</ui:include>
+	
+	<!-- dynamic="true" cache="true" -->
+	<p:accordionPanel id="accPanel" multiple="true" widgetVar="accPanelWidget" activeIndex="#{processHandler.returnActiveIndexString()}">		
+		<ui:include src="./tab_process_info.xhtml" />
+
+		<ui:include src="./tab_process_modelValid.xhtml" />
+
+		<ui:include src="./include/tab_administrative_proc.xhtml">
+			<ui:param name="datasetHandler" value="#{processHandler}" />
+			<ui:param name="dataset" value="#{process}" />
+		</ui:include>
+
+		<ui:insert name="tabs_other_inputsOutputs_lciaResults" />
+		
+		<ui:insert name="tab_epd_environmentalIndicators" />
+	</p:accordionPanel>
+	
+	<ui:fragment rendered="#{conf.displayConfig.showBackLinks}">
+		<ui:include src="./include/backLinks.xhtml">
+			<ui:param name="linkDetailOutcome" value="#{url.process.getDetail(process)}" />
+			<ui:param name="linkListOutcome" value="#{url.process.list}" />
+			<ui:param name="linkValue" value="#{i18n['common.proc']}" />
+		</ui:include>
+	</ui:fragment>
+</ui:composition>

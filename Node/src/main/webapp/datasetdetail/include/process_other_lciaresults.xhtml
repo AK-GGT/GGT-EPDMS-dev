@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	
+	<p:tab rendered="#{not empty process.lciaResults}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+		<f:facet name="title">
+			<h:outputText id="lciaResultsTabTitle" value="#{i18n['common.lciaResults']}" />
+		</f:facet>
+		<f:facet name="title">
+			<h:outputText id="lciaResultsTabTitleRight" value="#{process.quantitativeReference.functionalUnit.getValueWithFallback(lang)}" style="float:right"
+				rendered="#{conf.displayConfig.showProcessesDetailLciaResultsShowFunctionalUnit and not empty process.quantitativeReference.functionalUnit.getValueWithFallback(lang)}" />
+		</f:facet>
+		<ui:fragment rendered="#{user.hasDatasetDetailRights(process) or conf.enableDatasetdetailsView}">
+			<p:dataTable rendered="#{not empty process.lciaResults}" value="#{process.lciaResults}" var="lciaResult" styleClass="lotsofcolumns" sortBy="#{lciaResult}" sortFunction="#{processHandler.sortLciaResults}">
+				<p:column styleClass="column-style" >
+					<f:facet name="header">
+						<soda:outputTextTooltip
+							outputTextId="referenceToLCIAMethodDataSet"
+							outputTextValue="#{i18n['common.lciaMethod.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.referenceToLCIAMethodDataSet']}" />
+					</f:facet>
+					<soda:switchLinkOrText
+						outputLinkValue="#{processHandler.getReferenceUrl(lciaResult.methodReference, url.lciaMethod)}"
+						outputLinkTitle="#{i18n['common.lciaMethod.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+						outputTextValue="#{lciaResult.methodReference.shortDescription.getValueWithFallback(lang)}" />
+				</p:column>
+				<p:column styleClass="column-style" width="11%"  >
+					<f:facet name="header">
+						<soda:outputTextTooltip
+							outputTextId="meanAmount"
+							outputTextValue="#{i18n['common.meanAmount']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.meanAmount']}" />
+					</f:facet>
+					<div style="text-align: right;">
+						#{lciaResult.meanAmount}
+					</div>
+					</p:column>
+				<p:column styleClass="column-style" width="16%" >
+					<f:facet name="header" styleClass="column-style">
+						<soda:outputTextTooltip
+							outputTextId="unit"
+							outputTextValue="#{i18n['common.unit']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.unit']}" />
+					</f:facet>
+					#{processHandler.getLCIAResultUnit(lciaResult.methodReference, lang)}
+				</p:column>
+				<p:column styleClass="column-style" rendered="#{conf.displayConfig.showProcessesDetailLciaResultsUncertaintyDistType}" >
+					<f:facet name="header">
+						<soda:outputTextTooltip
+							outputTextId="uncertaintyDistributionType"
+							outputTextValue="#{i18n['common.uncertaintyDistributionType.wrapped']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.uncertaintyDistributionType']}" />
+					</f:facet>
+					#{lciaResult.uncertaintyDistribution}
+				</p:column>
+				<p:column styleClass="column-style" rendered="#{conf.displayConfig.showProcessesDetailLciaResultsRelativeStdDev}" >
+					<f:facet name="header">
+						<soda:outputTextTooltip
+							outputTextId="relativeStandardDeviation95In"
+							outputTextValue="#{i18n['common.relativeStdDev.wrapped']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.dataset.relativeStandardDeviation95In']}" />
+					</f:facet>
+					#{lciaResult.standardDeviation} %
+				</p:column>
+				<p:column styleClass="column-style" >
+					<f:facet name="header">
+						<soda:outputTextTooltip
+							outputTextId="generalComment"
+							outputTextValue="#{i18n['common.comment']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.lciaResult.generalComment']}" />
+					</f:facet>
+					#{lciaResult.comment.getValueWithFallback(lang)}
+				</p:column>
+			</p:dataTable>
+		</ui:fragment>
+		<ui:fragment rendered="#{!user.hasDatasetDetailRights(process) and !conf.enableDatasetdetailsView}">
+			<h:outputText value="#{i18n['common.accessRestrictedMetadataOnly.info']} " styleClass="ui-state-error" />
+			<h:outputLink value="/registration.xhtml" rendered="#{conf.registrationActivated}">
+				<h:outputText value="#{i18n['common.accessRestrictedMetadataOnly.register']}" styleClass="ui-state-error" />
+			</h:outputLink>
+			<h:outputText value="#{i18n['common.accessRestrictedMetadataOnly.vendor']}" styleClass="ui-state-error" rendered="#{!conf.registrationActivated}" />
+		</ui:fragment>
+	</p:tab>
+</ui:composition>

@@ -1,0 +1,3 @@
+CREATE TABLE process_reference_to_original_epd (process_ID BIGINT NOT NULL, globalreference_ID BIGINT NOT NULL, PRIMARY KEY (process_ID, globalreference_ID));
+ALTER TABLE process_reference_to_original_epd ADD CONSTRAINT FK_process_reference_to_original_epd_globalreference_ID FOREIGN KEY (globalreference_ID) REFERENCES globalreference (ID) ON DELETE CASCADE;
+ALTER TABLE process_reference_to_original_epd ADD CONSTRAINT FK_process_reference_to_original_epd_process_ID FOREIGN KEY (process_ID) REFERENCES process (ID) ON DELETE CASCADE;

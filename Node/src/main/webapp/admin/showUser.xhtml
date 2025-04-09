@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+      
+    <f:metadata>
+        <f:viewParam name="userId" value="#{userHandler.entryIdString}" />
+        <f:event type="javax.faces.event.PreRenderViewEvent" listener="#{userHandler.postViewParamInit}" />
+    </f:metadata>
+
+    <h:body>
+        <ui:composition template="/admin/layout/adminDesign.xhtml">
+            <ui:param name="pageTitle" value="#{i18n['admin.user.edit']}: #{userHandler.user.userName}" />
+            <ui:define name="content">
+                <p>#{i18n['common.mandatoryFields']}</p>
+
+                <h:form id="generalForm" prependId="false">
+
+                    <ui:include src="/admin/userEntry.xhtml">
+	                    	<ui:param name="nameEditable" value="true" />
+	                    	<ui:param name="pwShown" value="false" />
+	                    	<ui:param name="showOrganisation" value="true" />
+	                    	<ui:param name="handler" value="#{userHandler}" />
+	                    	<ui:param name="requireSector" value="false"/>
+	                    	<ui:param name="edit" value="true" />
+                    </ui:include>
+
+                    <div class="buttonCenter">
+                        <p:commandButton value="#{i18n['admin.user.changeUserInfo']}"
+                                         action="#{userHandler.saveEntry}"
+                                         update="messages" />
+                    </div>
+                    <ui:include src="/messages.xhtml" />
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

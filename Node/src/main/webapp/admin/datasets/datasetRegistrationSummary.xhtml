@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:body>
+	<ui:composition template="/admin/layout/adminDesign.xhtml">
+		<ui:param name="pageTitle" value="#{i18n['admin.datasetRegistrationSummary.title']}" />
+		<ui:define name="content">
+			<h:form id="generalForm" prependId="false">
+				<p:panel header="#{i18n['admin.datasetRegistrationSummary.title']}" >
+					<h:panelGrid columns="2"
+						columnClasses="column1of4,column2of4"
+						styleClass="detailsWidth" >
+						
+						<h:outputLabel value="#{i18n['admin.datasetRegistrationSummary.registry']}:" for="registryName" rendered="#{datasetRegistrationSummaryBean.registry!=null}"/>
+						<h:outputText id="registryName"
+							value="#{datasetRegistrationSummaryBean.registry.name}" rendered="#{datasetRegistrationSummaryBean.registry!=null}"/>
+
+						<h:outputLabel value="#{datasetRegistrationSummaryBean.glad ? i18n['admin.datasetRegistrationSummary.success'] : i18n['admin.datasetRegistrationSummary.approved']}:"
+							for="accepted" />
+						<h:outputText id="accepted"
+							value="#{datasetRegistrationSummaryBean.accepted}" />
+
+						<h:outputLabel value="#{datasetRegistrationSummaryBean.glad ? i18n['admin.datasetRegistrationSummary.notRegistered'] : i18n['admin.datasetRegistrationSummary.rejected']}:"
+							for="rejected" />
+						<h:outputText id="rejected"
+							value="#{datasetRegistrationSummaryBean.rejected}" />
+							
+						<h:outputLabel value="#{i18n['admin.datasetRegistrationSummary.error']}:"
+							for="error" rendered="#{!datasetRegistrationSummaryBean.glad}"/>
+						<h:outputText id="error"
+							value="#{datasetRegistrationSummaryBean.errorCount}" rendered="#{!datasetRegistrationSummaryBean.glad}"/>	
+					</h:panelGrid>
+				</p:panel>
+				
+				<p:panel header="#{datasetRegistrationSummaryBean.glad ? i18n['admin.datasetRegistrationSummary.notRegisteredDataSets'] : i18n['admin.datasetRegistrationSummary.rejectedDataSets']}" > <!-- rendered="#{datasetRegistrationSummaryBean.registry!=null}" -->
+					<p:dataTable id="processTable" var="process"
+						value="#{datasetRegistrationSummaryBean.rejectedProcesses}" paginator="true"
+						rows="15" lazy="false" rowsPerPageTemplate="5,10,15,50"
+						paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+			                     {PreviousPageLink} {PageLinks} {NextPageLink}
+			                     {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']}"
+				        currentPageReportTemplate="#{i18n['common.list.currentEntries']}: {totalRecords} 
+		    		    		 		 (#{dataSetsRegistrationBean.count} #{i18n['common.list.total']})  
+		        		 			 (#{i18n['common.list.page']} {currentPage} #{i18n['common.list.of']} {totalPages})"
+						emptyMessage="#{i18n['common.list.noneFound']}">
+						
+						<p:column headerText="#{i18n['common.name']}" sortBy="#{process.name.value}" filterBy="#{process.name.value}" filterMatchMode="contains">
+							<h:outputText value="#{process.name.value}" />
+						</p:column>
+
+						<p:column headerText="#{i18n['admin.proc.version']}" sortBy="#{process.version}" filterBy="#{process.version}">
+							<h:outputText value="#{process.version}" />
+						</p:column>
+
+						<p:column headerText="#{i18n['common.type']}" sortBy="#{process.type.value}" filterBy="#{process.type.value}">
+							<h:outputText value="#{process.type.value}" />
+						</p:column>
+
+						<p:column headerText="#{i18n['common.dataset.classif']}" sortBy="#{process.classification.classHierarchyAsString}" 
+							filterBy="#{process.classification.classHierarchyAsString}" filterMatchMode="contains">
+							<h:outputText value="#{process.classification.classHierarchyAsString}" />
+						</p:column>
+						
+						<p:column headerText="#{datasetRegistrationSummaryBean.glad ? i18n['admin.datasetRegistrationSummary.reason'] : i18n['admin.datasetRegistrationSummary.rejectionReason']}">
+							<h:outputText value="#{datasetRegistrationSummaryBean.glad ? i18n['admin.datasetRegistrationSummary.invalidDataSet'] : i18n['admin.datasetRegistrationSummary.invalidCompliance']}" 
+								rendered="#{datasetRegistrationSummaryBean.isRejectedCompliance(process)}"/>
+							<h:outputText value="#{i18n['admin.datasetRegistrationSummary.noDifference']}" 
+								rendered="#{datasetRegistrationSummaryBean.isRejectedNoDifference(process)}"/>
+							<h:outputText value="#{i18n['admin.datasetRegistrationSummary.errorReason']}" 
+								rendered="#{datasetRegistrationSummaryBean.isError(process)}"/>
+						</p:column>
+						
+					</p:dataTable>
+				</p:panel>
+				
+			</h:form>
+			<ui:include src="/messages.xhtml" />
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
+

@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	
+	<f:metadata>
+		<f:viewParam name="uuid" value="#{sourceHandler.dataSetUuidString}" />
+		<f:viewParam name="version" value="#{sourceHandler.dataSetVersionString}" />
+		<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{sourceHandler.postViewParamInit(true)}" />
+	</f:metadata>
+
+	<h:body>
+		<ui:composition template="./datasetTemplateDetailView.xhtml">
+			<ui:param name="dataset" value="#{sourceHandler.source}" />
+			<ui:param name="source" value="#{sourceHandler.source}" />
+			<ui:param name="xmlSourceDataSetInfo" value="#{sourceHandler.xmlDataset.sourceInformation.dataSetInformation}" />
+			<ui:param name="lang" value="#{localeBean.locale.language}" />
+			<ui:param name="pageTitleDatasetName" value="#{source.shortName.getValueWithFallback(lang)}" />
+			<ui:param name="pageTitleDatasetType" value="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+			<ui:define name="content">
+				<p:accordionPanel id="accPanel" multiple="true" widgetVar="accPanelWidget" activeIndex="0,1">
+					<!-- section -->
+					<p:tab title="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['common.info']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+						<p:panelGrid>
+							<!-- subsection -->
+							<p:row>
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['public.dataset']}#{i18n['delimiter']}#{i18n['common.info']}
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="shortName"
+										outputTextValue="#{i18n['public.dataset.shortName']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.source.shortName']}" />
+								</p:column>
+								<p:column>
+									#{source.shortName.getValueWithFallback(lang)}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty sourceHandler.xmlDataset.sourceInformation.dataSetInformation.classificationInformation.classification}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="classification"
+										outputTextValue="#{i18n['common.dataset.classif']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.classification']}" />
+								</p:column>
+								<p:column>
+									<ui:include src="./include/classNameLevel.xhtml">
+										<ui:param name="xmlClassification" value="#{sourceHandler.xmlDataset.sourceInformation.dataSetInformation.classificationInformation.classification}" />
+									</ui:include>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty source.citation.getValueWithFallback(lang)}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="sourceCitation"
+										outputTextValue="#{i18n['common.sourceCitation']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.source.sourceCitation']}" />
+								</p:column>
+								<p:column>
+									#{source.citation.getValueWithFallback(lang)}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty source.publicationType.value}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="publicationType"
+										outputTextValue="#{i18n['public.source.publicationType']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.source.publicationType']}" />
+								</p:column>
+								<p:column>
+									#{source.publicationType.value}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty source.description.getValueWithFallback(lang)}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="sourceDescriptionOrComment"
+										outputTextValue="#{i18n['common.sourceDescriptionOrComment']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.source.sourceDescriptionOrComment']}" />
+								</p:column>
+								<p:column>
+									#{source.description.getValueWithFallback(lang)}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty source.files}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToDigitalFile"
+										outputTextValue="#{i18n['common.referenceToDigitalFile']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.source.referenceToDigitalFile']}" />
+								</p:column>
+								<p:column>
+									<ui:include src="/digitalFiles.xhtml" />
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty source.contacts}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToContact"
+										outputTextValue="#{i18n['common.referenceToContact']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToContact']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{sourceHandler.getAsList(source.contacts)}">
+										<ui:param name="contactRef" value="#{dataListStyledVar}" />
+										<soda:switchLinkOrText
+											outputLinkValue="#{sourceHandler.getReferenceUrl(contactRef, url.contact)}"
+											outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+											outputTextValue="#{contactRef.shortDescription.getValueWithFallback(lang)}" />
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty xmlSourceDataSetInfo.referenceToLogo.shortDescription}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToLogo"
+										outputTextValue="#{i18n['common.referenceToLogo']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToLogo']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListLinkOrText
+										dataListValue="#{sourceHandler.getMultilangWithFallback(lang, xmlSourceDataSetInfo.referenceToLogo.shortDescription)}"
+										outputLinkValue="#{sourceHandler.getReferenceUrlXml(xmlSourceDataSetInfo.referenceToLogo, url.source)}"
+										outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+										outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:tab>
+
+					<ui:include src="./include/tab_administrative.xhtml">
+						<ui:param name="dataset" value="#{source}" />
+						<ui:param name="datasetHandler" value="#{sourceHandler}" />
+						<ui:param name="datasetTitle" value="#{i18n['common.source.inflected']}" />
+						<ui:param name="urlBeanDataset" value="#{url.source}" />
+					</ui:include>
+				</p:accordionPanel>
+				
+				<ui:fragment rendered="#{conf.displayConfig.showBackLinks}">
+					<ui:include src="./include/backLinks.xhtml">
+						<ui:param name="linkDetailOutcome" value="#{url.source.getDetail(source)}" />
+						<ui:param name="linkListOutcome" value="#{url.source.list}" />
+						<ui:param name="linkValue" value="#{i18n['common.source.inflected']}" />
+					</ui:include>
+				</ui:fragment>
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</html>

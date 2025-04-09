@@ -1,0 +1,38 @@
+Producer - Batteries and accumulators
+Producer - Decorative paints
+Producer - Hot & cold water pipe systems
+Producer - Liquid household detergents
+Producer - IT equipment (hard disks)
+Producer - Metal sheets
+Producer - Non-leather shoes
+Producer - Photovoltaic electricity generation
+Producer - Intermediate paper products
+Producer - T-shirts
+Producer - Uninterrupted power supplies
+Producer - Leather
+Producer - Thermal insulation
+Producer - Beer
+Producer - Coffee
+Producer - Fish
+Producer - Dairy products
+Producer - Animal feed
+Producer - Red meat
+Producer - Pet food
+Producer - Olive oil
+Producer - Pasta
+Producer - Wine
+Producer - Copper
+Producer - Packed water
+Services industry - Consulting
+Services industry - Research
+Services industry - Retail
+Services industry - Other
+Public - Policy development
+Public - Administration
+Public - Research
+Public - Other
+Public - International body
+NGO - Green and consumers
+NGO - Industry representation/association
+NGO - Other
+Other

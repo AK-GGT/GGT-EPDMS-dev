@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:a="http://xmlns.jcp.org/jsf/core">
+
+	<f:metadata>
+		<f:viewParam name="uuid" value="#{processHandler.dataSetUuidString}" />
+		<f:viewParam name="version" value="#{processHandler.dataSetVersionString}" />
+		<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{processHandler.postViewParamInit(true)}" />
+	</f:metadata>
+
+	<h:body>
+								
+		<ui:composition template="./datasetTemplateDetailView.xhtml">
+			<ui:param name="dataset" value="#{processHandler.process}" />
+			<ui:param name="process" value="#{processHandler.process}" />
+			<ui:param name="xmlProcessInfo" value="#{processHandler.xmlDataset.processInformation}" />
+			<ui:param name="xmlProcessModelValid" value="#{processHandler.xmlDataset.modellingAndValidation}" />
+			<ui:param name="xmlProcessAdminInfo" value="#{processHandler.xmlDataset.administrativeInformation}" />
+			<ui:param name="lang" value="#{localeBean.locale.language}" />
+			<ui:param name="pageTitleDatasetName" value="#{process.name.getValueWithFallback(lang)}" />
+			<ui:param name="pageTitleDatasetType" value="#{i18n['common.proc']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+			<ui:define name="content">
+				<h:outputStylesheet name="css/datasetdetailWide.css" />
+				
+                <h:graphicImage rendered="#{conf.datasetDetailBackgroundProvided and !conf.logoHighRes}" value="#{conf.datasetDetailBackgroundPath}" style="position: absolute; opacity: 0.3; z-index: 99; width: 60em; left: 30%; top: 11em; pointer-events: none" />		
+                <h:graphicImage rendered="#{conf.datasetDetailBackgroundProvided and conf.logoHighRes}" value="#{conf.datasetDetailBackgroundPath}" style="position: absolute; opacity: 0.3; z-index: 99; width: 60em; left: 30%; top: 11em; pointer-events: none" >   
+                    <a:passThroughAttribute name="data-rjs" value="2"/>
+                </h:graphicImage>
+            	<ui:include src="./include/otherVersionsAvailableStaticMessage.xhtml">
+            		<ui:param name="handler" value="#{processHandler}"/>
+            		<ui:param name="detailsView" value="true"/>
+					<ui:param name="urlgen" value="#{url.process}" />
+            	</ui:include>
+				<pe:switch value="#{processHandler.EPD}">
+					<pe:case value="#{true}">
+						<ui:include src="process_epd.xhtml" />
+					</pe:case>
+					<pe:case value="#{false}">
+						<ui:include src="process_other.xhtml" />
+					</pe:case>
+				</pe:switch>
+			</ui:define>
+		</ui:composition>
+		
+		
+	</h:body>
+</html>

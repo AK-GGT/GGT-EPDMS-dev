@@ -1,0 +1,163 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<f:metadata>
+		<f:viewParam name="uuid" value="#{flowpropertyHandler.dataSetUuidString}" />
+		<f:viewParam name="version" value="#{flowpropertyHandler.dataSetVersionString}" />
+		<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{flowpropertyHandler.postViewParamInit(true)}" />
+	</f:metadata>
+
+	<h:body>
+		<ui:composition template="./datasetTemplateDetailView.xhtml">
+			<ui:param name="dataset" value="#{flowpropertyHandler.flowproperty}" />
+			<ui:param name="flowProperty" value="#{flowpropertyHandler.flowproperty}" />
+			<ui:param name="xmlFlowPropertyModelValid" value="#{flowpropertyHandler.xmlDataset.modellingAndValidation}" />
+			<ui:param name="lang" value="#{localeBean.locale.language}" />
+			<ui:param name="pageTitleDatasetName" value="#{flowProperty.name.getValueWithFallback(lang)}" />
+			<ui:param name="pageTitleDatasetType" value="#{i18n['common.flowProperty.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+			<ui:define name="content">
+				<p:accordionPanel id="accPanel" multiple="true" widgetVar="accPanelWidget" activeIndex="0,1,2">
+					<!-- section -->
+					<p:tab title="#{i18n['common.flowProperty.inflected']}#{i18n['delimiter']}#{i18n['common.info']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+						<p:panelGrid>
+							<!-- subsection -->
+							<p:row>
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['public.dataset']}#{i18n['delimiter']}#{i18n['common.info']}
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="name"
+										outputTextValue="#{i18n['common.name']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.flowproperty.name']}" />
+								</p:column>
+								<p:column>
+									#{flowProperty.name.getValueWithFallback(lang)}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty flowProperty.synonyms.getValueWithFallback(lang)}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="synonyms"
+										outputTextValue="#{i18n['public.dataset.synonyms']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.flowproperty.synonyms']}" />
+								</p:column>
+								<p:column>
+									#{flowProperty.synonyms.getValueWithFallback(lang)}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty flowpropertyHandler.xmlDataset.flowPropertiesInformation.dataSetInformation.classificationInformation.classification}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="classification"
+										outputTextValue="#{i18n['common.dataset.classif']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.classification']}" />
+								</p:column>
+								<p:column>
+									<ui:include src="./include/classNameLevel.xhtml">
+										<ui:param name="xmlClassification" value="#{flowpropertyHandler.xmlDataset.flowPropertiesInformation.dataSetInformation.classificationInformation.classification}" />
+									</ui:include>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty flowProperty.description.getValueWithFallback(lang)}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="generalComment"
+										outputTextValue="#{i18n['public.dataset.comment']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.flowproperty.generalComment']}" />
+								</p:column>
+								<p:column>
+									#{flowProperty.description.getValueWithFallback(lang)}
+								</p:column>
+							</p:row>
+							<!-- subsection -->
+							<p:row rendered="#{not empty flowProperty.referenceToUnitGroup}">
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.quantitativeReference']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty flowProperty.referenceToUnitGroup}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToReferenceUnitGroup"
+										outputTextValue="#{i18n['common.dataset.defaultUnit']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.flowproperty.referenceToReferenceUnitGroup']}" />
+								</p:column>
+								<p:column>
+									<soda:switchLinkOrText
+										outputLinkValue="#{flowpropertyHandler.getReferenceUrl(flowProperty.referenceToUnitGroup, url.unitGroup)}"
+										outputLinkTitle="#{i18n['common.unitGroup.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+										outputTextValue="#{flowProperty.unitGroupName.getValueWithFallback(lang)}"
+										outputTextValueUnit="#{flowProperty.defaultUnit}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:tab>
+					<!-- section -->
+					<p:tab rendered="#{not empty xmlFlowPropertyModelValid}" title="#{i18n['common.modellingValidation']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+						<p:panelGrid>
+							<!-- subsection -->
+							<p:row rendered="#{not empty xmlFlowPropertyModelValid.dataSourcesTreatmentAndRepresentativeness.referenceToDataSource}">
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.dataSourcesTreatmentRepresentativeness']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty xmlFlowPropertyModelValid.dataSourcesTreatmentAndRepresentativeness.referenceToDataSource}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToDataSource"
+										outputTextValue="#{i18n['common.dataSource']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.flowproperty.referenceToDataSource']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{xmlFlowPropertyModelValid.dataSourcesTreatmentAndRepresentativeness.referenceToDataSource}">
+										<ui:param name="sourceRef" value="#{dataListStyledVar}" />
+										<soda:dataListLinkOrText
+											dataListValue="#{contactHandler.getMultilangWithFallback(lang, sourceRef.shortDescription)}"
+											outputLinkValue="#{contactHandler.getReferenceUrlXml(sourceRef, url.source)}"
+											outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+											repeatValue="#{sourceRef.subReference}" />
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<!-- subsection -->
+							<p:row rendered="#{not empty xmlFlowPropertyModelValid.complianceDeclarations.compliance}">
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['public.proc.compliance.tooltip.headline']}
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						<ui:include src="./include/compliance.xhtml">
+							<ui:param name="xmlCompliances" value="#{xmlFlowPropertyModelValid.complianceDeclarations.compliance}" />
+							<ui:param name="handler" value="#{flowpropertyHandler}" />
+						</ui:include>
+					</p:tab>
+
+					<ui:include src="./include/tab_administrative.xhtml">
+						<ui:param name="dataset" value="#{flowProperty}" />
+						<ui:param name="datasetHandler" value="#{flowpropertyHandler}" />
+						<ui:param name="datasetTitle" value="#{i18n['common.flowProperty.inflected']}" />
+						<ui:param name="urlBeanDataset" value="#{url.flowProperty}" />
+					</ui:include>
+				</p:accordionPanel>
+				
+				<ui:fragment rendered="#{conf.displayConfig.showBackLinks}">
+					<ui:include src="./include/backLinks.xhtml">
+						<ui:param name="linkDetailOutcome" value="#{url.flowProperty.getDetail(flowProperty)}" />
+						<ui:param name="linkListOutcome" value="#{url.flowProperty.list}" />
+						<ui:param name="linkValue" value="#{i18n['common.flowProperty.inflected']}" />
+					</ui:include>
+				</ui:fragment>
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</html>

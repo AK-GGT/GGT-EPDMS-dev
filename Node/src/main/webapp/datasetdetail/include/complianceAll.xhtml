@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+full version of compliance declarations
+used in
+	- lciamethod.xhtml
+	- process_modelValid.xhtml
+
+via ui:param:
+	- xmlCompliances
+	- handler
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp">
+
+	<ui:repeat value="#{xmlCompliances}" var="compliance">
+		<p:panelGrid columns="8">
+			#{i18n['common.compliance']}
+			<h:panelGroup>
+				<div>
+					<soda:outputTextTooltip
+						outputTextId="referenceToComplianceSystem"
+						outputTextValue="#{i18n['common.referenceToComplianceSystem']}"
+						tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToComplianceSystem']}" />
+				</div>
+				<soda:dataListLinkOrText
+					dataListValue="#{handler.getMultilangWithFallback(lang, compliance.referenceToComplianceSystem.shortDescription)}"
+					outputLinkValue="#{handler.getReferenceUrlXml(compliance.referenceToComplianceSystem, url.source)}"
+					outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+			</h:panelGroup>
+			<h:panelGroup>
+				<div>
+					<soda:outputTextTooltip
+						outputTextId="approvalOfOverallCompliance"
+						outputTextValue="#{i18n['common.approvalOfOverallCompliance']}"
+						tooltipValue="#{i18n['datasetdetail.tooltip.dataset.approvalOfOverallCompliance']}" />
+				</div>
+				<span class="italic">#{compliance.approvalOfOverallCompliance.value}</span>
+			</h:panelGroup>
+			<h:panelGroup>
+				<div>
+					<soda:outputTextTooltip
+						outputTextId="nomenclatureCompliance"
+						outputTextValue="#{i18n['common.nomenclatureCompliance']}"
+						tooltipValue="#{i18n['datasetdetail.tooltip.dataset.nomenclatureCompliance']}" />
+				</div>
+				<span class="italic">#{compliance.nomenclatureCompliance.value}</span>
+			</h:panelGroup>
+			<h:panelGroup>
+				<div>
+					<soda:outputTextTooltip
+						outputTextId="methodologicalCompliance"
+						outputTextValue="#{i18n['common.methodologicalCompliance']}"
+						tooltipValue="#{i18n['datasetdetail.tooltip.dataset.methodologicalCompliance']}" />
+				</div>
+				<span class="italic">#{compliance.methodologicalCompliance.value}</span>
+			</h:panelGroup>
+			<h:panelGroup>
+				<div>
+					<soda:outputTextTooltip
+						outputTextId="reviewCompliance"
+						outputTextValue="#{i18n['common.reviewCompliance']}"
+						tooltipValue="#{i18n['datasetdetail.tooltip.dataset.reviewCompliance']}" />
+				</div>
+				<span class="italic">#{compliance.reviewCompliance.value}</span>
+			</h:panelGroup>
+			<h:panelGroup>
+				<div>
+					<soda:outputTextTooltip
+						outputTextId="documentationCompliance"
+						outputTextValue="#{i18n['common.documentationCompliance']}"
+						tooltipValue="#{i18n['datasetdetail.tooltip.dataset.documentationCompliance']}" />
+				</div>
+				<span class="italic">#{compliance.documentationCompliance.value}</span>
+			</h:panelGroup>
+			<h:panelGroup>
+				<div>
+					<soda:outputTextTooltip
+						outputTextId="qualityCompliance"
+						outputTextValue="#{i18n['common.qualityCompliance']}"
+						tooltipValue="#{i18n['datasetdetail.tooltip.dataset.qualityCompliance']}" />
+				</div>
+				<span class="italic">#{compliance.qualityCompliance.value}</span>
+			</h:panelGroup>
+		</p:panelGrid>
+	</ui:repeat>
+</ui:composition>

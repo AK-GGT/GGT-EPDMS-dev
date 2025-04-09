@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+via ui:param:
+	- showInvisibleTags
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp">
+
+	<p:repeat var="tag" varStatus="tagStatus" value="#{(not empty showInvisibleTags and showInvisibleTags) ? processHandler.process.associatedTagsList : processHandler.process.visibleTagsList}">
+		<!-- h:panelGroup wrapper for nested conditions -->
+		<h:panelGroup rendered="#{conf.displayConfig.showTagsHorizontally}">
+			<h:panelGroup rendered="#{conf.displayConfig.showTagName}">
+				<soda:outputTextTooltip outputTextId="tagText"
+					outputTextValue="#{tag.name.concat(conf.displayConfig.tagsDelimiter)}"
+					tooltipValue="#{tag.description}" 
+					rendered="#{!tagStatus.last}" />
+				<soda:outputTextTooltip outputTextId="tagText"
+					outputTextValue="#{tag.name}"
+					tooltipValue="#{tag.description}" 
+					rendered="#{tagStatus.last}" />
+			</h:panelGroup>
+			<h:panelGroup rendered="#{!conf.displayConfig.showTagName}">
+				<soda:outputTextTooltip outputTextId="tagText"
+					outputTextValue="#{tag.description.concat(conf.displayConfig.tagsDelimiter)}"
+					tooltipValue="#{tag.name}"
+					rendered="#{!tagStatus.last}" />
+				<soda:outputTextTooltip outputTextId="tagText"
+					outputTextValue="#{tag.description}"
+					tooltipValue="#{tag.name}"
+					rendered="#{tagStatus.last}" />
+			</h:panelGroup>
+		</h:panelGroup>
+		<h:panelGroup rendered="#{!conf.displayConfig.showTagsHorizontally}">
+			<h:panelGroup rendered="#{conf.displayConfig.showTagName}">
+				<soda:outputTextTooltip outputTextId="tagText"
+					outputTextValue="#{tag.name}"
+					tooltipValue="#{tag.description}" />
+				<br/>
+			</h:panelGroup>
+			<h:panelGroup rendered="#{!conf.displayConfig.showTagName}">
+				<soda:outputTextTooltip outputTextId="tagText"
+					outputTextValue="#{tag.description}"
+					tooltipValue="#{tag.name}" />
+				<br/>
+			</h:panelGroup>
+		</h:panelGroup>
+	</p:repeat>
+</ui:composition>

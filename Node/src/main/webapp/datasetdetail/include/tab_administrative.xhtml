@@ -1,0 +1,139 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+used in
+	- contact.xhtml
+	- flow.xhtml
+	- flowproperty.xhtml
+	- source.xhtml
+	- unitgroup.xhtml
+
+via ui:param:
+	- dataset
+	- datasetHandler
+	- datasetTitle
+	- urlBeanDataset
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp">
+
+	<ui:param name="dsAdminInfo" value="#{datasetHandler.xmlDataset.administrativeInformation}" />
+	
+	<!-- section -->
+	<p:tab title="#{i18n['common.administrative']} #{i18n['common.info']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+		<div role="region" aria-label="#{i18n['common.administrative']} #{i18n['common.info']}">
+			<p:panelGrid>
+				<!-- subsection -->
+				<p:row rendered="#{not empty dsAdminInfo.dataEntryBy.timeStamp or not empty dsAdminInfo.dataEntryBy.referenceToDataSetFormat}">
+					<p:column colspan="2" styleClass="ui-state-hover">
+						#{i18n['common.dataEntryBy']}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty dsAdminInfo.dataEntryBy.timeStamp}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="timeStamp"
+							outputTextValue="#{i18n['common.timeStamp']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.dataset.timeStamp']}" />
+					</p:column>
+					<p:column>
+						#{dsAdminInfo.dataEntryBy.timeStamp}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty dsAdminInfo.dataEntryBy.referenceToDataSetFormat}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="referenceToDataSetFormat"
+							outputTextValue="#{i18n['common.referenceToDataSetFormat']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToDataSetFormat']}" />
+					</p:column>
+					<p:column>
+						<soda:dataListStyled dataListValue="#{dsAdminInfo.dataEntryBy.referenceToDataSetFormat}">
+							<ui:param name="formatRef" value="#{dataListStyledVar}" />
+							<soda:dataListLinkOrText
+								dataListValue="#{datasetHandler.getMultilangWithFallback(lang, formatRef.shortDescription)}"
+								outputLinkValue="#{datasetHandler.getReferenceUrlXml(formatRef, url.source)}"
+								outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+						</soda:dataListStyled>
+					</p:column>
+				</p:row>
+				<!-- subsection -->
+				<p:row>
+					<p:column colspan="2" styleClass="ui-state-hover">
+						#{i18n['common.publicationAndOwnership']}
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="uuid"
+							outputTextValue="#{i18n['common.uuid']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.dataset.uuid']}" />
+					</p:column>
+					<p:column>
+						#{dataset.uuid.uuid}
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="dataSetVersion"
+							outputTextValue="#{i18n['public.proc.datasetVersion']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.dataset.dataSetVersion']}" />
+					</p:column>
+					<p:column>
+						#{dataset.dataSetVersion}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty dsAdminInfo.publicationAndOwnership.referenceToPrecedingDataSetVersion}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="referenceToPrecedingDataSetVersion"
+							outputTextValue="#{i18n['common.preceding']} #{i18n['public.proc.datasetVersion']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToPrecedingDataSetVersion']}" />
+					</p:column>
+					<p:column>
+						<soda:dataListStyled dataListValue="#{dsAdminInfo.publicationAndOwnership.referenceToPrecedingDataSetVersion}">
+							<ui:param name="precedingVersionRef" value="#{dataListStyledVar}" />
+							<soda:dataListLinkOrText
+								dataListValue="#{datasetHandler.getMultilangWithFallback(lang, precedingVersionRef.shortDescription)}"
+								outputLinkValue="#{datasetHandler.getReferenceUrlXml(precedingVersionRef, urlBeanDataset)}"
+								outputLinkTitle="#{datasetTitle}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+						</soda:dataListStyled>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty dataset.permanentUri}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="permanentDataSetURI"
+							outputTextValue="#{i18n['public.lciam.permanentUri']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.dataset.permanentDataSetURI']}" />
+					</p:column>
+					<p:column styleClass="linkOverflow">
+						<h:outputLink value="#{dataset.permanentUri}" title="#{dataset.permanentUri}">
+							#{dataset.permanentUri}
+						</h:outputLink>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty dsAdminInfo.publicationAndOwnership.referenceToOwnershipOfDataSet}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="referenceToOwnershipOfDataSet"
+							outputTextValue="#{i18n['public.proc.owner']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToOwnershipOfDataSet']}" />
+					</p:column>
+					<p:column>
+						<ui:param name="ref" value="#{dsAdminInfo.publicationAndOwnership.referenceToOwnershipOfDataSet}" />
+						<soda:dataListLinkOrText
+							dataListValue="#{datasetHandler.getMultilangWithFallback(lang, ref.shortDescription)}"
+							outputLinkValue="#{datasetHandler.getReferenceUrlXml(ref, url.contact)}"
+							outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</div>
+	</p:tab>
+</ui:composition>

@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <f:metadata>
+        <f:viewParam name="fuuid" value="#{processesByExchangeFlowHandler.flowUuid}" />
+        <f:viewParam name="direction" value="#{processesByExchangeFlowHandler.direction}" />
+        <f:event type="javax.faces.event.PreRenderViewEvent" listener="#{processesByExchangeFlowHandler.doFilter}" />
+    </f:metadata>
+    
+    <h:body>
+        <ui:composition template="#{conf.templatePath}/frontend.xhtml">
+            <ui:param name="pageTitle" value="#{i18n['common.proc']}#{i18n['delimiter']}#{i18n['public.datasets']}" />
+            <ui:param name="activeMenu" value="#{Constants.MENU_SEARCHPROCESS}" />
+            <ui:define name="content">
+            
+            	<h3>
+            		<h:outputText rendered="#{processesByExchangeFlowHandler.inputDirection}" value="#{i18n['public.proc.byExchFlow.withInput']}: #{processesByExchangeFlowHandler.flowDefaultName}" />
+            		<h:outputText rendered="#{processesByExchangeFlowHandler.outputDirection}" value="#{i18n['public.proc.byExchFlow.withOutput']}: #{processesByExchangeFlowHandler.flowDefaultName}" />
+            	</h3>
+            
+                <ui:include src="processListDisplay.xhtml">
+                    <ui:param name="distributed" value="false" />
+                    <ui:param name="lazyDataModelRef" value="#{processesByExchangeFlowHandler.lazyDataModel}" />
+                    <ui:param name="filtering" value="false" />
+                </ui:include>
+                <ui:include src="/messages.xhtml" />
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

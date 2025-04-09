@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<soda:menuBar
+		action_saveEntry="#{orgHandler.saveEntry}"
+		action_saveCloseEntry="#{orgHandler.saveCloseEntry}"
+		action_saveNewEntry="#{orgHandler.saveNewEntry}"
+		btnLabel_manageList="#{i18n['admin.org.manageList']}"
+		btnOutcome_manageList="#{url.org.manageList}"
+		spacerHeight_afterToolbar="#{spacerHeight_afterToolbar}"
+		spacerHeight_beforeToolbar="#{spacerHeight_beforeToolbar}"
+		update="@(#messages), @(#orgTabs)" />
+
+</ui:composition>

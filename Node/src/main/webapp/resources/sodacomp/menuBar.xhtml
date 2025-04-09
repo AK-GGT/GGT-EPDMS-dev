@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+	example usage:
+
+	<soda:menuBar
+		action_saveEntry="#{orgHandler.saveEntry}"
+		action_saveCloseEntry="#{orgHandler.saveCloseEntry}"
+		action_saveNewEntry="#{orgHandler.saveNewEntry}"
+		btnLabel_manageList="#{i18n['admin.org.manageList']}"
+		btnOutcome_manageList="#{url.org.manageList}"
+		spacerHeight_afterToolbar="#{spacerHeight_afterToolbar}"
+		spacerHeight_beforeToolbar="#{spacerHeight_beforeToolbar}"
+		update="@(#messages), @(#orgTabs)" />
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+	
+	<composite:interface>
+		<composite:attribute name="spacerHeight_afterToolbar" />
+		<composite:attribute name="spacerHeight_beforeToolbar" />
+		<composite:attribute name="btnLabel_manageList" />
+		<composite:attribute name="btnOutcome_manageList" />
+		<composite:attribute name="action_saveEntry" method-signature="String action()" />
+		<composite:attribute name="action_saveCloseEntry" method-signature="String action()" />
+		<composite:attribute name="action_saveNewEntry" method-signature="String action()" />
+		<composite:attribute name="update" default="@(#messages)" />
+	</composite:interface>
+	
+	<composite:implementation>
+		<!-- following buttons are fake buttons because h/p:commandbutton won't trigger the action
+		     http://java.net/jira/browse/JAVASERVERFACES_SPEC_PUBLIC-790 -->
+		<h:panelGroup rendered="#{not empty cc.attrs.spacerHeight_beforeToolbar}" style="display:block; height:#{cc.attrs.spacerHeight_beforeToolbar}px" />
+		<div class="menuBarFake floatRight">
+			<h:commandLink value="#{i18n['admin.save']}" action="#{cc.attrs.action_saveEntry}" update="#{cc.attrs.update}" styleClass="fakeButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+			<h:commandLink value="#{i18n['admin.saveClose']}" action="#{cc.attrs.action_saveCloseEntry}" update="#{cc.attrs.update}" styleClass="fakeButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+			<h:commandLink value="#{i18n['admin.saveNew']}" action="#{cc.attrs.action_saveNewEntry}" update="#{cc.attrs.update}" styleClass="fakeButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+			<h:link value="#{i18n['admin.cancel']}" outcome="/admin/index.xhtml" styleClass="fakeButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+			<h:link value="#{cc.attrs.btnLabel_manageList}" outcome="#{cc.attrs.btnOutcome_manageList}" styleClass="fakeButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" />
+		</div>
+		<h:panelGroup rendered="#{not empty cc.attrs.spacerHeight_afterToolbar}" style="display:block; clear:right; height:#{cc.attrs.spacerHeight_afterToolbar}px" />
+		
+<!-- 		<p:spacer rendered="#{not empty cc.attrs.spacerHeight_beforeToolbar}" height="#{cc.attrs.spacerHeight_beforeToolbar}" /> -->
+<!-- 		<p:toolbar styleClass="menuBar"> -->
+<!-- 			<p:toolbarGroup align="right"> -->
+<!-- 				<p:commandButton value="#{i18n['admin.save']}" action="#{cc.attrs.action_saveEntry}" update="#{cc.attrs.update}" /> -->
+<!-- 				<p:commandButton value="#{i18n['admin.saveClose']}" action="#{cc.attrs.action_saveCloseEntry}" update="#{cc.attrs.update}" /> -->
+<!-- 				<p:commandButton value="#{i18n['admin.saveNew']}" action="#{cc.attrs.action_saveNewEntry}" update="#{cc.attrs.update}" /> -->
+<!-- 				<p:button value="#{i18n['admin.cancel']}" outcome="/admin/index.xhtml" /> -->
+<!-- 				<p:button value="#{cc.attrs.btnLabel_manageList}" outcome="#{cc.attrs.btnOutcome_manageList}" /> -->
+<!-- 			</p:toolbarGroup> -->
+<!-- 		</p:toolbar> -->
+<!-- 		<p:spacer rendered="#{not empty cc.attrs.spacerHeight_afterToolbar}" height="#{cc.attrs.spacerHeight_afterToolbar}" /> -->
+
+	</composite:implementation>
+</html>

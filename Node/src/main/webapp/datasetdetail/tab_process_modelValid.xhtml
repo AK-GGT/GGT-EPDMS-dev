@@ -1,0 +1,507 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+via ui:param:
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<!-- section -->
+	<p:tab title="#{i18n['common.modellingValidation']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+		<div role="region" aria-label="#{i18n['common.modellingValidation']}">
+			<p:panelGrid>
+				<!-- subsection -->
+				<p:row rendered="#{!processHandler.EPD}">
+					<p:column colspan="2" styleClass="ui-state-hover">
+						#{i18n['common.lciMethodAllocation']}
+					</p:column>
+				</p:row>
+
+				<ui:fragment rendered="#{conf.displayConfig.showDatasetDetailProcessType}">
+					<p:row>
+						<p:column styleClass="ui-state-hover transp">
+							<soda:outputTextTooltip
+								outputTextId="typeOfDataSet"
+								outputTextValue="#{i18n['public.dataset.typeOf']}"
+								tooltipValue="#{i18n['datasetdetail.tooltip.process.typeOfDataSet']}" />
+						</p:column>
+						<p:column>
+							#{process.type.value}
+						</p:column>
+					</p:row>
+				</ui:fragment>
+
+				<ui:insert name="row_epd_subType" />
+
+				<p:row rendered="#{not empty process.LCIMethodInformation.methodPrinciple.value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="lciMethodPrinciple"
+							outputTextValue="#{i18n['public.proc.methodPrinciple']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.lciMethodPrinciple']}" />
+					</p:column>
+					<p:column>
+						#{process.LCIMethodInformation.methodPrinciple.value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.LCIMethodAndAllocation.deviationsFromLCIMethodPrinciple).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="deviationsFromLCIMethodPrinciple"
+							outputTextValue="#{i18n['common.deviationsFromLCIMethodPrinciple']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.deviationsFromLCIMethodPrinciple']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.LCIMethodAndAllocation.deviationsFromLCIMethodPrinciple).value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty process.LCIMethodInformation.approaches}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="lciMethodApproaches"
+							outputTextValue="#{i18n['common.lciMethodApproaches']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.lciMethodApproaches']}" />
+					</p:column>
+					<p:column>
+						<p:dataList value="#{process.LCIMethodInformation.approaches.toArray()}" var="approach" styleClass="ourDataListNoBullet">
+							#{approach.value}
+						</p:dataList>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.LCIMethodAndAllocation.deviationsFromLCIMethodApproaches).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="deviationsFromLCIMethodApproaches"
+							outputTextValue="#{i18n['common.deviationsFromLCIMethodApproaches']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.deviationsFromLCIMethodApproaches']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.LCIMethodAndAllocation.deviationsFromLCIMethodApproaches).value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.LCIMethodAndAllocation.modellingConstants).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="modellingConstants"
+							outputTextValue="#{i18n['common.modellingConstants']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.modellingConstants']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.LCIMethodAndAllocation.modellingConstants).value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.LCIMethodAndAllocation.deviationsFromModellingConstants).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="deviationsFromModellingConstants"
+							outputTextValue="#{i18n['common.deviationsFromModellingConstants']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.deviationsFromModellingConstants']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.LCIMethodAndAllocation.deviationsFromModellingConstants).value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty xmlProcessModelValid.LCIMethodAndAllocation.referenceToLCAMethodDetails}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="referenceToLCAMethodDetails"
+							outputTextValue="#{i18n['common.referenceToLCAMethodDetails']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.referenceToLCAMethodDetails']}" />
+					</p:column>
+					<p:column>
+						<soda:dataListStyled dataListValue="#{xmlProcessModelValid.LCIMethodAndAllocation.referenceToLCAMethodDetails}">
+							<ui:param name="methodologyReport" value="#{dataListStyledVar}" />
+							<soda:dataListLinkOrText
+								dataListValue="#{processHandler.getMultilangWithFallback(lang, methodologyReport.shortDescription)}"
+								outputLinkValue="#{processHandler.getReferenceUrlXml(methodologyReport, url.source)}"
+								outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+								repeatValue="#{methodologyReport.subReference}" />
+						</soda:dataListStyled>
+					</p:column>
+				</p:row>
+				<!-- subsection -->
+				<p:row>
+					<p:column colspan="2" styleClass="ui-state-hover">
+						#{i18n['common.dataSourcesTreatmentRepresentativeness']}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.dataCutOffAndCompletenessPrinciples).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="dataCutOffAndCompletenessPrinciples"
+							outputTextValue="#{i18n['common.dataCutOffAndCompletenessPrinciples']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.dataCutOffAndCompletenessPrinciples']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.dataCutOffAndCompletenessPrinciples).value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.deviationsFromCutOffAndCompletenessPrinciples).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="deviationsFromCutOffAndCompletenessPrinciples"
+							outputTextValue="#{i18n['common.deviationsFromCutOffAndCompletenessPrinciples']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.deviationsFromCutOffAndCompletenessPrinciples']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.deviationsFromCutOffAndCompletenessPrinciples).value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.dataSelectionAndCombinationPrinciples).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="dataSelectionAndCombinationPrinciples"
+							outputTextValue="#{i18n['common.dataSelectionAndCombinationPrinciples']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.dataSelectionAndCombinationPrinciples']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.dataSelectionAndCombinationPrinciples).value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.deviationsFromSelectionAndCombinationPrinciples).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="deviationsFromSelectionAndCombinationPrinciples"
+							outputTextValue="#{i18n['common.deviationsFromSelectionAndCombinationPrinciples']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.deviationsFromSelectionAndCombinationPrinciples']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.deviationsFromSelectionAndCombinationPrinciples).value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.dataTreatmentAndExtrapolationsPrinciples).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="dataTreatmentAndExtrapolationsPrinciples"
+							outputTextValue="#{i18n['common.dataTreatmentAndExtrapolationsPrinciples']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.dataTreatmentAndExtrapolationsPrinciples']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.dataTreatmentAndExtrapolationsPrinciples).value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.deviationsFromTreatmentAndExtrapolationPrinciples).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="deviationsFromTreatmentAndExtrapolationPrinciples"
+							outputTextValue="#{i18n['common.deviationsFromTreatmentAndExtrapolationPrinciples']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.deviationsFromTreatmentAndExtrapolationPrinciples']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.deviationsFromTreatmentAndExtrapolationPrinciples).value}
+					</p:column>
+				</p:row>
+	<!-- 			rendered="#{not empty xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.referenceToDataHandlingPrinciples}" -->
+				<p:row rendered="#{not empty xmlProcessModelValid.LCIMethodAndAllocation.referenceToLCAMethodDetails}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="referenceToDataHandlingPrinciples"
+							outputTextValue="#{processHandler.isEPD() ? i18n['common.epd.referenceToDataHandlingPrinciples'] : i18n['common.referenceToDataHandlingPrinciples']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.referenceToDataHandlingPrinciples']}" />
+					</p:column>
+					<p:column>
+						<soda:dataListStyled dataListValue="#{xmlProcessModelValid.LCIMethodAndAllocation.referenceToLCAMethodDetails}">
+							<ui:param name="dataReport" value="#{dataListStyledVar}" />
+							<soda:dataListLinkOrText
+								dataListValue="#{processHandler.getMultilangWithFallback(lang, dataReport.shortDescription)}"
+								outputLinkValue="#{processHandler.getReferenceUrlXml(dataReport, url.source)}"
+								outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+								repeatValue="#{dataReport.subReference}" />
+						</soda:dataListStyled>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.referenceToDataSource}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="referenceToDataSource"
+							outputTextValue="#{i18n['common.referenceToDataSource']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.referenceToDataSource']}" />
+					</p:column>
+					<p:column>
+						<soda:dataListStyled dataListValue="#{xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.referenceToDataSource}">
+							<ui:param name="sourceRef" value="#{dataListStyledVar}" />
+							<soda:dataListLinkOrText
+								dataListValue="#{processHandler.getMultilangWithFallback(lang, sourceRef.shortDescription)}"
+								outputLinkValue="#{processHandler.getReferenceUrlXml(sourceRef, url.source)}"
+								outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+								repeatValue="#{sourceRef.subReference}" />
+						</soda:dataListStyled>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{ (not empty processHandler.process.referenceToOriginalEPD) and ( processHandler.isEPD()) }">
+					<p:column styleClass="ui-state-hover transp">
+						<h:outputLabel>#{i18n['common.epd.referenceToOriginalEPDs']}</h:outputLabel>
+					</p:column>
+					<p:column>
+						<soda:dataListStyled dataListValue="#{processHandler.process.referenceToOriginalEPD}">
+							<ui:param name="reference" value="#{dataListStyledVar}" />
+							<soda:dataListLinkOrText
+								dataListValue="#{reference.shortDescription}"
+								outputLinkValue="#{processHandler.getReferenceUrl(reference, url.source)}"/>
+						</soda:dataListStyled>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.percentageSupplyOrProductionCovered}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="percentageSupplyOrProductionCovered"
+							outputTextValue="#{i18n['common.percentageSupplyOrProductionCovered']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.percentageSupplyOrProductionCovered']}" />
+					</p:column>
+					<p:column>
+						#{xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.percentageSupplyOrProductionCovered} %
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.annualSupplyOrProductionVolume).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="annualSupplyOrProductionVolume"
+							outputTextValue="#{i18n['common.annualSupplyOrProductionVolume']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.annualSupplyOrProductionVolume']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.annualSupplyOrProductionVolume).value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.samplingProcedure).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="samplingProcedure"
+							outputTextValue="#{i18n['common.samplingProcedure']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.samplingProcedure']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.samplingProcedure).value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.dataCollectionPeriod).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="dataCollectionPeriod"
+							outputTextValue="#{i18n['common.dataCollectionPeriod']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.dataCollectionPeriod']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.dataCollectionPeriod).value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.uncertaintyAdjustments).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="uncertaintyAdjustments"
+							outputTextValue="#{i18n['common.uncertaintyAdjustments']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.uncertaintyAdjustments']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.dataSourcesTreatmentAndRepresentativeness.uncertaintyAdjustments).value}
+					</p:column>
+				</p:row>
+				<!-- subsection -->
+				<p:row>
+					<p:column colspan="2" styleClass="ui-state-hover">
+						#{i18n['common.completeness']}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{(processHandler.showCompletenessProductModel())}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="completenessProductModel"
+							outputTextValue="#{i18n['public.proc.completeness']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.completenessProductModel']}" />
+					</p:column>
+					<p:column>
+						#{process.completenessProductModel.value}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty xmlProcessModelValid.completeness.referenceToSupportedImpactAssessmentMethods}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="referenceToSupportedImpactAssessmentMethods"
+							outputTextValue="#{i18n['common.referenceToSupportedImpactAssessmentMethods']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.referenceToSupportedImpactAssessmentMethods']}" />
+					</p:column>
+					<p:column>
+						<soda:dataListStyled dataListValue="#{xmlProcessModelValid.completeness.referenceToSupportedImpactAssessmentMethods}">
+							<ui:param name="methodRef" value="#{dataListStyledVar}" />
+							<soda:dataListLinkOrText
+								dataListValue="#{processHandler.getMultilangWithFallback(lang, methodRef.shortDescription)}"
+								outputLinkValue="#{processHandler.getReferenceUrlXml(methodRef, url.lciaMethod)}"
+								outputLinkTitle="#{i18n['common.lciaMethod.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+						</soda:dataListStyled>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty xmlProcessModelValid.completeness.completenessElementaryFlows}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="completenessElementaryFlows"
+							outputTextValue="#{i18n['common.completenessElementaryFlows']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.completenessElementaryFlows']}" />
+					</p:column>
+					<p:column>
+						<p:dataList value="#{xmlProcessModelValid.completeness.completenessElementaryFlows}" var="completeness" styleClass="ourDataListNoBullet">
+							#{completeness.type.value}: #{completeness.value.value}
+						</p:dataList>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.completeness.completenessOtherProblemField).value}">
+					<p:column styleClass="ui-state-hover transp">
+						<soda:outputTextTooltip
+							outputTextId="completenessOtherProblemField"
+							outputTextValue="#{i18n['common.completenessOtherProblemField']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.completenessOtherProblemField']}" />
+					</p:column>
+					<p:column>
+						#{processHandler.getMultilangWithFallback(lang, xmlProcessModelValid.completeness.completenessOtherProblemField).value}
+					</p:column>
+				</p:row>
+				<!-- subsection -->
+				<p:row rendered="#{not empty process.reviews}">
+					<p:column colspan="2" styleClass="ui-state-hover">
+						#{i18n['common.validation']}
+					</p:column>
+				</p:row>
+				<p:row rendered="#{not empty process.reviews}">
+					<p:column colspan="2">
+						<ui:repeat value="#{process.reviews}" var="review" >
+						<p:panelGrid>
+							<f:facet name="header">
+							<p:row>
+								<p:column rendered="#{not empty review.type.value}">
+								<soda:outputTextTooltip
+										outputTextId="typeOfReview"
+										outputTextValue="#{i18n['common.typeOfReview']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.typeOfReview']}" />
+								</p:column>
+								<p:column rendered="#{not empty review.scopes}">
+									<soda:outputTextTooltip
+										outputTextId="scopeMethodsOfReview"
+										outputTextValue="#{i18n['common.scopeMethodsOfReview']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.scopeMethodsOfReview']}" />
+								</p:column>
+								<p:column rendered="#{not empty review.getDataQualityIndicatorsAsList()}">
+									<soda:outputTextTooltip
+										outputTextId="dataQualityIndicators"
+										outputTextValue="#{i18n['public.proc.indicators']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.process.dataQualityIndicators']}" />
+								</p:column>
+								<p:column rendered="#{not empty review.otherReviewDetails.getValueWithFallback(lang)}">
+									<soda:outputTextTooltip
+										outputTextId="reviewDetails"
+										outputTextValue="#{i18n['public.proc.reviewDetails']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.process.reviewDetails']}" />
+								</p:column>
+							</p:row>
+							</f:facet>
+							<p:row>
+								<p:column rendered="#{not empty review.type.value}">
+									#{review.type.value}
+								</p:column>
+								<p:column rendered="#{not empty review.scopes}" style="width:30%">
+									<p:dataTable value="#{review.scopes.toArray()}" var="scope">
+										<p:column>
+											<f:facet name="header">
+												#{i18n['common.scopeName']}
+											</f:facet>
+											#{scope.name.value}
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												#{i18n['common.methodName']}
+											</f:facet>
+											<soda:dataListStyled dataListValue="#{processHandler.getAsList(scope.methods)}">
+												<ui:param name="method" value="#{dataListStyledVar}" />
+												#{method.value}
+											</soda:dataListStyled>
+										</p:column>
+									</p:dataTable>
+								</p:column>
+								<p:column style="width:30%" rendered="#{not empty review.getDataQualityIndicatorsAsList()}">
+									<soda:dataListStyled dataListValue="#{review.getDataQualityIndicatorsAsList()}">
+										<ui:param name="indicator" value="#{dataListStyledVar}" />
+										#{indicator.name.value}: #{indicator.value.value} <h:outputText rendered="#{not empty indicator.numericValue}" value=" - #{indicator.numericValue}"/>
+									</soda:dataListStyled>
+								</p:column>
+								<p:column rendered="#{not empty review.otherReviewDetails.getValueWithFallback(lang)}" style="width:30%">
+									<p:panelGrid>
+										<p:row>
+											<p:column>
+												#{review.reviewDetails.getValueWithFallback(lang)}
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+									<p:panelGrid>
+										<f:facet name="header">
+											<p:row>
+												<p:column>
+													<soda:outputTextTooltip
+														outputTextId="otherReviewDetails"
+														outputTextValue="#{i18n['common.otherReviewDetails']}"
+														tooltipValue="#{i18n['datasetdetail.tooltip.dataset.otherReviewDetails']}" />
+												</p:column>
+											</p:row>
+										</f:facet>
+										<p:row>
+											<p:column>
+												#{review.otherReviewDetails.getValueWithFallback(lang)}
+											</p:column>
+										</p:row>
+									</p:panelGrid>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						<p:panelGrid>
+							<f:facet name="header">
+							<p:row>
+								<p:column rendered="#{not empty review.referencesToReviewers}">
+								<soda:outputTextTooltip
+										outputTextId="reviewerNameInstitution"
+										outputTextValue="#{i18n['common.reviewerNameInstitution']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.reviewerNameInstitution']}" />
+								</p:column>
+								<p:column rendered="#{not empty processHandler.getReferenceUrl(review.referenceToReport, url.source)}" >
+									<soda:outputTextTooltip
+										outputTextId="referenceToCompleteReviewReport"
+										outputTextValue="#{i18n['common.referenceToCompleteReviewReport']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToCompleteReviewReport']}" />
+								</p:column>
+							</p:row>
+							</f:facet>
+							<p:row>
+								<p:column rendered="#{not empty review.referencesToReviewers}" style="width:30%">
+								<soda:dataListStyled dataListValue="#{review.referencesToReviewers}">
+									<ui:param name="reviewer" value="#{dataListStyledVar}" />
+									<soda:switchLinkOrText
+										outputLinkValue="#{processHandler.getReferenceUrl(reviewer, url.contact)}"
+										outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+										outputTextValue="#{reviewer.shortDescription.getValueWithFallback(lang)}" />
+								</soda:dataListStyled>
+							</p:column>
+							<p:column rendered="#{not empty processHandler.getReferenceUrl(review.referenceToReport, url.source)}">
+								<soda:switchLinkOrText
+									outputLinkValue="#{processHandler.getReferenceUrl(review.referenceToReport, url.source)}"
+									outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+									outputTextValue="#{review.referenceToReport.shortDescription.getValueWithFallback(lang)}" />
+							</p:column>
+							</p:row>
+						</p:panelGrid>
+						</ui:repeat>
+					</p:column>
+				</p:row>
+				<!-- subsection -->
+				<p:row rendered="#{not empty xmlProcessModelValid.complianceDeclarations.compliance}">
+					<p:column colspan="2" styleClass="ui-state-hover">
+						#{i18n['public.proc.compliance.tooltip.headline']}
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+			<ui:include src="./include/complianceAll.xhtml">
+				<ui:param name="xmlCompliances" value="#{xmlProcessModelValid.complianceDeclarations.compliance}" />
+				<ui:param name="handler" value="#{processHandler}" />
+			</ui:include>
+		</div>
+	</p:tab>
+</ui:composition>

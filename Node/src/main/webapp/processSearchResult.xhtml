@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:body>
+        <h2>#{i18n['public.proc.searchResults']}</h2>
+        <h:form>
+            <div class="buttonLeft">
+                <p:commandButton value="#{i18n['public.proc.backToSearch']}" ajax="false" action="#{processesSearchHandler.loadForm}"></p:commandButton>
+            </div>
+        </h:form>
+
+        <c:choose>
+            <c:when test="#{not processesSearchHandler.distributedFilter}">
+                <ui:include src="processListDisplay.xhtml">
+                    <ui:param name="distributed" value="#{processesSearchHandler.distributedFilter}" />
+                    <ui:param name="lazyDataModelRef" value="#{processesSearchHandler.lazyDataModel}" />
+                    <ui:param name="registry" value="#{processesSearchHandler.registry}" />
+                    <ui:param name="filtering" value="false" />
+                </ui:include>
+            </c:when>
+            <c:otherwise>
+                <ui:include src="processListSimpleDisplay.xhtml">
+                    <ui:param name="distributed" value="#{processesSearchHandler.distributedFilter}" />
+                    <ui:param name="lazyDataModelRef" value="#{processesSearchHandler.lazyDataModel}" />
+                    <ui:param name="registry" value="#{processesSearchHandler.registry}" />
+                    <ui:param name="filtering" value="false" />
+                </ui:include>
+            </c:otherwise>
+        </c:choose>
+
+    </h:body>
+</html>

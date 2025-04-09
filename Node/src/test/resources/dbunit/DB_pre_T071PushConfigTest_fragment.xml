@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+<!-- The column entry BASEURL must contain the entry "${nodeurl}" (during preprocessing the data set in setup, the entry String will be replaced by the target site URL) -->
+  <networknode ID="1" ADMINEMAILADDRESS="admin@admin.admin" ADMINNAME="admin" ADMINPHONE="123" ADMINWWWADDRESS="www" BASEURL="${nodeurl}" DESCRIPTION="desc" NAME="test" NODEID="ACME" OPERATOR="oper" ACCESSACCOUNT="admin" ACCESSPASSWORD="ZGVmYXVsdA=="/>
+  <pushconfig/>
+  <pushtarget ID="1" network_node_name="test" network_node_id="ACME2" network_node_url="${nodeurl}" name="test_target" login="admin" target_ds_name="default" target_ds_uuid="39be0b9b-683b-4bb8-b1f2-32320cb2cbfe"/>
+  <pushtarget ID="2" network_node_name="test" network_node_id="ACME2" network_node_url="${nodeurl}" name="test_change_target" login="admin" target_ds_name="default" target_ds_uuid="39be0b9b-683b-4bb8-b1f2-32320cb2cbfe"/>
+  <pushtarget ID="3" network_node_name="test" network_node_id="ACME2" network_node_url="${nodeurl}" name="test_delete_target" login="admin" target_ds_name="default" target_ds_uuid="39be0b9b-683b-4bb8-b1f2-32320cb2cbfe"/>
+</dataset>

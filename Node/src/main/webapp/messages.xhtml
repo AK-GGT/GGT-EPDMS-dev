@@ -1,0 +1,18 @@
+<!-- CG/01.06.2011 remember: keep surrounding dummy div (=display block) around messagesBox
+     because it's needed for correct positioning of succeeding inline-block-divs -->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <div style="margin-bottom:-1em;">
+        <div id="messagesBox">
+            <p:messages id="messages" closable="true">
+            	<p:autoUpdate />
+            </p:messages>
+        </div>
+    </div>
+
+</ui:composition>

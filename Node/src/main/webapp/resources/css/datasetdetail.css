@@ -1,0 +1,194 @@
+* {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+	font-size: 12px;
+}
+
+#datasetdetailPanel {
+	max-width: 1200px;
+	margin: 0 auto;
+	border: 0;
+	padding: 0;
+}
+
+#datasetdetailPanelHeader {
+	font-size: 14px;
+}
+
+.preformatted {
+    white-space: pre-line;
+	padding: 6px;
+	columns: 2;
+	column-gap: 2em;
+	column-rule: solid #d3d3d3 thin;
+	display: block;
+	column-fill: balance;
+}
+
+.ui-panel .ui-panel-content {
+	padding: 0 !important;
+}
+.ui-accordion .ui-accordion-content {
+	 padding: 0 0.1em 0.5em 0 !important;
+}
+
+.ui-accordion .ui-accordion-header a {
+	padding: 0.3em 2em !important;
+}
+
+.ui-datalist-empty-message {
+    display: none;
+}
+
+.datasetDetailLogo {
+	margin-right: 0.5em;
+	float: left;
+	margin-bottom: 5px;
+}
+
+#toggleFakeButton, #closeButton, #backButton {
+	float: right;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	line-height: 1.4;
+	padding: 0.4em 1em;
+	margin-left: 0.3em;
+	margin-bottom: 0.3em;
+}
+
+table {
+	width: 100%;
+}
+
+td {
+	vertical-align: top;
+	padding: 6px !important;
+}
+
+.transp {
+	-ms-filter: "alpha(opacity=50)";
+	filter: alpha(opacity=50);
+	-moz-opacity: 0.5;
+	-khtml-opacity: 0.5;
+	opacity: 0.5;
+	font-weight: normal !important;
+	background-repeat: no-repeat !important;
+	background-image: none !important;
+	color: black !important;
+}
+
+td.transp {
+	width: 200px !important;
+}
+
+span.transp {
+	border: none !important;
+}
+
+.epd th {
+	vertical-align: bottom;
+}
+
+.epd td {
+	padding: 3px !important;
+}
+
+.ui-datatable.epd .column-style {
+	white-space:normal !important;
+	padding:32px 8px 32px 8px !important;
+}
+
+.epd td.amount {
+	text-align: right;
+}
+
+.epd td.unit {
+	text-align: center;
+}
+
+.lotsofcolumns {
+	width: 100%;
+	max-width: 100%;
+}
+
+.lotsofcolumns td, .lotsofcolumns th {
+	white-space: normal !important;
+	vertical-align: text-top;
+}
+
+.lotsofcolumns td {
+	padding: 2px !important;
+	font-size: 11px !important;
+}
+
+.lotsofcolumns th {
+	padding: 0 !important;
+}
+
+.lotsofcolumns th span {
+	font-size: 11px !important;
+}
+
+.lotsofcolumns td table {
+	width: 25em;
+}
+
+.lotsofcolumns td .expandedTable {
+    width: auto;
+}
+
+#backLinks {
+	margin: 1em;
+}
+
+#switchInline, #switchInline div {
+	display: inline;
+	font-size: inherit;
+}
+
+code {
+	font-family: monospace;
+}
+
+.italic {
+	font-style: italic;
+}
+
+div.ourDataList ul, div.ourDataListNoBullet ul {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+div.ourDataList > .ui-widget-content, div.ourDataListNoBullet > .ui-widget-content {
+	border: 0;
+}
+
+td.amount div.ui-datalist-content {
+	background:none;
+}
+
+div.ourDataListNoBullet li {
+	list-style-type: none;
+}
+
+div.ourDataList li {
+	list-style-type: circle;
+	margin-left: 1.2em;
+}
+
+.highlighted {
+	border: 2px solid !important;
+}
+
+.column-style {
+	white-space: pre-line !important;
+	vertical-align: middle !important;
+}
+
+.datasetTitleOverflow {
+	float: left;
+	width: 100%;
+}

@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:body>
+        <ui:composition template="/admin/layout/adminDesign.xhtml">
+            <ui:param name="pageTitle" value="#{i18n['admin.export.db']}" />
+            <ui:define name="content">
+
+                <h:form id="form">
+                    <p:commandButton value="#{i18n['admin.export.db']}" ajax="false" icon="fa fa-download">
+                        <p:fileDownload value="#{dataExportController.file}"></p:fileDownload>
+                    </p:commandButton>
+                    <br /><br />
+                    	<h:outputLabel value="#{i18n['admin.export.exportAllVersions']}"/>
+                    	<p:selectOneMenu layout="pageDirection" value="#{dataExportController.exportMode}">
+							<f:selectItems value="#{dataExportController.exportModes}" var="exportMode"
+								itemValue="#{exportMode}" itemLabel="#{i18n['admin.exportmode.'.concat(exportMode)]}" />
+						</p:selectOneMenu>
+                    <br /><br />
+                    
+                </h:form>
+                    <h:outputText value="#{i18n['admin.export.hint']}"/>
+                    <h:link value=" #{i18n['admin.stock.manageList']}" outcome="#{url.stock.manageList}"/>
+
+                <ui:include src="/messages.xhtml"></ui:include>
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

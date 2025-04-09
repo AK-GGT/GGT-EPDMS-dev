@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:body>
+	<ui:composition template="/admin/layout/adminDesign.xhtml">
+		<ui:param name="pageTitle" value="#{i18n['common.welcome']}, #{user.userName}!" />
+		<ui:define name="content">
+			<p>#{i18n['admin.tasks']}:</p>
+			<h:form id="generalForm" prependId="false">
+				<p:panelGrid id="landingPageTable" styleClass="#{facesContext.externalContext.requestLocale.ISO3Language}">
+					<p:row>
+						<p:column rendered="#{user.hasSuperAdminPermission()}">
+							<p:button value="#{i18n['admin.org.manageList']}" outcome="#{url.org.manageList}" />
+						</p:column>
+						<p:column>
+							<p:button value="#{i18n['admin.user.manageList']}" outcome="#{url.user.showList}" />
+						</p:column>
+						<p:column>
+							<p:button value="#{i18n['admin.group.manageList']}" outcome="#{url.group.showList}" />
+						</p:column>
+						<p:column colspan="2" style="text-align:center;">
+							<p:button value="#{i18n['admin.stock.manageList']}" outcome="#{url.stock.manageList}" />
+						</p:column>
+						<p:column>
+							<p:button value="Select Language" outcome="/selectUILanguage.xhtml" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column rendered="#{user.hasSuperAdminPermission()}">
+							<p:button value="#{i18n['admin.org.new']}" outcome="#{url.org.getNew()}" />
+						</p:column>
+						<p:column>
+							<p:button value="#{i18n['admin.user.new']}" outcome="#{url.user.getNew()}" />
+						</p:column>
+						<p:column>
+							<p:button value="#{i18n['admin.group.new']}" outcome="#{url.group.getNew()}" />
+						</p:column>
+						<p:column>
+							<p:button value="#{i18n['admin.rootStock.new']}" outcome="#{url.rootStock.getNew()}" />
+						</p:column>
+						<p:column>
+							<p:button value="#{i18n['admin.stock.new']}" outcome="#{url.stock.getNew()}" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:button value="#{i18n['admin.import.datasets']}" outcome="#{url.data.importUpload}" />
+						</p:column>
+						<p:column>
+							<p:button value="#{i18n['admin.compareDatasets']}" outcome="/admin/compareDatasetsSelection.xhtml?stock=#{stockSelection.currentStockName}" />
+						</p:column>
+						<p:column>
+							<p:button value="#{i18n['admin.node.new']}" outcome="#{url.node.getNew()}" />
+						</p:column>
+						<p:column>
+							<p:button value="#{i18n['common.profile']}" outcome="#{url.user.profile}" />
+						</p:column>
+						<p:column>
+							<p:button value="#{i18n['common.password']}" outcome="#{url.user.password}" />
+						</p:column>
+						<p:column rendered="#{user.hasSuperAdminPermission()}">
+							<p:button value="#{i18n['admin.config']}" outcome="#{url.config}" />
+						</p:column>
+						
+						<p:column rendered="#{user.hasSuperAdminPermission() and conf.gladEnabled}">
+							<p:button value="#{i18n['admin.glad.config']}" outcome="#{url.gladDatabaseProperties}" />
+						</p:column>
+						
+					</p:row>
+					<p:row rendered="#{conf.pushShown}">
+						<p:column >
+							<p:button value="#{i18n['admin.pushConfig.manageList']}" outcome="#{url.pushConfig.showList}" />
+						</p:column>
+						<ui:repeat var="item" value="#{pushConfigListHandler.favouritePushConfigs}">
+							<p:column>
+								<p:button value="#{i18n['admin.pushConfig.pushFavourite']}: &lt;/br&gt; #{item.name}" escape="false" outcome="#{url.pushConfig.getEdit(item.id)}"/>
+							</p:column>
+						</ui:repeat>
+					</p:row>
+					
+					<p:row rendered="#{customReportsBean.customReportsEnabled}">
+						<p:column>
+							<p:button value="#{i18n['admin.customReports']}" outcome="/admin/customReports.xhtml" />
+						</p:column>
+					</p:row>
+						
+					<p:row>
+						<p:column>
+							<p:button value="#{i18n['admin.jobs.showList']}" outcome="#{url.jobs.showList}"/>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
+

@@ -1,0 +1,7 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<h:outputLink value="#{conf.imprintURLMultiLang ? langContentHandler.imprintURL : conf.imprintURL}" target="_blank"
+		rendered="#{conf.imprintURL != null and !conf.imprintURLFragment}">#{i18n['common.imprint']}</h:outputLink>
+
+</ui:composition>

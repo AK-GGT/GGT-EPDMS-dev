@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+      
+    <f:metadata>
+        <f:viewParam name="pushConfigId" value="#{pushConfigHandler.entryIdString}" />
+        <f:event type="javax.faces.event.PreRenderViewEvent" listener="#{pushConfigHandler.postViewParamInit}" />
+    </f:metadata>
+	
+    <h:body>
+    
+        <ui:composition template="/admin/layout/adminDesign.xhtml">
+            <ui:param name="pageTitle" value="#{pushConfigHandler.edit ? i18n['admin.pushConfig.edit'] : i18n['admin.pushConfig.show']}: #{pushConfigHandler.pushConfig.name}"/>
+            <ui:define name="content">
+           		<p>
+                	<h:outputText rendered="#{pushConfigHandler.edit}" value="#{i18n['common.mandatoryFields']}"/>
+                </p>
+                <h:form id="generalForm" prependId="false">
+
+                    <ui:include src="/admin/pushConfigEntry.xhtml">
+	                    <ui:param name="editable" value="#{pushConfigHandler.edit}" />
+	                    <ui:param name="handler" value="#{pushConfigHandler}" />
+                    </ui:include>
+
+					<div class="buttonRight">	
+                    	<p:commandButton value="#{i18n['admin.pushConfig.edit']}"
+                    					 rendered="#{not pushConfigHandler.edit}"
+                    					 action="#{pushConfigHandler.setEdit(true)}"
+                    					 icon="fa fa-edit" 
+                    					 update="editFields" ajax="false"/>				 
+                        <p:commandButton value="#{i18n['admin.pushConfig.changePushConfigInfo']}"
+                        				 rendered="#{pushConfigHandler.edit}"
+                        				 icon="fa fa-check"
+                                         action="#{pushConfigHandler.saveEntry}"
+                                         update="messages" 
+                                         ajax="false">
+                                         <f:actionListener binding="#{pushConfigHandler.setEdit(false)}"/> 
+                                         </p:commandButton>   
+                        <p:commandButton value="#{i18n['admin.pushConfig.cancel']}"
+                        				 rendered="#{pushConfigHandler.edit}"
+                                         action="#{pushConfigHandler.setEdit(false)}"
+                                         icon="fa fa-ban"
+                                         
+                                         ajax="false"/> 
+                    </div>
+
+                    <div class="buttonCenter">
+                    	<p:commandButton value="#{i18n['admin.pushConfig.pushStocks']}" 
+                    					 onclick="PF('confirmPush').show()"
+                    					 rendered="#{not pushConfigHandler.edit}"
+                    					 update="messages" 
+                    					 icon="fa fa-cloud-upload"
+                    					 type="button"/>
+                    					 
+                    					 <p:button value="#{i18n['admin.jobs.showList']}..." 
+                    					 styleClass="space_left"
+                    					 outcome="#{url.jobs.showList}"
+                    					 rendered="#{pushConfigHandler.pushed}"
+                    					 update="messages"/>
+                    </div>
+                    
+                    	<p:confirmDialog message="#{i18n['admin.pushConfig.confirmPush']}" header="#{i18n['admin.pushConfig.pushStocks']}" severity="alert" widgetVar="confirmPush">
+                   		<div class="confirmDlgButtons">
+                   			<p:outputLabel value="#{i18n['admin.pushConfig.confirmPassword']}" for="pass"/>
+                   			<p:password id="pass" value="#{pushConfigHandler.password}"/>
+                   			<p:defaultCommand target="pushConfirm"/>
+                   			<p:commandButton id="pushCancel" value="#{i18n['admin.cancel']}" type="button" onclick="PF('confirmPush').hide()"/>
+                   			<p:commandButton id="pushConfirm" value="#{i18n['admin.ok']}" action="#{pushConfigHandler.pushDataStock}" 
+                   					oncomplete="PF('confirmPush').hide" ajax="false" update="messages showSourceImportedDataSets"/>
+                   		</div>
+                   	</p:confirmDialog> 
+                    
+                    
+                    <ui:include src="/messages.xhtml" />
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

@@ -1,0 +1,94 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<ui:composition>
+
+	<div>
+	    <p:outputLabel value="#{i18n['admin.validation.section.results']}" styleClass="margine checkboxalign" />
+		<p:commandButton id="exportLogs" value="#{i18n['admin.validation.log.export']}" disabled="#{empty validationHandler.events}" update="logTable,resetEvents" ajax="false">
+			<p:dataExporter type="xls" target="logTable" postProcessor="#{validationResultDocumentView.postProcessXLS}" fileName="#{validationHandler.stockName}_log" />
+		</p:commandButton>
+	    <p:commandButton styleClass="buttonvalid" id="resetEvents" value="#{i18n['admin.validation.log.export.reset']}" actionListener="#{validationHandler.clearEvents}" disabled="#{empty validationHandler.events}" update="logTable,exportLogs,resetEvents,progressBar" >
+		</p:commandButton>
+	</div>
+
+	<p:importEnum type="de.iai.ilcd.webgui.util.ValidationContext"
+		var="ValidationContext" />
+	<p:importEnum type="com.okworx.ilcd.validation.common.DatasetType"
+		var="ValidationDatasetType" />
+
+	<p:dataTable id="logTable" emptyMessage="" var="event"
+		value="#{validationHandler.events}" widgetVar="eventTable"
+		tableStyle="width:auto">
+
+		<p:column headerText="#{i18n['admin.validation.log.table.severity']}"
+			sortBy="#{event.severity}">
+			<h:outputText value="#{event.severity}" />
+		</p:column>
+
+		<p:column headerText="#{i18n['admin.validation.log.table.aspect']}"
+			sortBy="#{event.aspect}">
+			<h:outputText value="#{event.aspect}" />
+		</p:column>
+
+		<p:column
+			headerText="#{i18n['admin.validation.log.table.reference.name']}"
+			sortBy="#{event.reference.name}">
+			<h:outputText value="#{event.reference.name}" />
+		</p:column>
+
+		<p:column headerText="#{i18n['admin.validation.log.table.type']}"
+			sortBy="#{event.reference.datasetType.value}">
+			<h:outputText value="#{event.reference.datasetType.value}" />
+		</p:column>
+
+		<p:column headerText="UUID" sortBy="#{event.reference.uuid}" exportable="false">
+			<c:choose>
+				<c:when
+					test="#{validationHandler.validationContext==ValidationContext.DATASETS or validationHandler.validationContext==ValidationContext.STOCK}">
+					<h:outputLink
+						value="#{request.contextPath}#{validationHandler.goToDataset(event.reference.uuid, event.reference.version, event.reference.datasetType)}"
+						target="_blank">
+						<h:outputText value="#{event.reference.uuid}" />
+					</h:outputLink>
+				</c:when>
+				<c:otherwise>
+					<h:outputText value="#{event.reference.uuid}" />
+				</c:otherwise>
+			</c:choose>
+		</p:column>
+		
+		<p:column visible="false" headerText="UUID">
+			<h:outputText value="#{event.reference.uuid}" />
+		</p:column>
+
+		<p:column headerText="#{i18n['admin.proc.version']}">
+			<h:outputText value="#{event.reference.version}" />
+		</p:column>
+
+		<p:column headerText="#{i18n['admin.validation.log.table.processes']}" exportable="false">
+			<ui:fragment rendered="#{event.reference.datasetType eq ValidationDatasetType.FLOW}">
+				<ui:repeat var="reference" value="#{validationHandler.getRefsToProcessesForFlow(event.reference.uuid)}">
+					<h:outputLink
+						value="#{request.contextPath}#{validationHandler.goToDataset(reference.uuid, reference.version, reference.datasetType, true)}"
+						target="_blank">
+						<h:outputText value="#{reference.name}" />
+						<br/> 
+					</h:outputLink>
+				</ui:repeat>
+			</ui:fragment>
+		</p:column>
+
+		<p:column headerText="#{i18n['admin.validation.log.table.processes']}" visible="false">
+				<h:outputText value="#{validationHandler.getRefsAsString(validationHandler.getRefsToProcessesForFlow(event.reference.uuid))}" /> 
+		</p:column>
+
+		<p:column headerText="#{i18n['admin.validation.log.table.message']}"
+			sortBy="#{event.message}">
+			<h:outputText value="#{event.message}" />
+		</p:column>
+	</p:dataTable>
+</ui:composition>
+</html>

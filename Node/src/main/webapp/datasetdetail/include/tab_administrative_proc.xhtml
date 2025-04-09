@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+via ui:param:
+	- datasetHandler
+	- dataset
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	template="tab_administrative_template.xhtml">
+	
+	<ui:define name="after_referenceToPersonOrEntityEnteringTheData">
+		<p:row rendered="#{not empty xmlProcessAdminInfo.dataEntryBy.referenceToDataSetUseApproval}">
+			<p:column styleClass="ui-state-hover transp">
+				<soda:outputTextTooltip
+					outputTextId="referenceToDataSetUseApproval"
+					outputTextValue="#{i18n['common.referenceToDataSetUseApproval']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToPersonOrEntityEnteringTheData']}" />
+			</p:column>
+			<p:column>
+				<soda:dataListStyled dataListValue="#{xmlProcessAdminInfo.dataEntryBy.referenceToDataSetUseApproval}">
+					<ui:param name="useRef" value="#{dataListStyledVar}" />
+					<soda:dataListLinkOrText
+						dataListValue="#{processHandler.getMultilangWithFallback(lang, useRef.shortDescription)}"
+						outputLinkValue="#{processHandler.getReferenceUrlXml(useRef, url.contact)}"
+						outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+				</soda:dataListStyled>
+			</p:column>
+		</p:row>
+	</ui:define>
+	
+	<ui:define name="after_referenceToUnchangedRepublication">
+		<p:row rendered="#{not empty processHandler.getMultilangWithFallback(lang, xmlProcessAdminInfo.publicationAndOwnership.referenceToRegistrationAuthority.shortDescription)}">
+			<p:column styleClass="ui-state-hover transp">
+				<soda:outputTextTooltip
+					outputTextId="referenceToRegistrationAuthority"
+					outputTextValue="#{i18n['common.referenceToRegistrationAuthority']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.process.referenceToRegistrationAuthority']}" />
+			</p:column>
+			<p:column>
+				<soda:dataListLinkOrText
+					dataListValue="#{processHandler.getMultilangWithFallback(lang, xmlProcessAdminInfo.publicationAndOwnership.referenceToRegistrationAuthority.shortDescription)}"
+					outputLinkValue="#{processHandler.getReferenceUrlXml(xmlProcessAdminInfo.publicationAndOwnership.referenceToRegistrationAuthority, url.contact)}"
+					outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+			</p:column>
+		</p:row>
+		<p:row rendered="#{not empty xmlProcessAdminInfo.publicationAndOwnership.registrationNumber}">
+			<p:column styleClass="ui-state-hover transp">
+				<soda:outputTextTooltip
+					outputTextId="registrationNumber"
+					outputTextValue="#{i18n['common.registrationNumber']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.process.registrationNumber']}" />
+			</p:column>
+			<p:column>
+				#{xmlProcessAdminInfo.publicationAndOwnership.registrationNumber}
+			</p:column>
+		</p:row>
+	</ui:define>
+	
+	<ui:define name="copyright">
+		<p:row rendered="#{not empty process.accessInformation.copyright}">
+			<p:column styleClass="ui-state-hover transp">
+				<soda:outputTextTooltip
+					outputTextId="copyright"
+					outputTextValue="#{i18n['public.proc.copyright']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.dataset.copyright']}" />
+			</p:column>
+			<p:column>
+				#{process.accessInformation.copyright ? i18n['common.button.yes'] : i18n['common.button.no']}
+			</p:column>
+		</p:row>
+		<p:row rendered="#{not empty xmlProcessAdminInfo.publicationAndOwnership.referenceToEntitiesWithExclusiveAccess}">
+			<p:column styleClass="ui-state-hover transp">
+				#{i18n['public.proc.referenceToEntitiesWithExclusiveAccess']}
+			</p:column>
+			<p:column>
+				<soda:dataListStyled dataListValue="#{xmlProcessAdminInfo.publicationAndOwnership.referenceToEntitiesWithExclusiveAccess}">
+					<ui:param name="accessRef" value="#{dataListStyledVar}" />
+					<soda:dataListLinkOrText
+						dataListValue="#{processHandler.getMultilangWithFallback(lang, accessRef.shortDescription)}"
+						outputLinkValue="#{processHandler.getReferenceUrlXml(accessRef, url.contact)}"
+						outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+				</soda:dataListStyled>
+			</p:column>
+		</p:row>
+		<p:row rendered="#{not empty process.accessInformation.licenseType.value}">
+			<p:column styleClass="ui-state-hover transp">
+				#{i18n['public.proc.licenseType']}
+			</p:column>
+			<p:column>
+				#{process.accessInformation.licenseType.value}
+			</p:column>
+		</p:row>
+	</ui:define>
+	
+</ui:composition>

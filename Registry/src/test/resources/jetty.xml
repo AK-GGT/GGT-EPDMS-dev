@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://www.eclipse.org/jetty/configure_9_0.dtd">
+<Configure id="Server" class="org.eclipse.jetty.server.Server">
+    
+ <!--   <Call name="addConnector">
+        <Arg>
+            <New class="org.eclipse.jetty.server.ServerConnector">
+                <Arg name="server"><Ref refid="Server" /></Arg>
+                <Set name="host"><Property name="jetty.host" /></Set>
+                <Set name="port"><Property name="jetty.port" default="8081" /></Set>
+            </New>
+        </Arg>
+    </Call>    
+-->
+    
+    <New id="DSTest" class="org.eclipse.jetty.plus.jndi.Resource">
+        <Arg></Arg>
+        <Arg>jdbc/soda4LCAdbconnection</Arg>
+        <Arg>
+            <New class="com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource">
+                <Set name="url">jdbc:mysql://localhost:${mysql.port}/root?useUnicode=yes&amp;characterEncoding=UTF-8</Set>
+                <Set name="user">root</Set>
+                <Set name="password">root</Set>
+            </New>
+        </Arg>
+    </New>
+    
+    <New id="soda4LCAProperties"  class="org.eclipse.jetty.plus.jndi.EnvEntry">
+        <Arg>soda4LCAProperties</Arg>
+        <Arg type="java.lang.String">${project.basedir}/target/test-resources/soda4LCA.properties</Arg>
+    </New>
+    
+</Configure>

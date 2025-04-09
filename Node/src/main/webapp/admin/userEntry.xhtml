@@ -1,0 +1,174 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!-- 
+ui:params:
+	- nameEditable: name field editable?
+	- pwShown: show password field
+	- showOrganisation: show organisation
+	- handler: handler to use (must have getUser method)
+	- requireSector: whether to require entry for sector
+ -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pe="http://primefaces.org/ui/extensions"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <ui:composition>
+        <p:panel header="#{i18n['admin.user.loginInfo']}">
+            <h:panelGrid columns="4">
+                <p:outputLabel value="#{i18n['common.user.loginName']}:" for="nameOut" rendered="#{not nameEditable}" />
+                <p:outputLabel id="nameOut" value="#{handler.user.userName}" rendered="#{not nameEditable}" style="padding-left:0.5em;" />
+                
+                <p:outputLabel value="#{i18n['common.user.loginName']}:" for="nameIn" rendered="#{nameEditable}" />
+                <p:inputText id="nameIn" value="#{handler.user.userName}" required="true" requiredMessage="#{i18n['admin.user.requiredMsg.loginName']}" maxlength="40" size="20" rendered="#{nameEditable}" />
+                
+                <p:outputLabel value="#{i18n['common.email']}:" for="email" />
+                <p:inputText id="email" value="#{handler.user.email}" type="email" required="true" requiredMessage="#{i18n['admin.user.requiredMsg.email']}" validatorMessage="#{i18n['admin.user.validatorMsg.email']}" maxlength="80" size="40">
+                    <f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+                </p:inputText>
+                
+                <p:outputLabel rendered="#{pwShown}" value="#{i18n['common.user.passw']}:" for="passw" />
+                <p:password rendered="#{pwShown}" id="passw" value="#{handler.plainPassword}" required="#{handler.createView}" requiredMessage="#{i18n['admin.user.requiredMsg.passw']}" feedback="false" minLength="" maxlength="20" size="20" >
+                	<f:validator validatorId="de.iai.ilcd.webgui.validators.PasswordRequirementsValidator" />
+                </p:password>
+                
+                <p:outputLabel rendered="#{pwShown}" value="#{i18n['admin.user.repeatPassw']}:" for="repeatPassw" />
+                <p:password rendered="#{pwShown}" id="repeatPassw" value="#{handler.verifyPassword}" feedback="false" minLength="" maxlength="20" size="20" /> 
+            </h:panelGrid>
+            <p:outputLabel style="font-size: smaller;" value="#{i18n['admin.user.passwInfo']}." rendered="#{pwShown}" />
+        </p:panel>
+
+        <p:panel header="#{i18n['admin.user.personalInfo']}">
+            <h:panelGrid columns="6">
+                    <p:outputLabel value="#{i18n['admin.title']}:" for="title" />
+                    <p:inputText id="title" value="#{handler.user.title}" maxlength="40" size="5" />
+                    
+                    <p:outputLabel value="#{i18n['admin.user.firstName']}:" for="firstName" />
+                    <p:inputText id="firstName" value="#{handler.user.firstName}" required="#{conf.requireNameForRegistration}" requiredMessage="#{i18n['admin.user.requiredMsg.firstName']}" maxlength="40" size="15" />
+                    
+                    <p:outputLabel value="#{i18n['admin.user.lastName']}:" for="lastName" />
+                    <p:inputText id="lastName" value="#{handler.user.lastName}" required="#{conf.requireNameForRegistration}" requiredMessage="#{i18n['admin.user.requiredMsg.lastName']}" maxlength="40" size="20" />
+            </h:panelGrid>
+            <h:panelGrid columns="2">
+                <p:outputLabel value="#{i18n['admin.user.gender']}:" for="gender" style="margin-right:1em;" />
+                <p:selectOneRadio id="gender" value="#{handler.user.gender}" styleClass="radioLabelPadding">
+                    <f:selectItem itemLabel="#{i18n['admin.user.gender.female']}" itemValue="f" />
+                    <f:selectItem itemLabel="#{i18n['admin.user.gender.male']}" itemValue="m" />
+                    <f:selectItem itemLabel="#{i18n['admin.user.gender.other']}" itemValue="o" />
+                </p:selectOneRadio>
+          	        
+          	    <p:outputLabel value="#{i18n['common.user.jobposition']}:" for="jobposition" />
+                <p:inputText id="jobposition"
+                	    value="#{handler.user.jobPosition}"
+                              required="false"
+                              requiredMessage="#{i18n['common.user.requiredMsg.jobposition']}"
+                              maxlength="80"
+                              size="40" />          
+            </h:panelGrid>
+            <h:panelGrid columns="2"> 
+                              
+               	<p:outputLabel value="#{i18n['admin.user.institution']}:" for="institution" />
+                <p:inputText id="institution" value="#{handler.user.institution}" required="#{conf.requireAffiliationForRegistration}" requiredMessage="#{i18n['common.user.requiredMsg.affiliation']}" maxlength="100" size="75"/>
+            </h:panelGrid>
+             
+            <h:panelGrid columns="2">            
+            	<p:outputLabel value="#{i18n['admin.user.phone']}:" for="phone" />
+                <p:inputText id="phone" onkeypress="if(event.which &lt; 48 || event.which &gt; 57) return false;" value="#{handler.user.phone}" maxlength="20" size="20" />	                
+            </h:panelGrid>
+        </p:panel>
+        <p:panel header="#{i18n['common.user.comments']}">
+	        <h:panelGrid>
+                <p:outputLabel value="#{i18n['common.user.dspurpose']}" for="dspurpose" />
+                <p:inputTextarea id="dspurpose"
+                                 value="#{handler.user.dsPurpose}"
+                                 required="#{conf.requirePurposeForRegistration}"
+                                 requiredMessage="#{i18n['common.user.requiredMsg.dsPurpose']}"
+                                 cols="72"
+                                 rows="4" maxlength="255" />
+            </h:panelGrid>
+        </p:panel>
+
+        <p:panel header="#{i18n['admin.user.accessRight']}" rendered="#{user.hasSuperAdminPermission()}">
+            <p:selectBooleanCheckbox value="#{handler.entry.superAdminPermission}" itemLabel="#{i18n['admin.user.accessRight.superadmin']}" disabled="#{handler.entry.id == Constants.ADMIN_ID}"/>
+        </p:panel>
+
+        <p:panel header="#{i18n['admin.user.apikey']}" rendered="#{(handler.user.isApiKeyAllowed() || user.hasSuperAdminPermission()) and edit}">
+        	
+            <p:panelGrid columns="1" styleClass="ui-noborder" rendered="#{user.hasSuperAdminPermission()}">
+                <p:selectBooleanCheckbox value="#{handler.apiKeyAllowed}" itemLabel="#{i18n['admin.user.apikey.allowed']}" disabled="#{not edit}">
+                    <p:ajax update="apiKey"/>
+                </p:selectBooleanCheckbox>
+            </p:panelGrid>
+
+            <h:panelGroup rendered="#{handler.user.isApiKeyAllowed()}">
+                <p:panel id="apiKey" visible="#{handler.apiKeyAllowed}">
+                    <h:panelGrid columns="2" rendered="#{handler.user.isApiKeyAllowed()}">
+                        <h:outputText value="#{i18n['admin.user.apikey.token']}:"/>
+                        <p:inputTextarea id="tokenOutput" value="#{handler.token}" readonly="true" cols="72"/>
+                    </h:panelGrid>
+
+                    <pe:clipboard id="clipCopy" trigger="btnCopy" action="copy" target="tokenOutput">
+                       <p:ajax event="success" listener="#{userHandler.successListener}" />
+                       <p:ajax event="error" listener="#{userHandler.errorListener}" />
+                    </pe:clipboard>
+                    <div class="buttonRight">
+                        <p:commandButton value="" action="#{handler.generateApiKeyOLD}" ajax="true" update="apiKey" style="display:none;" styleClass="generateApiKeyOLD"  />
+                        <p:commandButton value="#{i18n['admin.user.apikey.generate']}" action="#{handler.generateApiKey}" ajax="true" update="apiKey" />
+                        <p:commandButton id="btnCopy" value="Copy" icon="fa fa-copy" />
+                    </div>
+                    <h:outputText value="#{i18n['admin.user.apikey.expiry']}:"/>
+                    <h:outputText value="#{handler.entry.apiKeyExpiryString}" />
+                </p:panel>
+            </h:panelGroup>
+        </p:panel>
+
+        <p:panel header="#{i18n['admin.org.info']}" rendered="#{showOrganisation}">
+            <ui:fragment rendered="#{empty userHandler.allOrganizations}">
+                <h:panelGrid columns="2">
+                    <p:outputLabel for="org" value="#{i18n['admin.org']}:" />
+                    <p:outputLabel id="org" value="#{handler.user.organization.name}" />
+                </h:panelGrid>
+            </ui:fragment>
+            <ui:fragment rendered="#{not empty userHandler.allOrganizations}">
+                <h:panelGrid columns="2">
+                    <p:outputLabel for="orgSelect" value="#{i18n['admin.org']}:" />
+                    <p:selectOneMenu id="orgSelect" value="#{handler.user.organization}" converter="orgConverter">
+                        <f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+                        <f:selectItems value="#{userHandler.allOrganizations}" var="o" itemLabel="#{o.name}" itemValue="#{o}" />
+                        <p:ajax event="change" process="@this" update="orgChangeHint" />
+                    </p:selectOneMenu>
+                </h:panelGrid>
+                <p:outputLabel id="orgChangeHint" value="#{i18n['admin.user.hint.orgChange']}" styleClass="#{userHandler.organizationChangeRequiresGroupRemovals?'':'ui-helper-hidden'}" />
+            </ui:fragment>
+        </p:panel>
+        
+        <ui:fragment rendered="#{conf.sectors}">
+	        <p:panel id="sector" header="#{i18n['public.user.registration.sector']}">
+	            <h:panelGrid columns="1">
+		            <p:outputLabel for="sectorSelect" value="#{i18n['public.user.registration.sector.info']}" />
+		            <p:selectManyMenu id="sectorSelect" value="#{handler.user.sector}" required="#{requireSector}" requiredMessage="#{i18n['public.user.registration.sector.required']}" style="width: 400px">
+		                <f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+		                <f:selectItems value="#{userHandler.allSectors}" var="o" itemLabel="#{o}" itemValue="#{o}" />
+		            </p:selectManyMenu>
+		
+		            <div style="margin-top: 1em">
+		                <p:outputLabel for="sectorOther" value="#{i18n['public.user.registration.sector.other']}:"/>
+		                <div>
+		                    <p:inputText id="sectorOther" value="#{handler.user.sectorOther}" maxlength="100" style="width: 400px" />
+		                </div>
+		            </div>
+		        </h:panelGrid>
+	        </p:panel>
+		</ui:fragment>     
+		   
+		<ui:include src="addressInfoPanel.xhtml">
+			<ui:param name="countries" value="#{handler.countries}" />
+			<ui:param name="chosenCountry" value="#{handler.chosenCountry}" />
+			<ui:param name="address" value="#{handler.user.address}" />
+		</ui:include>
+    </ui:composition>
+</html>
+

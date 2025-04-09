@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:body>
+        <ui:composition template="/admin/layout/adminDesign.xhtml">
+            <ui:param name="pageTitle" value="#{i18n['admin.elementaryFlow.manageList']}" />
+            <ui:define name="content">
+			<ui:include src="include/flowListInclude.xhtml">
+				<ui:param name="publicShowFacelet" value="showElementaryFlow" />
+			    <ui:param name="backingBean" value="#{elementaryFlowListHandler}" />
+			    <ui:param name="lazyDataModel" value="#{elementaryFlowListHandler.lazyModel}" />
+			    	<ui:param name="countModel" value="#{elementaryFlowListHandler}"/>
+			    <ui:param name="selectionProperty" value="#{elementaryFlowListHandler.selectedFlows}" />
+			    <ui:param name="selectedActionButtonLabel" value="#{i18n['admin.deleteSelected']}" />
+			    <ui:param name="actionDialogHeader" value="#{i18n['admin.confirmDlg.delete']}" />
+			    <ui:param name="actionDialogMessage" value="#{i18n['admin.confirmMsg.deleteSelected']}?" />
+			    <ui:param name="actionDialogCancelLabel" value="#{i18n['admin.cancel']}" />
+			    <ui:param name="actionDialogOKLabel" value="#{i18n['admin.ok']}" />
+			    <ui:param name="actionDialogOKActionMethod" value="deleteSelected" />
+			    <ui:param name="showDependenciesOption" value="false" />
+			    <ui:param name="moveControls" value="true"/>
+			    <ui:param name="initialRows" value="100" />
+			    <ui:param name="includeMessages" value="true" />
+				<ui:param name="mostRecentVersionOnlyFilter" value="true" />
+				<ui:param name="mostRecentVersionOnlyBackingObject" value="#{elementaryFlowListHandler}" />
+				<ui:param name="datasetType" value="#{i18n['common.elementaryFlows']}" />
+			</ui:include>
+		</ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:jsf="http://xmlns.jcp.org/jsf">
+
+	<ui:param name="dialogId" value="#{dataTableId}#{action}Confirm" />
+	<p:dialog header="#{dialogHeader}" severity="alert" modal="true"
+		widgetVar="#{dialogId}" resizable="false" appendTo="@form">
+		<p:ajax event="open"
+			listener="#{assignRemoveDataSetHandler.resetForce()}" />
+		<p:ajax disabled="#{allMode == 'true' and jobCheckbox == 'false'}"
+			event="open" update="@(.#{dataTableId}#{action}panel)"
+			listener="#{assignRemoveDataSetHandler.batchNeeded(lazyDataModel, backingBean)}" />
+
+		<div style="padding-top: 15px; padding-bottom: 15px;">
+			<h:outputText value="#{dialogMessage}" style="white-space: pre-wrap" />
+		</div>
+
+		<h:panelGroup rendered="#{action=='moveSelected'}">
+			<div>
+				<h:outputText value="#{i18n['admin.stock.move.target']}" />
+				<p:spacer width="10px" />
+				<p:selectOneMenu value="#{backingBean.moveTarget}"
+					converter="#{dsMetaConverter}">
+					<f:selectItem itemLabel="#{i18n['common.select.hint']}"
+						noSelectionOption="true" />
+					<f:selectItems value="#{backingBean.availableStocksForMove}"
+						var="stock" itemLabel="#{stock.name}" itemValue="#{stock}" />
+				</p:selectOneMenu>
+			</div>
+			<p:spacer height="10px" />
+		</h:panelGroup>
+
+		<ui:include
+			src="/admin/datasets/include/dependenciesDropListInclude.xhtml">
+			<ui:param name="backingBean" value="#{backingBean}" />
+			<ui:param name="showDependenciesOption"
+				value="#{showDependenciesOption}" />
+		</ui:include>
+
+		<div class="confirmDlgButtons"
+			style="display: flex; flex-flow: row wrap; align-items:flex-start; justify-content:space-between;">
+			
+			<!-- Batch needed checkbox	 -->
+			<div style="display:flex; flex-flow:row nowrap; align-items:center; justify-content:flex-start;"
+				jsf:rendered="#{jobCheckbox == 'true'}">
+				<p:selectBooleanCheckbox
+					id="#{dataTableId}#{action}batchNeeded" style="margin: 6px;"
+					value="#{assignRemoveDataSetHandler.batchNeeded}">
+					<p:ajax update="#{dataTableId}#{action}panel" />
+				</p:selectBooleanCheckbox>
+
+				<!-- 	Label of the selectBooleanCheckBox -->
+				<!-- 	The element obtained by the label attribut in -->
+				<!-- 	p:selectBooleanCheckbox doesn't realign nicely within the surrounding flex box. -->
+				<p:outputLabel value="#{i18n['admin.stock.createBatchAsJob']}"/>
+
+				<p:tooltip
+					for="#{dataTableId}#{action}batchNeeded" mouseTracking="true"
+					adjustX="10" adjustY="20"
+					value="Recommended for large datasets, more than 500." />
+			</div>
+			
+			<p:spacer width="20px"/>
+
+			<!-- Cancel + OK buttons -->
+			<div style="display:flex; flex-flow:row nowrap; align-items:baseline; justify-content:flex-end;">
+				<!-- Cancel button -->
+				<c:choose>
+					<c:when
+						test="#{conf.displayConfig.showDependenciesOptions and showDependenciesOption}">
+						<p:commandButton id="#{dialogId}CancelButton"
+							value="#{i18n['admin.cancel']}"
+							action="#{backingBean.dependenciesOptions.resetDependenciesOption()}"
+							oncomplete="PF('#{dialogId}').hide();" />
+					</c:when>
+					<c:otherwise>
+						<p:commandButton
+							value="#{i18n['admin.cancel']}"
+							onclick="PF('#{dialogId}').hide();" />
+					</c:otherwise>
+				</c:choose>
+				
+				
+				<!-- Ok button -->
+				<h:panelGroup id="#{dataTableId}#{action}panel"
+					styleClass="#{dataTableId}#{action}panel">
+	
+					<p:commandButton id="#{dialogId}OkButton"
+						rendered="#{allMode == 'true'}" process="@this" ajax="false"
+						value="#{actionDialogOKLabel}"
+						action="#{assignRemoveDataSetHandler[action]}" />
+	
+					<p:commandButton
+						rendered="#{allMode != 'true' and not assignRemoveDataSetHandler.batchNeeded}"
+						process="@this" ajax="false" value="#{i18n['admin.ok']}"
+						action="#{backingBean[action]}" />
+	
+					<p:commandButton
+						rendered="#{assignRemoveDataSetHandler.batchNeeded and jobCheckbox == 'true'}"
+						process="@this" ajax="false" value="#{i18n['admin.ok']}"
+						action="#{assignRemoveDataSetHandler.batch(lazyDataModel, action)}" />
+				</h:panelGroup>
+			</div>
+		</div>
+	</p:dialog>
+</ui:composition>

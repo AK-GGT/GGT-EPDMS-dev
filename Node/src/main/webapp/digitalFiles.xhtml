@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+used in
+	- showSource.xhtml
+	- datasetdetail/source.xhtml
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	
+	<soda:dataListStyled dataListValue="#{sourceHandler.getAsList(sourceHandler.source.files)}">
+		<ui:param name="file" value="#{dataListStyledVar}" />
+		<ui:param name="filename" value="#{file.fileName}" />
+		<ui:param name="fileurl" value="#{url.source.resourceList}#{sourceHandler.source.uuid.uuid}/#{sourceHandler.urlEncode(filename)}?version=#{sourceHandler.source.version}" />
+		<pe:switch value="#{sourceHandler.hasImageExtension(filename)}">
+			<pe:case value="#{true}">
+				<h:outputLink value="#{conf.contextPath}#{fileurl}" title="#{filename}">
+					<h:graphicImage value="#{fileurl}" alt="#{filename}" title="#{filename}" width="100%" />
+				</h:outputLink>
+			</pe:case>
+			<pe:case value="#{false}">
+				<h:outputLink rendered="#{not filename.contains('://')}" value="#{conf.contextPath}#{fileurl}" title="#{filename}">
+					#{filename}
+				</h:outputLink>
+				<h:outputLink rendered="#{filename.contains('://')}" value="#{filename}" title="#{filename}" target="_blank">
+					#{filename}
+				</h:outputLink>
+			</pe:case>
+		</pe:switch>
+	</soda:dataListStyled>
+</ui:composition>

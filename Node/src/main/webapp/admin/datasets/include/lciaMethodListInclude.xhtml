@@ -1,0 +1,78 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	template="datasetListTemplate.xhtml">
+
+	<ui:param name="dataTableId"
+		value="#{empty dtId ? 'lciamethodTable' : dtId}" />
+	<ui:param name="exportedFileName" value="lciMethodTable" />
+	<ui:param name="publicShowFacelet" value="showLCIAMethod" />
+	<ui:param name="nameFilterField" value="" />
+
+	<ui:define name="columns">
+
+		<!-- 	Data set type column -->
+		<c:set var="id" value="#{'typeColumn'}" />
+		<p:column id="#{id}" exportable="true" toggleable="true"
+			style="width:100px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="true">
+
+			<!-- 	COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText" value="#{i18n['common.type']}"
+					styleClass="ui-column-title" />
+			</f:facet>
+
+			<!-- 	COLUMN CONTENT -->
+			<h:outputText id="#{id}ContentTypeValue"
+				value="#{dataset.type.value}" />
+		</p:column>
+
+
+
+
+		<!-- 	Reference year column -->
+		<c:set var="id" value="#{'referenceYearColumn'}" />
+		<p:column id="#{id}" exportable="true" toggleable="true"
+			style="width:100px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="true">
+
+			<!-- 	COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText"
+					value="#{i18n['common.dataset.refYear']}"
+					styleClass="ui-column-title" />
+			</f:facet>
+
+			<!-- 	COLUMN CONTENT -->
+			<h:outputText id="#{id}ContentYear"
+				value="#{dataset.timeInformation.referenceYear.value}" />
+		</p:column>
+
+
+
+
+		<!-- 	Duration column -->
+		<c:set var="id" value="#{'durationColumn'}" />
+		<p:column id="#{id}" exportable="true" toggleable="true"
+			style="width:100px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="true">
+
+			<!-- 	COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText"
+					value="#{i18n['common.lciam.duration']}"
+					styleClass="ui-column-title" />
+			</f:facet>
+
+			<!-- 	COLUMN CONTENT -->
+			<h:outputText id="#{id}ContentDuration"
+				value="#{dataset.timeInformation.duration.value}" />
+		</p:column>
+
+	</ui:define>
+</ui:composition>

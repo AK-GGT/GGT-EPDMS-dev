@@ -1,0 +1,44 @@
+# FROM maven:3.8.2-jdk-11
+FROM markhobson/maven-chrome:jdk-11
+
+LABEL \
+	Maintainer="ok*worx <info@okworx.com>" \
+	MailingList="soda4LCA@lists.kit.edu" \
+	License="GNU Affero General Public License (AGPL) 3.0" \
+    Purpose="Caches all maven dependencies"
+
+ENV MARIADB_VERSION=10.11
+
+RUN apt-get update; \
+    apt-get install curl software-properties-common dirmngr ca-certificates apt-transport-https -y
+
+RUN curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version=$MARIADB_VERSION;
+
+RUN { \
+		echo mariadb-server mysql-server/data-dir select ''; \
+		echo mariadb-server mysql-server/root-pass password ''; \
+		echo mariadb-server mysql-server/re-root-pass password ''; \
+		echo mariadb-server mysql-server/remove-test-db select false; \
+	} | debconf-set-selections \
+    && export DEBIAN_FRONTEND=noninteractive \
+	&& apt-get install -y mariadb-server mariadb-client && rm -rf /var/lib/apt/lists/* \
+	&& rm -rf /var/lib/mysql && mkdir -p /var/lib/mysql /var/run/mysqld \
+	&& chown -R mysql:mysql /var/lib/mysql /var/run/mysqld \
+# ensure that /var/run/mysqld (used for socket and lock files) is writable regardless of the UID our mysqld instance ends up having at runtime
+	&& chmod 1777 /var/run/mysqld /var/lib/mysql \
+# comment out a few problematic configuration values
+	&& find /etc/mysql/ -name '*.cnf' -print0 \
+		| xargs -0 grep -lZE '^(bind-address|log)' \
+		| xargs -rt -0 sed -Ei 's/^(bind-address|log)/#&/' \
+# don't reverse lookup hostnames, they are usually another container
+	&& echo '[mysqld]\nskip-host-cache\nskip-name-resolve' > /etc/mysql/conf.d/docker.cnf
+
+RUN mariadb --version; \
+    mariadbd &
+
+COPY . soda4lca
+RUN cd soda4lca \
+	&& mvn --no-transfer-progress org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=$(find Node/lib/primefaces/ -name '*.jar') \
+	&& mvn --no-transfer-progress org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=$(find Node/lib/shiro-faces/ -name '*.jar') \
+	&& mvn --no-transfer-progress install -DskipTests -DskipITs -DskipCargo
+RUN rm -rf soda4lca

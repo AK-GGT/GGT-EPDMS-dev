@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<!--
+Parameters for this composition:
+	via ui:param:
+		processListHandler
+		registrationHandler
+		includeActions
+-->
+
+	<h:panelGroup id="btnPanelRegDereg">
+		<p:commandButton id="btnRegisterSelected" styleClass="processTablebtn" value="#{i18n['admin.registerSelected']}" action="#{registrationHandler.registerSelected}"
+			ajax="false" rendered="#{includeActions and applicationInfoBean.showRegistrationControls and processListHandler.registry==null}" disabled="#{registrationHandler.nothingSelected}"/>
+
+		<p:commandButton id="btnDeregisterSelected" styleClass="processTablebtn" value="#{i18n['admin.deregisterSelected']}" onclick="PF('deregistration').show()"
+			rendered="#{includeActions and applicationInfoBean.showRegistrationControls and processListHandler.registry!=null and processListHandler.registry ne '-1'}" disabled="#{processListHandler.nothingSelected}"/>
+
+		<p:commandButton id="btnDeregisterSelectedGLAD" styleClass="processTablebtn" value="#{i18n['admin.deregisterSelected']}" actionListener="#{processListHandler.deregisterSelected}" ajax="false"
+			rendered="#{includeActions and applicationInfoBean.showRegistrationControls and processListHandler.registry!=null and processListHandler.registry eq '-1'}" disabled="#{processListHandler.nothingSelected}"/>
+	</h:panelGroup>
+
+	<p:dialog header="#{i18n['admin.deregisterDataSets.deregistrationHeader']}" widgetVar="deregistration" resizable="false" severity="alert" modal="true" width="340"
+		onHide="document.getElementById('deregistrationreason').value=''">
+		<h:panelGrid columns="1">
+			<h:outputText for="deregistrationreason" value="#{i18n['admin.deregisterDataSets.areYouSureDeregister']}"/>
+			<h:outputText for="deregistrationreason" value="#{i18n['admin.deregisterDataSets.enterDeregistrationReason']}"/>
+			<p:inputTextarea id="deregistrationreason" value="#{processListHandler.reason}" style="width:300px;height:100px;"/>
+		</h:panelGrid>
+		<p:commandButton value="#{i18n['common.button.yes']}" oncomplete="PF('deregistration').hide();" actionListener="#{processListHandler.deregisterSelected}" ajax="false"/>
+		<p:commandButton value="#{i18n['common.button.no']}" onclick="PF('deregistration').hide();" type="button"/>
+	</p:dialog>
+
+
+</ui:composition>

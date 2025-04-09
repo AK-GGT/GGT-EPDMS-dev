@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:body>
+		<ui:composition template="/admin/layout/adminDesign.xhtml">
+			<ui:param name="pageTitle"
+				value="#{i18n['admin.pushConfig.manageList']}" />
+			<ui:define name="content">
+				<h:form id="tableForm" prependId="false">
+					<p:commandButton id="deleteBtn"
+						value="#{i18n['admin.deleteSelected']}"
+						onclick="PF('confirmDelete').show()" type="button" />
+	
+					<p:confirmDialog
+						message="#{i18n['admin.confirmMsg.deleteSelected']}?"
+						header="#{i18n['admin.confirmDlg.delete']}" severity="alert"
+						widgetVar="confirmDelete">
+						<div class="confirmDlgButtons">
+							<p:commandButton value="#{i18n['admin.cancel']}" type="button"
+								onclick="PF('confirmDelete').hide()" />
+							<p:commandButton value="#{i18n['admin.ok']}"
+								action="#{pushConfigListHandler.deleteSelected}"
+								oncomplete="PF('confirmDelete').hide()" ajax="false"
+								update="messages #{showTable}" />
+						</div>
+					</p:confirmDialog>
+					<ui:include src="pushConfigList.xhtml">
+						<ui:param name="showTable" value="pushTable" />
+					</ui:include>
+					<ui:include src="/messages.xhtml" />
+				</h:form>
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</html>

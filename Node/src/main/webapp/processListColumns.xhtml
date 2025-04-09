@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:sodautil="http://de.iai.ilcd.util/sodautil">
+
+          	<p:column style="width:30%" sortBy="#{process.name.getValueWithFallback(lang)}" headerText="#{i18n['common.name']}" rendered="#{conf.displayConfig.showProcessName}">
+          		<c:if test="#{filtering}">
+	          		<f:attribute name="filterBy" value="#{process.name}"/>
+          		</c:if>
+            
+                <h:link outcome="#{url.process.getDetailWithRegistry(process, registry)}" rendered="#{process.getClass().name == 'de.iai.ilcd.model.process.Process'}"
+                        value="#{process.name.getValueWithFallback(lang)}" title="#{process.uuidAsString}   #{process.version}">
+                </h:link>
+                
+                 <h:outputLink value="#{processesHandler.getNodeBaseUrl(registry,process.sourceId)}#{'/showProcess.xhtml?uuid='}#{process.uuidAsString}#{'&amp;version='}#{process.dataSetVersion}#{'&amp;registryUUID='}#{registry}"
+               		rendered="#{process.getClass().name != 'de.iai.ilcd.model.process.Process'}">
+                    <h:outputText value="#{process.name.getValueWithFallback(lang)}"/>
+        		 </h:outputLink>
+        		 
+            </p:column>
+            
+            <p:column style="width:6%" sortBy="#{process.type.value}" headerText="#{i18n['common.type']}" rendered="#{conf.displayConfig.showProcessType}">
+                <h:outputText rendered="#{process.parameterized}"
+                    value="(#{i18n['public.proc.parameterized']}) " />
+                <h:outputText value="#{process.type.value}" />
+            </p:column>
+
+            <p:column style="width:10%" sortBy="#{process.subType.value}" headerText="#{i18n['common.proc.subtype']}" rendered="#{conf.displayConfig.showProcessSubType}">
+                <h:outputText value="#{process.subType.value}" />
+            </p:column>
+
+            <p:column style="width:5%" sortBy="#{process.location}" headerText="#{i18n['common.dataset.location']}" rendered="#{conf.displayConfig.showProcessLocation}">
+                <h:outputText value="#{process.location}" />
+            </p:column>
+
+            <p:column style="width:12%" sortBy="#{process.classification.classHierarchyAsString}" headerText="#{i18n['common.dataset.classif']}" rendered="#{conf.displayConfig.showProcessClassification}">
+          		<c:if test="#{filtering}">
+	          		<f:attribute name="filterBy" value="#{process.classes}"/>
+          		</c:if>
+          		
+                <h:outputText
+                    value="#{process.classification.classHierarchyAsString}" />
+            </p:column>
+
+            <p:column style="width:5%" sortBy="#{process.timeInformation.referenceYear}" filterBy="#{process.referenceYear}" headerText="#{i18n['common.dataset.refYear']}" rendered="#{conf.displayConfig.showProcessReferenceYear}">
+                <h:outputText value="#{process.timeInformation.referenceYear}" />
+            </p:column>
+
+            <p:column style="width:5%" sortBy="#{process.timeInformation.validUntil}"  filterBy="#{process.validUntil}" headerText="#{i18n['common.proc.validUntilYear']}" rendered="#{conf.displayConfig.showProcessValidUntil}">
+                <h:outputText value="#{process.timeInformation.validUntil}" />
+            </p:column>
+
+			<p:column sortBy="#{process.complianceSystems}" style="width:17%; white-space:pre-line; overflow-wrap:break-word; padding:0px 20px 10px 20px;">
+				<f:facet name="header">
+					<h:outputText id="processTableComplianceHeader" value="#{i18n['public.proc.complianceSystems']}"/>
+				</f:facet>
+
+                <h:outputText id="#{id}BulletList" value="#{stringify.toBulletList(process.complianceSystems, cs -> cs.name)}"/>
+
+			</p:column>
+
+            <p:column style="width:10%" sortBy="#{process.sourceId}" headerText="#{i18n['common.node.id']}" rendered="#{distributed and conf.displayConfig.showProcessNodeId}">
+                <h:outputText value="#{process.sourceId}" rendered="#{not conf.displayConfig.showNodeIdAsLink}"/>
+                <h:outputLink value="#{processesHandler.getNodeBaseUrl(registry,process.sourceId)}" rendered="#{conf.displayConfig.showNodeIdAsLink}">
+                	#{process.sourceId}
+                </h:outputLink>
+            </p:column>
+
+</ui:composition>

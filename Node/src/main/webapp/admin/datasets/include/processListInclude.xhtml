@@ -1,0 +1,400 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	template="datasetListTemplate.xhtml">
+
+	<ui:param name="dataTableId"
+		value="#{empty dtId ? 'processTable' : dtId}" />
+	<ui:param name="exportedFileName" value="processTable" />
+	<ui:param name="publicShowFacelet" value="showProcess" />
+	<ui:param name="nameFilterField" value="" />
+
+
+	<ui:define name="columns">
+		<p:importEnum
+			type="de.fzk.iai.ilcd.service.client.impl.vo.epd.ProcessSubType"
+			var="SubTypeValues" />
+		<p:importEnum
+			type="de.fzk.iai.ilcd.service.model.enums.TypeOfProcessValue"
+			var="ProcessTypeValues" />
+
+		<!--	 Data set type column -->
+		<c:set var="id" value="#{'typeColumn'}" />
+		<p:column id="#{id}" sortBy="#{dataset.type}"
+			filterBy="#{dataset.type}" exportable="true" toggleable="true"
+			style="width:120px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="#{conf.displayConfig.showManageProcessType}">
+
+			<!-- 	COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText" value="#{i18n['common.type']}"
+					styleClass="ui-column-title" />
+			</f:facet>
+			<f:facet name="filter">
+				<p:selectCheckboxMenu id="#{id}HeaderFilterSelectCheckboxMenu"
+					label="#{i18n['public.proc.list.filter.select']}"
+					onchange="PF('dataTable').filter()" style="width:120px"
+					scrollHeight="120" panelStyle="width:300px;">
+					<f:selectItems value="#{ProcessTypeValues.ALL_VALUES}" var="type"
+						itemValue="#{type}"
+						itemLabel="#{i18n['common.proc.type.'.concat(type)]}" />
+				</p:selectCheckboxMenu>
+			</f:facet>
+
+			<!-- 	COLUMN CONTENT -->
+			<h:outputText id="#{id}ContentTypeValue"
+				value="#{dataset.type.value}" />
+		</p:column>
+
+
+
+
+		<!-- 	Data set sub-type column -->
+		<c:set var="id" value="#{'subTypeColumn'}" />
+		<p:column id="#{id}" sortBy="#{dataset.subType}"
+			filterBy="#{dataset.subType}" exportable="true" toggleable="true"
+			style="width:120px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="#{conf.displayConfig.showManageProcessSubType}">
+
+			<!-- 	COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText"
+					value="#{i18n['common.proc.subtype']}" styleClass="ui-column-title" />
+			</f:facet>
+			<f:facet name="filter">
+				<p:selectCheckboxMenu id="#{id}HeaderFilterSelectCheckboxMenu"
+					label="#{i18n['public.proc.list.filter.select']}"
+					onchange="PF('dataTable').filter()" style="width:120px"
+					scrollHeight="120">
+					<f:selectItems value="#{SubTypeValues.ALL_VALUES}" var="subType"
+						itemValue="#{subType}"
+						itemLabel="#{i18n['common.proc.subtype.'.concat(subType)]}" />
+				</p:selectCheckboxMenu>
+			</f:facet>
+
+			<!-- 	COLUMN CONTENT -->
+			<h:outputText id="#{id}ContentSubTypeValue"
+				value="#{dataset.subType == null ? '' : i18n['common.proc.subtype.'.concat(dataset.subType)]}" />
+		</p:column>
+
+
+
+
+		<!-- 	Classification column -->
+		<c:set var="id" value="#{'classificationColumn'}" />
+		<p:column id="#{id}"
+			sortBy="#{dataset.classification.classHierarchyAsString}"
+			filterBy="#{classes}" exportable="true" toggleable="true"
+			style="min-width:100px !important; max-width:200px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="#{conf.displayConfig.showManageDatasetClassification}">
+
+			<!-- 	COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText"
+					value="#{i18n['common.dataset.classif']}"
+					styleClass="ui-column-title" />
+			</f:facet>
+
+			<!-- 	COLUMN CONTENT -->
+			<h:outputText id="#{id}ContentClassHierarchyAsString"
+				value="#{dataset.classification.getClassHierarchyAsString(conf.displayConfig.showManageProcessClassificationId)}" />
+		</p:column>
+
+
+
+
+		<!-- 	Location column -->
+		<c:set var="id" value="#{'locationColumn'}" />
+		<p:column id="#{id}" sortBy="#{dataset.location}"
+			filterBy="#{dataset.location}" filterMatchMode="in" exportable="true"
+			toggleable="true"
+			style="width:50px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="#{conf.displayConfig.showManageProcessLocation}">
+
+			<!-- 	COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText"
+					value="#{i18n['common.dataset.location']}"
+					styleClass="ui-column-title" />
+			</f:facet>
+			<f:facet name="filter" style="width:35px !important">
+				<p:selectCheckboxMenu id="#{id}HeaderFilterSelectCheckboxMenu"
+					label="#{i18n['public.proc.list.filter.select.short']}"
+					onchange="PF('dataTable').filter()" style="width:45px"
+					scrollHeight="280" panelStyle="width:120px;">
+					<f:selectItems value="#{backingBean.locations}" />
+				</p:selectCheckboxMenu>
+			</f:facet>
+
+			<!--	COLUMN CONTENT -->
+			<h:outputText id="#{id}ContentLocation"
+				value="#{dataset.geography.location}" />
+		</p:column>
+
+
+
+
+		<!-- 	Data source column -->
+		<c:set var="id" value="#{'dataSourceColumn'}" />
+		<p:column id="#{id}" sortBy="#{dataset.subType}"
+			filterBy="#{dataSource}" filterMatchMode="in" exportable="true"
+			toggleable="true"
+			style="width:100px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="#{conf.displayConfig.showManageProcessDatasource}">
+
+			<!-- 				COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText"
+					value="#{i18n['common.proc.database']}"
+					styleClass="ui-column-title" />
+			</f:facet>
+			<f:facet name="filter">
+				<p:selectCheckboxMenu id="#{id}HeaderFilterSelectCheckboxMenu"
+					label="#{i18n['public.proc.list.filter.select']}"
+					onchange="PF('dataTable').filter()" scrollHeight="280">
+					<f:selectItems value="#{backingBean.databases}" var="source"
+						itemLabel="#{source.name.defaultValue}"
+						itemValue="#{source.uuid.uuid}" />
+				</p:selectCheckboxMenu>
+			</f:facet>
+
+			<!-- 				COLUMN CONTENT -->
+			<h:outputText id="#{id}ContentSourcesAsString"
+				value="#{processListHandler.dataSourceListPrinter( dataset)}" />
+		</p:column>
+
+
+
+
+		<!-- 	Reference year column -->
+		<c:set var="id" value="#{'referenceYearColumn'}" />
+		<p:column id="#{id}"
+			sortBy="#{dataset.timeInformation.referenceYear}}"
+			filterBy="#{referenceYear}" exportable="true" toggleable="true"
+			style="width:60px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="#{conf.displayConfig.showManageProcessReferenceYear}">
+
+			<!-- 				COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText"
+					value="#{i18n['common.dataset.refYear']}"
+					styleClass="ui-column-title"
+					style="white-space:pre-line; overflow-wrap:break-word; word-break:break-all;" />
+			</f:facet>
+			<f:facet name="filter">
+				<p:inputText id="#{id}HeaderFilterInput"
+					style="width:50px !important" title="YYYY"
+					onkeyup="PF('dataTable').filter();" />
+			</f:facet>
+
+			<!-- 				COLUMN CONTENT -->
+			<h:outputText id="#{id}ContentYear"
+				value="#{dataset.timeInformation.referenceYear}" />
+		</p:column>
+
+
+
+
+		<!-- 	Valid until column -->
+		<c:set var="id" value="#{'validUntilColumn'}" />
+		<p:column id="#{id}" sortBy="#{dataset.timeInformation.validUntil}"
+			filterBy="#{validUntil}" exportable="true" toggleable="true"
+			style="width:50px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="#{conf.displayConfig.showManageProcessValidUntil}">
+
+			<!-- 				COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText"
+					value="#{i18n['common.proc.validUntilYear']}"
+					styleClass="ui-column-title" />
+			</f:facet>
+			<f:facet name="filter">
+				<p:inputText id="#{id}HeaderFilterInput"
+					style="width:45px !important"
+					title="#{i18n['common.proc.validUntilYear.tooltip']}"
+					onkeyup="PF('dataTable').filter();" />
+			</f:facet>
+
+			<!-- 				COLUMN CONTENT -->
+			<h:outputText id="#{id}ContentTimestamp"
+				value="#{dataset.timeInformation.validUntil}" />
+		</p:column>
+
+
+
+
+		<!-- 	Owner column -->
+		<c:set var="id" value="#{'ownerColumn'}" />
+		<p:column id="#{id}" sortBy="#{dataset.ownerReference}"
+			filterBy="#{owner}" exportable="true" toggleable="true"
+			style="max-width:250px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="#{conf.displayConfig.showManageProcessOwner}">
+
+			<!-- 				COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText"
+					value="#{i18n['common.proc.owner']}" styleClass="ui-column-title" />
+			</f:facet>
+
+			<!-- 				COLUMN CONTENT -->
+			<h:outputText id="#{id}ContentOwnerReference"
+				value="#{dataset.ownerReference.shortDescription.value}" />
+		</p:column>
+
+
+
+
+		<!-- 	Compliance systems column -->
+		<c:set var="id" value="#{'complianceColumn'}" />
+		<p:column id="#{id}" sortBy="#{dataset.complianceSystems}"
+			filterBy="#{compliance}"
+			exportable="true" toggleable="true"
+			style="min-width:150px !important; max-width:230px !important; white-space:pre-line; overflow-wrap:break-word; padding:0px 20px 10px 20px;"
+			visible="#{conf.displayConfig.showManageProcessCompliance}">
+
+			<!-- 	COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText"
+					value="#{i18n['public.proc.complianceSystems']}"
+					styleClass="ui-column-title" />
+			</f:facet>
+			<f:facet name="filter">
+				<p:selectCheckboxMenu id="#{id}HeaderFilterSelectCheckboxMenu"
+					label="#{i18n['public.proc.list.filter.select']}"
+					onchange="PF('dataTable').filter()" style="width:140px"
+					scrollHeight="280" panelStyle="width:350px;">
+					<f:selectItems value="#{AvailableComplianceSystemsHandler.availableCompSystems}" var="cs"
+					 itemLabel="#{cs.getDefaultName()}" itemValue="#{cs.getUuidAsString()}"/>
+				</p:selectCheckboxMenu>
+			</f:facet>
+			
+
+			<!-- 	COLUMN CONTENT -->
+			<h:outputText id="#{id}BulletList" value="#{stringify.toBulletList(dataset.complianceSystems, cs -> cs.name)}"/>
+		</p:column>
+		
+		
+
+
+		<!-- 	Tags column -->
+		<c:set var="id" value="#{'tagsColumn'}" />
+		<p:column id="#{id}" exportable="true" toggleable="true"
+			style="width:100px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="#{conf.displayConfig.showManageProcessTags}"
+			exportFunction="#{stringify.toSimpleList(dataset.associatedTagsList, t -> t.name)}">
+
+			<!-- 				COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText"
+					value="#{i18n['common.proc.tag']}" styleClass="ui-column-title" />
+			</f:facet>
+			<f:facet name="filter">
+				<p:inputText id="#{id}HeaderFilterInput"
+					style="width:90px !important"
+					onkeyup="PF('dataTable').filter();" />
+			</f:facet>
+
+			<!-- 				COLUMN CONTENT -->
+			<ui:repeat id="#{id}ContentList" var="tag"
+				value="#{dataset.associatedTagsList}">
+				<soda:outputTextTooltip id="tag" outputTextId="name"
+					outputTextValue="#{tag.name}" tooltipValue="#{tag.description}" />
+				<br />
+			</ui:repeat>
+		</p:column>
+
+
+
+
+		<!-- 	Registration authority column -->
+		<c:set var="id" value="#{'registrationAuthorityColumn'}" />
+		<p:column id="#{id}"
+			filterBy="#{dataset.referenceToRegistrationAuthority}"
+			exportable="true" toggleable="true"
+			style="width:70px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="#{conf.displayConfig.showManageProcessRegistrationAuthority}">
+
+			<!-- 				COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText"
+					value="#{i18n['common.referenceToRegistrationAuthority']}"
+					styleClass="ui-column-title" />
+			</f:facet>
+			<f:facet name="filter">
+				<p:inputText id="#{id}HeaderFilterInput"
+					style="width:60px !important" />
+			</f:facet>
+
+			<!-- 				COLUMN CONTENT -->
+			<h:outputText id="#{id}ContentReferenceText"
+				value="#{dataset.referenceToRegistrationAuthority.shortDescription.value}" />
+		</p:column>
+
+
+
+
+		<!-- 	Registration number column -->
+		<c:set var="id" value="#{'registrationNumberColumn'}" />
+		<p:column id="#{id}" filterBy="#{dataset.registrationNumber}"
+			exportable="true" toggleable="true"
+			style="width:70px !important; white-space:pre-line; overflow-wrap:break-word;"
+			visible="#{conf.displayConfig.showManageProcessRegistrationNumber}">
+
+			<!-- 				COLUMN HEADER -->
+			<f:facet name="header">
+				<h:outputText id="#{id}HeaderText"
+					value=" #{i18n['common.registrationNumber']}"
+					styleClass="ui-column-title" />
+			</f:facet>
+			<f:facet name="filter">
+				<p:inputText id="#{id}HeaderFilterInput"
+					style="width:60px !important"
+					onkeyup="PF('dataTable').filter();" />
+			</f:facet>
+
+			<!-- 				COLUMN CONTENT -->
+			<h:outputText id="#{id}ContentText"
+				value="#{dataset.registrationNumber}" />
+		</p:column>
+
+	</ui:define>
+
+
+	<ui:define name="additionalButtons">
+		<div
+			style="display: flex; flex-flow: row nowrap; align-items: center; justify-content: flex-start;">
+			<c:if
+				test="#{showRegistryControls and applicationInfoBean.showRegistrationControls}">
+				<ui:include src="/admin/common/include/registrationSelector.xhtml" style="margin-right: 3px;">
+					<ui:param name="processListHandler" value="#{processListHandler}"></ui:param>
+				</ui:include>
+				<p:outputLabel value="#{i18n['admin.selected']} "
+							rendered="#{includeActions}" style="margin: 3px;"/>
+				<ui:include src="/admin/common/include/registrationControls.xhtml">
+					<ui:param name="processListHandler" value="#{processListHandler}"></ui:param>
+					<ui:param name="registrationHandler" value="#{processListHandler}"></ui:param>
+				</ui:include>
+			</c:if>
+			<c:if test="#{includeActions}">
+				<h:panelGroup>
+					<p:commandButton id="btnValidateSelected"
+						value="#{i18n['admin.validate']}"
+						action="#{processListHandler.validateSelected}"
+						disabled="#{processListHandler.nothingSelected}"
+						styleClass="#{diaOpenBtnId}" />
+					<p:commandButton id="btnQualityCheckSelected"
+						value="#{i18n['admin.qualityCheck']}"
+						action="#{processListHandler.qualityCheckSelected}"
+						disabled="#{processListHandler.nothingSelected}"
+						styleClass="#{diaOpenBtnId}" rendered="#{conf.qqaEnabled}" />
+				</h:panelGroup>
+			</c:if>
+		</div>
+	</ui:define>
+
+</ui:composition>

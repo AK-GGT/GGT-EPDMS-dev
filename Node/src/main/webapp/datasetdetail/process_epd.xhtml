@@ -1,0 +1,190 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="process_template.xhtml">
+	
+	<ui:define name="row_epd_classificationNumber">
+		<p:row rendered="#{conf.defaultClassificationSystem eq 'OEKOBAU.DAT'}">
+			<p:column styleClass="ui-state-hover transp">
+				#{i18n['datasetdetail.epd.classificationNumber']}
+			</p:column>
+			<p:column>
+				<ui:repeat value="#{xmlProcessInfo.dataSetInformation.classificationInformation.classification}" var="classification">
+					<h:outputText value="#{processHandler.getLastElementOfList(classification.clazz).classId}" rendered="#{classification.name.equalsIgnoreCase('OEKOBAU.DAT')}" />
+				</ui:repeat>
+			</p:column>
+		</p:row>
+	</ui:define>
+	
+	<ui:define name="row_epd_safetyMargins">
+		<!-- subsection -->
+		<p:row rendered="#{process.safetyMargins.margins > 0}">
+			<p:column styleClass="ui-state-hover transp">
+				<soda:outputTextTooltip
+					outputTextId="safetyMargins"
+					outputTextValue="#{i18n['datasetdetail.epd.safetyMargins']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.epd.safetyMargins']}" />
+			</p:column>
+			<p:column>
+				#{process.safetyMargins.margins}
+			</p:column>
+		</p:row>
+		<p:row rendered="#{not empty process.safetyMargins.description.getValueWithFallback(lang)}">
+			<p:column styleClass="ui-state-hover transp">
+				<soda:outputTextTooltip
+					outputTextId="safetyMarginsDescription"
+					outputTextValue="#{i18n['datasetdetail.epd.safetyMarginsDescription']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.epd.safetyMarginsDescription']}" />
+			</p:column>
+			<p:column>
+				#{process.safetyMargins.description.getValueWithFallback(lang)}
+			</p:column>
+		</p:row>
+	</ui:define>
+	
+	<ui:define name="row_epd_scenarios">
+		<!-- subsection -->
+		<p:row rendered="#{not empty process.scenarios}">
+			<p:column styleClass="ui-state-hover transp">
+				<soda:outputTextTooltip
+					outputTextId="scenarios"
+					outputTextValue="#{i18n['datasetdetail.epd.scenarios']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.epd.scenarios']}" />
+			</p:column>
+			<p:column>
+				<soda:dataListStyled dataListValue="#{process.scenarios}">
+					<ui:param name="scenario" value="#{dataListStyledVar}" />
+					#{i18n['datasetdetail.epd.scenario']}#{processHandler.groupHint(scenario.group)}: <i>#{scenario.name}</i>#{scenario.default ? ' ('.concat(i18n['datasetdetail.epd.standard']).concat(")") : ''} - #{scenario.description.getValueWithFallback(lang)}
+				</soda:dataListStyled>
+			</p:column>
+		</p:row>
+	</ui:define>
+	
+	<ui:define name="row_epd_subType">
+		<p:row rendered="#{not empty process.subType.value}">
+			<p:column styleClass="ui-state-hover transp">
+				<soda:outputTextTooltip
+					outputTextId="subType"
+					outputTextValue="#{i18n['datasetdetail.epd.subType']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.epd.subType']}" />
+			</p:column>
+			<p:column>
+				#{process.subType.value}
+			</p:column>
+		</p:row>
+	</ui:define>
+
+	<ui:define name="tab_epd_environmentalIndicators">
+		<!-- section -->
+		<p:tab title="#{i18n['datasetdetail.epd.environmentalIndicators']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+			<div role="region" aria-label="#{i18n['datasetdetail.epd.environmentalIndicators']}">
+				<ui:fragment rendered="#{user.hasDatasetDetailRights(process) or conf.enableDatasetdetailsView}">
+					<ui:include src="./include/datatableExchangesIndicators.xhtml">
+						<ui:param name="exchanges" value="#{process.exchangesExcludingRefFlows}" />
+					</ui:include>
+					<h:form id="lciaindicatorsform">
+						<p style="font-weight:bold; margin-top:32px;">
+						<h:outputLabel value="#{i18n['epd.coreLciaResults']}" rendered="#{processHandler.isSeparationOfEIIndicators()}"/>
+						<h:outputLabel value="#{i18n['epd.lciaResults']}" rendered="#{not processHandler.isSeparationOfEIIndicators()}"/>
+						</p>
+						<p:dataTable draggableColumns="true" resizableColumns="true" rendered="#{not empty processHandler.coreLciaResults}" value="#{processHandler.coreLciaResults}" var="lciaResult" styleClass="epd" sortBy="#{lciaResult}" sortFunction="#{processHandler.sortLciaResults}">
+							<p:column styleClass="column-style" headerText="#{i18n['datasetdetail.epd.indicator']}" sortBy="#{lciaResult.methodReference.shortDescription.getValueWithFallback(lang)}">
+								<soda:switchLinkOrText
+									outputLinkValue="#{processHandler.getReferenceUrl(lciaResult.methodReference, url.lciaMethod)}"
+									outputLinkTitle="#{i18n['common.lciaMethod.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+									outputTextValue="#{lciaResult.methodReference.shortDescription.getValueWithFallback(lang)}" />
+							</p:column>
+							<p:column styleClass="unit column-style" headerText="#{i18n['common.unit']}" sortBy="#{lciaResult.unitGroupReference.shortDescription.getValueWithFallback(lang)}">
+								<soda:switchLinkOrText
+									outputLinkValue="#{processHandler.getReferenceUrl(lciaResult.unitGroupReference, url.unitGroup)}"
+									outputLinkTitle="#{i18n['common.unitGroup.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+									outputTextValue="#{lciaResult.unitGroupReference.shortDescription.getValueWithFallback(lang)}" />
+							</p:column>
+							<p:columns value="#{process.declaredModulesScenariosForLciaResults}" var="moduleScenario" columnIndexVar="colIndex" styleClass="amount column-style">
+								<f:facet name="header">
+									#{i18n["datasetdetail.epd." += moduleScenario[0] += "_2"]}<br />
+									#{i18n["datasetdetail.epd." += moduleScenario[0] += "_1"]}<br />
+									#{not empty moduleScenario[1] ? process.getScenario(moduleScenario[1]).name.concat(process.getScenario(moduleScenario[1]).default ? ' ('.concat(i18n['datasetdetail.epd.standard']).concat(")") : '') : ''}
+								</f:facet>
+								<p:dataList value="#{empty moduleScenario[1] ? lciaResult.getAmountByModule(moduleScenario[0]) : lciaResult.getAmountByModuleScenario(moduleScenario[0], moduleScenario[1])}" var="amount" styleClass="ourDataListNoBullet">
+									<h:outputText value="#{not empty amount.value ? amount.roundedAndFormattedValue : 'ND'}" title="#{not empty amount.value ? amount.value : 'ND'}" />
+								</p:dataList>
+							</p:columns>
+						</p:dataTable>
+					</h:form>
+
+	<!-- 					Additional Results -->
+					<h:form>
+						<p style="font-weight:bold">
+						<h:outputLabel value="#{i18n['epd.additionalLciaResults']}" rendered="#{processHandler.isSeparationOfEIIndicators()}"/>
+						</p>
+						<p:dataTable draggableColumns="true" resizableColumns="true" rendered="#{(not empty processHandler.additionalLciaResults) and (processHandler.isSeparationOfEIIndicators())}" value="#{processHandler.additionalLciaResults}" var="lciaResult" styleClass="epd" sortBy="#{lciaResult}" sortFunction="#{processHandler.sortLciaResults}">
+							<p:column styleClass="column-style" headerText="#{i18n['datasetdetail.epd.indicator']}" sortBy="#{lciaResult.methodReference.shortDescription.getValueWithFallback(lang)}"
+									style="white-space:normal">
+									<pe:switch id="switch" value="#{not empty processHandler.getReferenceUrl(lciaResult.methodReference, url.lciaMethod)}">
+									<pe:case value="#{true}">
+										<h:outputLink value="#{processHandler.getReferenceUrl(lciaResult.methodReference, url.lciaMethod)}" style="white-space:normal"
+											title="#{i18n['common.lciaMethod.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}">
+												#{lciaResult.methodReference.shortDescription.getValueWithFallback(lang)}<sup style="font-size:xx-small"> #{processHandler.getDisclaimerType(lciaResult)}</sup>
+										</h:outputLink>
+									</pe:case>
+									<pe:case value="#{false}">
+										#{lciaResult.methodReference.shortDescription.getValueWithFallback(lang)}<sup style="font-size:xx-small"> #{processHandler.getDisclaimerType(lciaResult)}</sup>
+									</pe:case>
+								</pe:switch>
+							</p:column>
+							<p:column styleClass="unit column-style" headerText="#{i18n['common.unit']}" sortBy="#{lciaResult.unitGroupReference.shortDescription.getValueWithFallback(lang)}">
+								<soda:switchLinkOrText
+									outputLinkValue="#{processHandler.getReferenceUrl(lciaResult.unitGroupReference, url.unitGroup)}"
+									outputLinkTitle="#{i18n['common.unitGroup.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+									outputTextValue="#{lciaResult.unitGroupReference.shortDescription.getValueWithFallback(lang)}" />
+							</p:column>
+							<p:columns value="#{process.declaredModulesScenariosForLciaResults}" var="moduleScenario" columnIndexVar="colIndex" styleClass="amount column-style">
+								<f:facet name="header">
+									#{i18n["datasetdetail.epd." += moduleScenario[0] += "_2"]}<br />
+									#{i18n["datasetdetail.epd." += moduleScenario[0] += "_1"]}<br />
+									#{not empty moduleScenario[1] ? process.getScenario(moduleScenario[1]).name.concat(process.getScenario(moduleScenario[1]).default ? ' ('.concat(i18n['datasetdetail.epd.standard']).concat(")") : '') : ''}
+								</f:facet>
+								<p:dataList value="#{empty moduleScenario[1] ? lciaResult.getAmountByModule(moduleScenario[0]) : lciaResult.getAmountByModuleScenario(moduleScenario[0], moduleScenario[1])}" var="amount" styleClass="ourDataListNoBullet">
+									<h:outputText value="#{not empty amount.value ? amount.roundedAndFormattedValue : 'ND'}" title="#{not empty amount.value ? amount.value : 'ND'}" />
+								</p:dataList>
+							</p:columns>
+							<p:columnGroup type="footer">
+								<p:row>
+									<p:column colspan="#{2+ process.declaredModulesScenariosForLciaResults.size()}" style="text-align:left; white-space:normal; font-weight:normal">
+										<f:facet name="footer">
+											<sup style="font-size:xx-small">1</sup>
+											<h:outputText>#{i18n['epd.additionalLciaResultsDisclaimer1']}</h:outputText>
+										</f:facet>
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column colspan="#{2+ process.declaredModulesScenariosForLciaResults.size()}" style="text-align:left; white-space:normal; font-weight:normal">
+										<f:facet name="footer">
+											<sup style="font-size:xx-small">2</sup>
+											<h:outputText >#{i18n['epd.additionalLciaResultsDisclaimer2']}</h:outputText>
+										</f:facet>
+									</p:column>
+								</p:row>
+							</p:columnGroup>
+						</p:dataTable>
+					</h:form>
+				</ui:fragment>
+				<ui:fragment rendered="#{!user.hasDatasetDetailRights(process) and !conf.enableDatasetdetailsView}">
+					<h:outputText value="#{i18n['common.accessRestrictedMetadataOnly.info']} " styleClass="ui-state-error" />
+					<h:outputLink value="/registration.xhtml" rendered="#{conf.registrationActivated}">
+						<h:outputText value="#{i18n['common.accessRestrictedMetadataOnly.register']}" styleClass="ui-state-error" />
+					</h:outputLink>
+					<h:outputText value="#{i18n['common.accessRestrictedMetadataOnly.vendor']}" styleClass="ui-state-error" rendered="#{!conf.registrationActivated}" />
+				</ui:fragment>
+			</div>
+		</p:tab>
+	</ui:define>
+	
+</ui:composition>

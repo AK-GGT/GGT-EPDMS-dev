@@ -1,0 +1,587 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>edu.kit.iai.lca.soda4LCA</groupId>
+	<artifactId>soda4LCA</artifactId>
+	<version>7.14.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>Node</module>
+		<module>Doc</module>
+		<module>Commons</module>
+		<module>Registry</module>
+		<module>Registry-api</module>
+	</modules>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java-version>11</java-version>
+		<jaxb-api-version>2.3.3</jaxb-api-version>
+		<jaxb-impl-version>2.3.9</jaxb-impl-version>
+		<log4j-version>2.24.3</log4j-version>
+		<org.springframework-version>5.3.39</org.springframework-version>
+		<org.glassfish.jersey-version>2.46</org.glassfish.jersey-version>
+		<eclipselink-version>2.7.15</eclipselink-version>
+		<shiro-version>1.13.0</shiro-version>
+		<selenium.version>4.13.0</selenium.version>
+		<selenide.version>6.19.1</selenide.version>
+		<pac4j-version>5.7.7</pac4j-version>
+        <buji-version>6.1.0</buji-version>
+		<mysql-connector-java-version>8.4.0</mysql-connector-java-version>
+		<jackson-version>2.18.2</jackson-version>
+		<scm-url>scm:git:https://okusche@bitbucket.org/okusche/soda4lca.git</scm-url>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.buji</groupId>
+			<artifactId>buji-pac4j</artifactId>
+			<version>${buji-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-core</artifactId>
+			<version>${pac4j-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.pac4j</groupId>
+			<artifactId>pac4j-oidc</artifactId>
+			<version>${pac4j-version}</version>
+			<!-- <scope>runtime</scope> -->
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.mail</groupId>
+					<artifactId>javax.mail</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>net.minidev</groupId>
+					<artifactId>json-smart</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>net.minidev</groupId>
+			<artifactId>json-smart</artifactId>
+			<version>2.5.1</version>
+		</dependency>
+
+		<!-- Required starting from JDK 9 -->
+		<dependency>
+		    <groupId>jakarta.annotation</groupId>
+		    <artifactId>jakarta.annotation-api</artifactId>
+		    <version>1.3.5</version>
+		</dependency>
+		<!-- Required starting from JDK 9 -->
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.2</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-jul</artifactId>
+			<version>${log4j-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j-version}</version>
+		</dependency>
+
+		<!-- CDI -->
+		<dependency>
+			<groupId>org.jboss.weld.servlet</groupId>
+			<artifactId>weld-servlet-core</artifactId>
+			<version>3.1.1.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.weld.servlet</groupId>
+			<artifactId>weld-servlet-shaded</artifactId>
+			<version>3.1.1.Final</version>
+		</dependency>
+
+		<!-- faces Implementation -->
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.faces</artifactId>
+            <version>2.3.21</version>
+        </dependency>
+
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>8.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.json</groupId>
+					<artifactId>json</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20231013</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.primefaces.themes</groupId>
+			<artifactId>all-themes</artifactId>
+			<version>1.0.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.primefaces.extensions</groupId>
+			<artifactId>primefaces-extensions</artifactId>
+			<version>8.0.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-faces</artifactId>
+			<version>2.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>33.4.0-jre</version>
+		</dependency>
+
+		<!-- persistence -->
+		<dependency>
+			<groupId>org.eclipse.persistence</groupId>
+			<artifactId>eclipselink</artifactId>
+			<version>${eclipselink-version}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- Servlet -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<version>2.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
+		
+		<!-- shiro -->
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-core</artifactId>
+			<version>${shiro-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-web</artifactId>
+			<version>${shiro-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.shiro</groupId>
+			<artifactId>shiro-aspectj</artifactId>
+			<version>${shiro-version}</version>
+		</dependency>
+
+		<!-- other -->
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-engine-core</artifactId>
+			<version>2.3</version>
+		</dependency>
+
+		<dependency>
+		  <groupId>org.apache.velocity.tools</groupId>
+		  <artifactId>velocity-tools-generic</artifactId>
+		  <version>3.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.github.cliftonlabs</groupId>
+					<artifactId>json-simple</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>com.github.cliftonlabs</groupId>
+			<artifactId>json-simple</artifactId>
+			<version>3.1.1</version>
+		</dependency>
+
+		<dependency>
+		  <groupId>org.apache.velocity.tools</groupId>
+		  <artifactId>velocity-tools-view</artifactId>
+		  <version>3.1</version>
+		</dependency>
+		
+		<dependency>
+		  <groupId>org.apache.velocity.tools</groupId>
+		  <artifactId>velocity-tools-view-jsp</artifactId>
+		  <version>3.1</version>
+		</dependency>
+		
+	    <dependency>
+			<groupId>commons-validator</groupId>
+			<artifactId>commons-validator</artifactId>
+			<version>1.7</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jdom</groupId>
+			<artifactId>jdom2</artifactId>
+			<version>2.0.6.1</version>
+		</dependency>
+	</dependencies>
+	
+	<dependencyManagement>
+		<dependencies>
+		    <dependency>
+				<groupId>commons-configuration</groupId>
+				<artifactId>commons-configuration</artifactId>
+				<version>1.6</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.mysql</groupId>
+				<artifactId>mysql-connector-j</artifactId>
+				<version>${mysql-connector-java-version}</version>
+				<scope>provided</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.flywaydb</groupId>
+			    <artifactId>flyway-core</artifactId>
+			    <version>5.2.4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-mysql</artifactId>
+				<version>5.2.4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.sun.xml.bind</groupId>
+				<artifactId>jaxb-impl</artifactId>
+				<version>${jaxb-impl-version}</version>
+			</dependency>
+
+			<!-- Required starting from JDK 9 -->
+			<dependency>
+				<groupId>jakarta.xml.bind</groupId>
+				<artifactId>jakarta.xml.bind-api</artifactId>
+				<version>${jaxb-api-version}</version>
+			</dependency>
+			<!-- Required starting from JDK 9 -->
+
+			<dependency>
+			    <groupId>org.mockito</groupId>
+			    <artifactId>mockito-core</artifactId>
+			    <version>3.12.4</version>
+			    <scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.seleniumhq.selenium</groupId>
+				<artifactId>selenium-java</artifactId>
+				<version>${selenium.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.codeborne</groupId>
+				<artifactId>selenide</artifactId>
+				<version>${selenide.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.codeborne</groupId>
+				<artifactId>selenide-testng</artifactId>
+				<version>${selenide.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>io.github.bonigarcia</groupId>
+				<artifactId>webdrivermanager</artifactId>
+				<version>5.9.2</version>
+				<scope>test</scope>
+				<exclusions>
+					<exclusion>
+						<groupId>ch.qos.logback</groupId>
+						<artifactId>logback-classic</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+	
+			<dependency>
+				<groupId>org.testng</groupId>
+				<artifactId>testng</artifactId>
+				<version>7.9.0</version>
+				<scope>test</scope>
+			</dependency>
+			
+			<dependency>
+				<groupId>commons-beanutils</groupId>
+				<artifactId>commons-beanutils</artifactId>
+				<version>1.9.4</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-core</artifactId>
+				<version>${jackson-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-annotations</artifactId>
+				<version>${jackson-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.core</groupId>
+				<artifactId>jackson-databind</artifactId>
+				<version>${jackson-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.dataformat</groupId>
+				<artifactId>jackson-dataformat-xml</artifactId>
+				<version>${jackson-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.fasterxml.jackson.module</groupId>
+				<artifactId>jackson-module-jaxb-annotations</artifactId>
+				<version>${jackson-version}</version>
+			</dependency>
+
+			<!-- Jersey -->
+
+			<dependency>
+				<groupId>org.glassfish.jersey.core</groupId>
+				<artifactId>jersey-server</artifactId>
+				<version>${org.glassfish.jersey-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.glassfish.jersey.inject</groupId>
+				<artifactId>jersey-hk2</artifactId>
+				<version>${org.glassfish.jersey-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.glassfish.jersey.containers</groupId>
+				<artifactId>jersey-container-servlet</artifactId>
+				<version>${org.glassfish.jersey-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.glassfish.jersey.containers</groupId>
+				<artifactId>jersey-container-servlet-core</artifactId>
+				<version>${org.glassfish.jersey-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.glassfish.jersey.core</groupId>
+				<artifactId>jersey-client</artifactId>
+				<version>${org.glassfish.jersey-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.glassfish.jersey.media</groupId>
+				<artifactId>jersey-media-json-jackson</artifactId>
+				<version>${org.glassfish.jersey-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.glassfish.jersey.media</groupId>
+				<artifactId>jersey-media-multipart</artifactId>
+				<version>${org.glassfish.jersey-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.glassfish.jersey.media</groupId>
+				<artifactId>jersey-media-jaxb</artifactId>
+				<version>${org.glassfish.jersey-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.glassfish.jersey.core</groupId>
+				<artifactId>jersey-common</artifactId>
+				<version>${org.glassfish.jersey-version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-web</artifactId>
+				<version>${org.springframework-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.glassfish.jersey.ext</groupId>
+				<artifactId>jersey-spring5</artifactId>
+				<version>${org.glassfish.jersey-version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.springframework</groupId>
+						<artifactId>spring-web</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+
+			<dependency>
+				<groupId>com.sun.mail</groupId>
+				<artifactId>jakarta.mail</artifactId>
+				<version>2.0.1</version>
+			</dependency>
+
+			<dependency>
+				<groupId>jakarta.mail</groupId>
+				<artifactId>jakarta.mail-api</artifactId>
+				<version>2.0.1</version>
+			</dependency>
+
+			<!-- hsqldb driver -->
+			<dependency>
+				<groupId>org.hsqldb</groupId>
+				<artifactId>hsqldb</artifactId>
+				<version>2.4.1</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java-version}</source>
+					<target>${java-version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5.2</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<tagNameFormat>@{project.version}</tagNameFormat>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<mode>war</mode>
+					<update>true</update>
+				</configuration>
+			</plugin>
+			<plugin>
+		        <groupId>org.apache.maven.plugins</groupId>
+		        <artifactId>maven-enforcer-plugin</artifactId>
+		        <version>3.0.0-M2</version>
+		        <configuration>
+		            <rules><dependencyConvergence /></rules>
+		        </configuration>
+	    	</plugin>
+		</plugins>
+		
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>3.1.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>3.2.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>3.2.2</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>primefaces</id>
+			<name>PrimeFaces Maven Repository</name>
+			<url>https://repository.primefaces.org</url>
+			<layout>default</layout>
+		</repository>
+		<repository>
+			<id>maven_central</id>
+			<name>Maven Central</name>
+			<url>https://repo.maven.apache.org/maven2/</url>
+		</repository>
+	</repositories>
+
+	<scm>
+		<developerConnection>${scm-url}</developerConnection>
+	    <tag>6.9.0</tag>
+    </scm>
+
+	<organization>
+		<name>KIT</name>
+		<url>http://www.kit.edu/</url>
+	</organization>
+	<name>soda4LCA</name>
+	<url>http://www.iai.kit.edu/soda4LCA/</url>
+	<mailingLists>
+		<mailingList>
+			<name>soda4LCA User List</name>
+			<subscribe>mailto:sympa@lists.kit.edu?subject=subscribe%20soda4LCA</subscribe>
+			<unsubscribe>mailto:sympa@lists.kit.edu?subject=unsubscribe%20soda4LCA</unsubscribe>
+			<post>soda4LCA@lists.kit.edu</post>
+			<archive>https://www.lists.kit.edu/wws/arc/soda4LCA/</archive>
+		</mailingList>
+	</mailingLists>
+
+	<licenses>
+		<license>
+			<name>GNU Affero General Public License (AGPL) 3.0</name>
+			<url>http://www.gnu.org/licenses/agpl.html</url>
+		</license>
+	</licenses>
+
+</project>

@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+    <h:body>
+        <ui:composition template="#{conf.templatePath}/frontend.xhtml">
+            <ui:param name="pageTitle" value="#{i18n['public.user.registrationForm.title']}" />
+            <ui:define name="content">
+
+ 	            <h:form id="generalForm" prependId="false">
+                
+					<div class="restrictedWidth">		
+	                    <ui:include src="/admin/userEntry.xhtml">
+		                    	<ui:param name="nameEditable" value="true" />
+		                    	<ui:param name="pwShown" value="false" />
+		                    	<ui:param name="showOrganisation" value="false" />
+		                    	<ui:param name="handler" value="#{uparHandler}" />
+		                    	<ui:param name="requireSector" value="true"/>
+	                    </ui:include>
+	
+	                    <p:panel rendered="#{conf.requireTermsAcceptance}">
+	                        	<f:facet name="header">
+		                   		<p:outputLabel value="#{i18n['public.user.registrationForm.terms.header']}"/>
+		                   	</f:facet>
+							<h:panelGrid columns="3" id="license-conditions">
+								<ui:fragment>
+			                        <p:selectBooleanCheckbox value="#{uparHandler.user.licenseConditions}" requiredMessage="#{i18n['admin.user.requiredMsg.licenseConditions']}">
+			                            <f:validator validatorId="requiredCheckboxValidator" />
+			                        </p:selectBooleanCheckbox>
+								</ui:fragment>
+	
+		                        <p:spacer width="5px"/>
+	
+								<ui:fragment>
+									<ui:fragment rendered="#{conf.termsMessage != null}">
+										<p:outputLabel value="#{conf.termsMessage}" escape="false" />
+									</ui:fragment>
+		
+									<ui:fragment rendered="#{conf.termsMessage == null}">
+										<p:outputLabel value="#{i18n['public.user.registrationForm.terms.message.pt1']}" />
+										<h:outputLink value="#{conf.termsLink}" rendered="#{conf.termsLink != null}" target="_blank">
+											<p:outputLabel value="#{i18n['public.user.registrationForm.terms.terms']}" />
+										</h:outputLink>
+										<p:outputLabel value="#{i18n['public.user.registrationForm.terms.terms']}" rendered="#{conf.termsLink == null}" />
+										<p:outputLabel value="#{i18n['public.user.registrationForm.terms.message.pt2']}" />
+									</ui:fragment>
+									<p:outputLabel value=" *" />
+								</ui:fragment>	
+		                    </h:panelGrid>
+						</p:panel>
+
+						<p:dataGrid id="additionalTerms" var="additionalTerm" value="#{additionalTermsBean.additionalTerms}" columns="1" rendered="#{conf.renderAdditionalTerms}">
+							<p:panel>
+								<f:facet name="header">
+									<h:outputText value="#{additionalTerm.title}"/>
+									<h:outputText value=" #{i18n['public.user.register.optional']}" rendered="#{!additionalTerm.isRequireAcceptance()}"/>
+								</f:facet>
+								<h:panelGrid columns="3">
+									<ui:fragment rendered="#{additionalTerm.isRequireAcceptance()}">
+										<p:selectBooleanCheckbox id="selectBoxRequired" value="#{uparHandler.user.acceptedAdditionalTermsMap[additionalTerm.title]}" required="true" requiredMessage="#{additionalTerm.requiredMessage}">
+											<f:validator validatorId="requiredCheckboxValidator"/>
+										</p:selectBooleanCheckbox>
+
+										<p:spacer width="5px"/>
+
+										<ui:fragment rendered="#{additionalTerm.message != null}">
+											<p:outputLabel for="selectBoxRequired">
+												<h:outputText value="#{additionalTerm.message}" escape="false"/>
+											</p:outputLabel>
+										</ui:fragment>
+									</ui:fragment>
+									<ui:fragment rendered="#{!additionalTerm.isRequireAcceptance()}">
+										<p:selectBooleanCheckbox id="selectBox" value="#{uparHandler.user.acceptedAdditionalTermsMap[additionalTerm.title]}"/>
+
+										<p:spacer width="5px"/>
+
+										<ui:fragment rendered="#{additionalTerm.message != null}">
+											<p:outputLabel for="selectBox">
+												<h:outputText value="#{additionalTerm.message}" escape="false"/>
+											</p:outputLabel>
+										</ui:fragment>
+									</ui:fragment>
+								</h:panelGrid>
+							</p:panel>
+						</p:dataGrid>
+
+						<ui:fragment rendered="#{conf.acceptPrivacyPolicy}">
+							<ui:include src="/admin/common/include/privacyPolicyAcceptance.xhtml">
+								<ui:param name="handler" value="#{uparHandler}" />
+							</ui:include>
+						</ui:fragment>
+						
+	                    <p:panel header="#{i18n['public.user.captcha.legend']}" rendered="#{conf.spamProtection or conf.spamProtectionSlider}">
+		                    <ui:fragment rendered="#{conf.spamProtection}">
+		                        <p><p:outputLabel value="#{i18n['public.user.captcha.msg']}" /></p>
+		                        <p><p:captcha label="#{i18n['public.user.captcha.label']}" language="en" theme="white"
+		                                      validatorMessage="#{i18n['public.user.captcha.errorMsg']}"
+		                                      requiredMessage="#{i18n['public.user.captcha.errorMsg']}" /></p>
+		                    </ui:fragment>
+		                    <ui:fragment rendered="#{conf.spamProtectionSlider}">
+		                        <p><p:outputLabel value="#{i18n['public.user.captcha.sliderMsg']}!" /></p>
+		                        <h:panelGrid columns="1" style="margin-bottom:10px">
+		                            <h:panelGroup>
+		                                <p:outputLabel value="&nbsp;%" style="float:right;" />
+		                                <p:outputLabel id="sliderOutput" value="#{uparHandler.spamSliderValue}" style="float:right;" />
+		                            </h:panelGroup>
+		
+		                            <h:inputHidden id="sliderValue" value="#{uparHandler.spamSliderValue}" />
+		                            <p:slider for="sliderValue" display="sliderOutput" style="width:200px" />
+		                        </h:panelGrid>
+	                        </ui:fragment>
+	                    </p:panel>
+	                                        
+	                    <div class="buttonCenter">
+	                        <p:commandButton value="#{i18n['public.user.register']}"
+	                                         action="#{uparHandler.doRegister}" update="messages"
+	                                         ajax="false" />
+	                    </div>
+	                    <ui:include src="/messages.xhtml" />
+					</div>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

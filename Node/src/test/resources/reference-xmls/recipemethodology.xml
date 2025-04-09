@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet version="1.0" href="../../stylesheets/source2html.xsl" type="text/xsl"?>
+<sourceDataSet xmlns="http://lca.jrc.it/ILCD/Source" xmlns:common="http://lca.jrc.it/ILCD/Common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://lca.jrc.it/ILCD/Source ../../schemas/ILCD_SourceDataSet.xsd" version="1.1">
+  <sourceInformation>
+    <dataSetInformation>
+      <common:UUID>544205b8-bcc5-4850-a5b6-241434f23be6</common:UUID>
+      <common:shortName xml:lang="en">ReCiPe methodology for Life Cycle Assessment Impact Assessment, v1.05</common:shortName>
+      <classificationInformation>
+        <common:classification name="GaBiCategories" classes="../GaBiCategories.xml">
+          <common:class level="0" classId="e4cd07b2-68a5-4c93-8f26-dac1ca39d64c">General information source</common:class>
+        </common:classification>
+      </classificationInformation>
+      <sourceCitation>http://www.lcia-recipe.net/</sourceCitation>
+      <publicationType>Software or database</publicationType>
+      <referenceToContact refObjectId="d0f67f21-22d8-4e5e-914b-6f7dde923e33" version="03.00.000" type="contact data set" uri="../contacts/d0f67f21-22d8-4e5e-914b-6f7dde923e33.xml">
+        <common:shortDescription xml:lang="en">PRé</common:shortDescription>
+      </referenceToContact>
+    </dataSetInformation>
+  </sourceInformation>
+  <administrativeInformation>
+    <dataEntryBy>
+      <common:timeStamp>2011-11-01T00:00:00+01:00</common:timeStamp>
+      <common:referenceToDataSetFormat refObjectId="a97a0155-0234-4b87-b4ce-a45da52f2a40" version="01.00.000" type="source data set" uri="../sources/a97a0155-0234-4b87-b4ce-a45da52f2a40.xml">
+        <common:shortDescription xml:lang="en">ILCD format 1.1</common:shortDescription>
+      </common:referenceToDataSetFormat>
+    </dataEntryBy>
+    <publicationAndOwnership>
+      <common:dataSetVersion>03.00.000</common:dataSetVersion>
+    </publicationAndOwnership>
+  </administrativeInformation>
+</sourceDataSet>

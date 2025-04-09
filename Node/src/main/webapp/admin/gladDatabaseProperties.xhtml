@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:body>
+        <ui:composition template="/admin/layout/adminDesign.xhtml">
+            <ui:param name="pageTitle" value="#{i18n['admin.glad.config']}" />
+            <ui:define name="content">
+                <h:form id="generalForm" prependId="false">
+                
+                
+                    
+                    <p:panel header="#{i18n['admin.glad.dataprovider']}">
+                    	<p:inputText value="#{gladAdminHandler.dataprovider}"/>
+                    </p:panel>
+                    
+                    <p:panel id="representativenessTypePanel" header="#{i18n['admin.glad.representativenessType']}">
+                    	<p:selectOneMenu value="#{gladAdminHandler.representativenessType}" id="representativenessType" title="#{i18n['admin.glad.representativenessType.tooltip']}">
+                    		<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+                    		<f:selectItems value="#{gladAdminHandler.representativenessTypes}" var="csm" itemLabel="#{csm}" itemValue="#{csm}"/>
+                    		<p:ajax event="change" update="@this" />
+                    	</p:selectOneMenu>
+                    </p:panel>
+                    <p:tooltip id="toolTipFade" for="representativenessType" value="#{i18n['admin.glad.representativenessType.tooltip']}" position="top"/>
+                    
+                    <p:panel id="reviewSystemPanel" header="#{i18n['admin.glad.reviewSystem']}">
+                    	<p:selectOneMenu value="#{gladAdminHandler.reviewSystem}" id="reviewSystem">
+                    		<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+                    		<f:selectItems value="#{gladAdminHandler.reviewSystems}" var="csm" itemLabel="#{csm}" itemValue="#{csm}"/>
+                    		<p:ajax event="change" update="@this" />
+                    	</p:selectOneMenu>
+                    </p:panel>
+                    <p:tooltip for="reviewSystem" value="#{i18n['admin.glad.reviewSystem.tooltip']}" position="top"/>
+                    
+                    <p:panel id="biogenicCarbonModelingPanel" header="#{i18n['admin.glad.biogenicCarbonModeling']}">
+                    	<p:selectOneMenu value="#{gladAdminHandler.biogenicCarbonModeling}" id="biogenicCarbonModeling">
+                    		<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+                    		<f:selectItems value="#{gladAdminHandler.biogenicCarbonModelings}" var="bcm" itemLabel="#{bcm}" itemValue="#{bcm}"/>
+                    		<p:ajax event="change" update="@this" />
+                    	</p:selectOneMenu>
+                    </p:panel>
+                    <p:tooltip for="biogenicCarbonModeling" value="#{i18n['admin.glad.biogenicCarbonModeling.tooltip']}" position="top"/>
+                    	
+                    <p:panel id="endOfLifeModelingPanel" header="#{i18n['admin.glad.endOfLifeModeling']}">
+                    	<p:selectOneMenu value="#{gladAdminHandler.endOfLifeModeling}" id="endOfLifeModeling">
+                    		<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+                    		<f:selectItems value="#{gladAdminHandler.endOfLifeModelings}" var="eol" itemLabel="#{eol}" itemValue="#{eol}"/>
+                    		<p:ajax event="change" update="@this" />
+                    	</p:selectOneMenu>
+                    </p:panel>
+                    <p:tooltip for="endOfLifeModeling" value="#{i18n['admin.glad.endOfLifeModeling.tooltip']}" position="top"/>
+                    	
+                    <p:panel id="waterModelingPanel" header="#{i18n['admin.glad.waterModeling']}">
+                    	<p:selectOneMenu value="#{gladAdminHandler.waterModeling}" id="waterModeling">
+                    		<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+                    		<f:selectItems value="#{gladAdminHandler.waterModelings}" var="wm" itemLabel="#{wm}" itemValue="#{wm}"/>
+                    		<p:ajax event="change" update="@this" />
+                    	</p:selectOneMenu>
+                    </p:panel>
+                    <p:tooltip for="waterModeling" value="#{i18n['admin.glad.waterModeling.tooltip']}" position="top"/>
+                    	
+                    <p:panel id="infrastructureModelingPanel" header="#{i18n['admin.glad.infrastructureModeling']}">
+                    	<p:selectOneMenu value="#{gladAdminHandler.infrastructureModeling}" id="infrastructureModeling">
+                    		<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+                    		<f:selectItems value="#{gladAdminHandler.infrastructureModelings}" var="im" itemLabel="#{im}" itemValue="#{im}"/>
+                    		<p:ajax event="change" update="@this" />
+                    	</p:selectOneMenu>
+                    </p:panel>
+                    <p:tooltip for="infrastructureModeling" value="#{i18n['admin.glad.infrastructureModeling.tooltip']}" position="top"/>
+                    	
+                    <p:panel id="emissionModelingPanel" header="#{i18n['admin.glad.emissionModeling']}">
+                    	<p:selectOneMenu value="#{gladAdminHandler.emissionModeling}" id="emissionModeling">
+                    		<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+                    		<f:selectItems value="#{gladAdminHandler.emissionModelings}" var="em" itemLabel="#{em}" itemValue="#{em}"/>
+                    		<p:ajax event="change" update="@this" />
+                    	</p:selectOneMenu>
+                    </p:panel>
+                    <p:tooltip for="emissionModeling" value="#{i18n['admin.glad.emissionModeling.tooltip']}" position="top"/>
+                    	
+                    <p:panel id="carbonStorageModelingPanel" header="#{i18n['admin.glad.carbonStorageModeling']}">
+                    	<p:selectOneMenu value="#{gladAdminHandler.carbonStorageModeling}" id="carbonStorageModeling">
+                    		<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+                    		<f:selectItems value="#{gladAdminHandler.carbonStorageModelings}" var="csm" itemLabel="#{csm}" itemValue="#{csm}"/>
+                    		<p:ajax event="change" update="@this" />
+                    	</p:selectOneMenu>
+                    </p:panel>
+                    <p:tooltip for="carbonStorageModeling" value="#{i18n['admin.glad.carbonStorageModeling.tooltip']}" position="top"/>
+
+                    <ui:include src="/messages.xhtml" />
+
+                    <div class="buttonCenter">
+                        <p:commandButton id="saveBtn"
+                                         value="#{i18n['admin.config.saveConfig']}"
+                                         action="#{gladAdminHandler.saveConfiguration()}"
+                                         update="messages" />
+                    </div>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

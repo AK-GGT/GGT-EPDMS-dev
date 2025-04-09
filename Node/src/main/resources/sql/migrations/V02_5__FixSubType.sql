@@ -1,0 +1,1 @@
+UPDATE process SET subtype = 'AVERAGE_DATASET' WHERE subtype = 'AVARAGE_DATASET';

@@ -1,0 +1,1 @@
+ALTER TABLE lifecyclemodel_processinstance MODIFY COLUMN multiplicationfactor double NULL;

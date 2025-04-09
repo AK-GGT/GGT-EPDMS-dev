@@ -1,0 +1,543 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    font-size: 12px;
+}
+
+div.minMax {
+    min-width: 800px;
+    max-width: none;
+    margin: 0px auto;
+}
+
+div#messagesBox {
+    display: inline-block;
+    margin: 1em 0;
+}
+
+div.ui-panel {
+    margin-bottom: 1em;
+}
+
+h1 {
+    font-size: 1.5em;
+    padding-top:1em;
+}
+
+h2 {
+    font-size: 1.2em;
+    padding-top: 1.2em;
+}
+
+table {
+    font-size: 12px;
+}
+
+div#datasetPage table {
+    border-spacing: 1px;
+    width: 100%;
+}
+
+td.datasetBlock {
+    vertical-align: top;
+    padding: 5px;
+}
+
+div.datasetLabel {
+    font-size: 10px;
+}
+
+.highlighted {
+    border: 2px solid !important;
+}
+
+div#leftColumn {
+    float: left;
+    width: 200px;
+    margin-bottom: 1em;
+}
+
+div.header {
+    padding: 1em;
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+div.header a {
+    padding: 0.5em;
+    text-decoration: none;
+}
+
+div.footer {
+    clear: both;
+    height: 20px;
+    margin-top: 3em;
+    padding: 0.5em;
+    font-size: 0.9em;
+}
+
+div#leftFooter {
+    float: left;
+    width: 60%;
+    margin-left: 10px;
+}
+
+div#rightFooter {
+    float: right;
+    width: 35%;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.title {
+	font-size: 1em !important;
+}
+
+.subtitle {
+	font-size: 0.6em !important;
+	margin-left: 4px;
+}
+
+#processSearchForm, #generalForm {
+    display: inline-block;
+    /* margin: 10px; */
+}
+
+#processSearchForm .tdVAlignTop td {
+	vertical-align: top;
+}
+
+#processSearchForm input, #processSearchForm select, #generalForm input, #generalForm select {
+    vertical-align: middle;
+}
+
+#processSearchForm input, #generalForm input {
+    margin: 2px;
+}
+
+.ui-selectonemenu {
+	margin: 2px;
+}
+
+.loginForm {
+    display: inline-block;
+}
+
+div.buttonRight {
+    margin-top: 1em;
+    margin-right: 1em;
+    text-align: right;
+}
+
+div.buttonLeft {
+    margin-top: 1em;
+}
+
+div.buttonCenter {
+    margin-top: 1em;
+    text-align: center;
+}
+
+#filterForm #filterPanel {
+	margin-bottom: 1em;
+}
+
+#filterForm #filterPanel td {
+	vertical-align: top;
+}
+
+/* instead of overflow:auto to remove horizontal scrollbar in chromium based browsers */
+#filterPanel .ui-accordion-content {
+	overflow: visible;
+}
+
+/* CG/2012-09-13: not necessary?!
+#tableForm button {
+    margin-bottom: 1em;
+    margin-right: 1em;
+} */
+
+#tableForm .ui-paginator-rpp-options {
+    margin-right: 0.5em !important;
+}
+
+iframe#console {
+    display: block;
+    margin-bottom: 2em;
+    width: 100%;
+    height: 300px;
+}
+
+span.redText {
+    color: red;
+}
+
+.boldText {
+    font-weight: bold;
+}
+
+div.confirmDlgButtons {
+	float: right;
+}
+
+div.confirmDlgButtons button {
+	margin: 0.5em !important;
+}
+
+div.floatRight {
+    float: right;
+}
+
+div.floatLeft {
+    float:left; 
+    margin-left:10px; 
+    margin-bottom: -5px;
+/*     margin-bottom:10px; */
+}
+
+div.buttonsFloatLeft {
+	float: left;
+	margin-top: 10px;
+}
+
+.alignBottom {
+	display: inline-block;
+	vertical-align: bottom;
+}
+
+div.clearRight {
+    clear: right;
+}
+
+div.clearLeft {
+    clear: left;
+}
+
+.bottomclear 
+{
+    margin-bottom: -3.3em;
+}
+
+div.ourDataList ul, div.ourDataListNoBullet ul {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+div.ourDataList > .ui-widget-content, div.ourDataListNoBullet > .ui-widget-content {
+    border: none;
+}
+
+div.ourDataListNoBullet li {
+    list-style-type: none;
+}
+
+div.ourDataList li {
+    list-style-type: circle;
+    margin-left: 1.2em;
+}
+
+div.ourDataList .ui-widget-content {
+    background: none;
+}
+
+.ui-datatable {
+    text-align: left;
+    margin-top: 1em;
+}
+
+.ui-datatable th {
+    white-space: normal;
+}
+
+.ui-datatable tbody td {
+	vertical-align: top;
+	white-space: normal;
+}
+
+.ui-datatable tbody th.wrap {
+   white-space: normal;
+}
+
+#leftColumn li.ui-widget-header {
+    margin-top: 1em !important;
+}
+
+.ui-tooltip .headline {
+	display: block;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+.ui-tooltip .legendHeader {
+	display: block;
+	font-weight: bold;
+	font-size: smaller;
+	text-decoration: underline;
+}
+.ui-tooltip .listItem {
+	display: block;
+	font-weight: normal;
+	margin-top: 5px;
+}
+.ui-sortable-column-icon + span {
+	margin-left: 2px;
+}
+
+div.selectedDataStock {
+   padding-top: 15px;
+   padding-left: 10px;
+   font-size: 10pt;
+	font-style: italic;
+}
+
+.unselectable td.ui-selection-column div.ui-chkbox-box {
+	display: none;
+}
+
+.unselectable.ui-state-highlight {
+	background: inherit;
+	border: inherit;
+}
+
+.unselectable td.ui-selection-column {
+	cursor: default;
+}
+
+/* default: eng */
+#landingPageTable button {
+	width: 120px;
+	height: 60px;
+}
+
+#landingPageTable.deu button {
+	width: 135px;
+	height: 70px;
+}
+
+#landingPageTable td {
+	padding: 15px;
+}
+
+#landingPageTable, #landingPageTable td, #landingPageTable tr {
+	border: none;
+	background: none;
+}
+
+.menuBar {
+	background: none;
+	border: none;
+}
+
+/* currently not used due to workaround */
+.menuBar button {
+	height: 40px;
+	vertical-align: top;
+	margin: 0 0.2em;
+}
+
+/* !! only a workaround !! */
+.menuBarFake a {
+/* 	height: 27px; */
+	margin: 0 0.2em;
+	vertical-align: top;
+	padding: 10px;
+}
+
+.radioLabelPadding td label {
+	padding-right: 2em !important;
+}
+
+.notDeletableInfo {
+	font-style: italic;
+	color: gray;
+}
+
+.italic {
+	font-style: italic;
+	color: gray;
+}
+
+.restrictedWidth {
+	max-width:1000px;
+}
+
+.selectbox
+{
+	display:inline-flex;
+	}
+
+.defaultcheck
+{
+	margin-left: 0.2em; 
+	padding-bottom: 1em; 
+	margin-bottom: 1.5em; 
+	margin-top: 1em;
+}	
+
+.moveright {
+	padding: 0em 5%;
+}
+
+.categoriesnode 
+{
+	width: 90%; 
+	margin-bottom: 1em;
+	
+}
+
+.categorieswidth {
+	margin-top: 1em;
+	margin-bottom:1em;
+}
+
+.categoriesnode td {
+	padding-bottom: 1.0em;	
+}
+
+.ui-datatable-tablewrapper table {
+	width: 100% !important;
+}
+
+.selectprofilebottom {
+	margin-left: 1.2em;
+    padding-bottom: 1em;
+    margin-bottom: 1.5em;
+    margin-top: 1em;
+}
+
+.margin-bottom div{
+    padding-bottom: 0.5%;
+    padding-top: 0.5%;
+}
+
+.ui-button-text .ui-c .validationcheckboxs {
+	width:100%;  
+    padding:0em 7%;
+}
+
+.margintops {
+	margin-top: -10px;
+}
+
+.marginbottoms {
+	margin-top:2%;
+    margin-bottom:2%;
+}
+
+.margine {
+	margin-left:1%;
+}
+
+.checkboxalign {
+	margin-left:13px;
+    margin-right:73%;
+}
+
+hr.borderalign{
+	height:1.5px;
+    color:#deedf9;
+    background-color:#deedf9;
+    border:none;
+}
+
+.selectorbottom {
+	margin-bottom: 20px;
+}
+
+.buttonvalid {
+	margin-left: 4px;
+}
+
+span.ui-chkbox-label {
+    padding-top: 0.1em;
+}
+
+div#j_idt154 {
+    position: relative;
+    top: -3px;
+}
+
+div#j_idt141 {
+    position: relative;
+    top: -3px;
+}
+
+.movedown {
+   margin-top: -2.7%;
+}
+
+button#j_idt87 {
+	margin-top:25px;
+}
+
+.floatLefts {
+	margin-bottom:-0.4em;
+}
+
+button#lciamethodTablebtn {
+	margin-bottom: 10px !important;
+}
+
+button#flowTablebtn {
+	margin-bottom: 10px !important;
+}
+
+button#flowpropertyTablebtn {
+	margin-bottom: 10px !important;
+}
+
+button#sourceTablebtn {
+	margin-bottom: 10px !important;
+}
+
+button#contactTablebtn {
+	margin-bottom: 10px !important;
+}
+
+div#orgTable_paginator_top {
+    margin-top: -2.2%;
+}
+
+div#userTable_paginator_top {
+	margin-top: -2.2%;
+}
+
+button#unitgroupTablebtn {
+   margin-bottom: 6%;
+}
+
+div#groupTable_paginator_top {
+	margin-top: -2.3%;
+}
+
+.icon-container {
+	float: right;
+	/* position: absolute; */
+	/* top: 0px; */
+	/* right: 30px; */
+}
+
+.icon-flag {
+	height: 32px;
+	width: 32px;
+	padding: 5px !important;
+	display: inline-block;
+	background-repeat: no-repeat;
+    background-size: 100%;
+    margin-top: 2px;
+    font-size: 24px;
+}
+
+.flaggDiv {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background-color: #696969; /* <!-- nice background color--> */
+}
+
+.flaggDiv > a > img { /* flags are wrapped in a commandLink */ 
+    width: 8rem;
+    height: 5rem;
+}

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet version="1.0" href="../../stylesheets/source2html.xsl" type="text/xsl"?>
+<sourceDataSet xmlns="http://lca.jrc.it/ILCD/Source" xmlns:common="http://lca.jrc.it/ILCD/Common" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://lca.jrc.it/ILCD/Source ../../schemas/ILCD_SourceDataSet.xsd" version="1.1">
+  <sourceInformation>
+    <dataSetInformation>
+      <common:UUID>eff34d61-54e9-4404-95ca-c09cc01b7f40</common:UUID>
+      <common:shortName xml:lang="en">Model Hydrate UUID a6b44172-a49d-471a-9e50-f37e7250caff version 20.00.000.jpg</common:shortName>
+      <classificationInformation>
+        <common:classification name="GaBiCategories" classes="../GaBiCategories.xml">
+          <common:class level="0" classId="Images">Images</common:class>
+        </common:classification>
+      </classificationInformation>
+      <sourceCitation>GaBi database</sourceCitation>
+      <publicationType>Undefined</publicationType>
+      <referenceToDigitalFile uri="../external_docs/Model Hydrate UUID b6b44172-a49d-471a-9e50-f37e7250caff version 20.00.000.jpg"/>
+    </dataSetInformation>
+  </sourceInformation>
+  <administrativeInformation>
+    <dataEntryBy>
+      <common:timeStamp>2013-02-06T11:39:36+01:00</common:timeStamp>
+      <common:referenceToDataSetFormat refObjectId="a97a0155-0234-4b87-b4ce-a45da52f2a40" version="01.00.000" type="source data set" uri="../sources/a97a0155-0234-4b87-b4ce-a45da52f2a40.xml">
+        <common:shortDescription xml:lang="en">ILCD format 1.1</common:shortDescription>
+      </common:referenceToDataSetFormat>
+    </dataEntryBy>
+    <publicationAndOwnership>
+      <common:dataSetVersion>03.00.000</common:dataSetVersion>
+    </publicationAndOwnership>
+  </administrativeInformation>
+</sourceDataSet>

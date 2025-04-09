@@ -1,0 +1,453 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>soda4LCA</artifactId>
+		<groupId>edu.kit.iai.lca.soda4LCA</groupId>
+		<version>7.14.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>Registry</artifactId>
+	<name>Registry</name>
+	<packaging>war</packaging>
+
+	<properties>
+		<test.mysql.port>3339</test.mysql.port>
+		<test.app.node.port>8080</test.app.node.port>
+		<test.app.registry.port>8081</test.app.registry.port>
+		<tomcat.version>7.0.57</tomcat.version>
+		<maven.build.timestamp.format>yyyy-MM-dd HH:mm:ss</maven.build.timestamp.format>
+	</properties>
+
+	<profiles>
+		<profile>
+			<id>externaldb_ci</id>
+			<properties>
+				<mysql.port>3306</mysql.port>
+				<mysql.database>root</mysql.database>
+				<mysql.database2>root2</mysql.database2>
+				<mysql.pass>root</mysql.pass>
+			</properties>
+			<build>
+				<plugins>
+<!-- 					<plugin> -->
+<!-- 						<groupId>org.apache.maven.plugins</groupId> -->
+<!-- 						<artifactId>maven-dependency-plugin</artifactId> -->
+<!-- 						<version>2.8</version> -->
+<!-- 						<executions> -->
+<!-- 							<execution> -->
+<!-- 								<id>unpack-mysql</id> -->
+<!-- 								<phase>none</phase> -->
+<!-- 							</execution> -->
+<!-- 						</executions> -->
+<!-- 					</plugin> -->
+<!-- 					<plugin> -->
+<!-- 						<groupId>com.github.mike10004</groupId> -->
+<!-- 						<artifactId>jcabi-mysql-maven-plugin</artifactId> -->
+<!-- 						<version>1.0r2</version> -->
+<!-- 						<executions> -->
+<!-- 							<execution> -->
+<!-- 								<id>mysql-test</id> -->
+<!-- 								<phase>none</phase> -->
+<!-- 							</execution> -->
+<!-- 						</executions> -->
+<!-- 					</plugin> -->
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<build>
+		<finalName>Registry</finalName>
+		<plugins>
+
+			<!-- Create Maven properties file, it will be use in tests -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>properties-maven-plugin</artifactId>
+				<version>1.1.0</version>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>write-project-properties</goal>
+						</goals>
+						<configuration>
+							<outputFile>${project.build.outputDirectory}/maven.properties</outputFile>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Reserve MySQL Port For Tests -->
+			<!-- <plugin> <groupId>org.codehaus.mojo</groupId> <artifactId>build-helper-maven-plugin</artifactId> 
+				<executions> <execution> <goals> <goal>reserve-network-port</goal> </goals> 
+				<configuration> <portNames> <portName>test.mysql.port</portName> </portNames> 
+				</configuration> </execution> </executions> </plugin> -->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.2</version>
+				<configuration>
+					<packagingExcludes>WEB-INF/web.xml</packagingExcludes>
+					<archive>
+						<manifestEntries>
+							<version>${project.version}</version>
+							<artifactId>${project.artifactId}</artifactId>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+
+			<!-- Copy Required Resources -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.basedir}/target/test-resources</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/test/resources</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- Genarate javadocs -->
+<!-- 			<plugin> -->
+<!-- 				<groupId>org.apache.maven.plugins</groupId> -->
+<!-- 				<artifactId>maven-javadoc-plugin</artifactId> -->
+<!-- 				<version>3.0.0</version> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>attach-javadocs</id> -->
+<!-- 						<goals> -->
+<!-- 							<goal>jar</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+
+<!-- 			<plugin> -->
+<!-- 				<groupId>com.btmatthews.maven.plugins</groupId> -->
+<!-- 				<artifactId>emailserver-maven-plugin</artifactId> -->
+<!-- 				<version>1.1.0</version> -->
+<!-- 				<configuration> -->
+<!-- 					<monitorKey>emailserver</monitorKey> -->
+<!-- 					<monitorPort>10025</monitorPort> -->
+<!-- 				</configuration> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>run-mail</id> -->
+<!-- 						<phase>pre-integration-test</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>run</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 							<daemon>true</daemon> -->
+<!-- 							<type>greenmail</type> -->
+<!-- 							<portOffset>13000</portOffset> -->
+<!-- 							<useSSL>false</useSSL> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+<!-- 					<execution> -->
+<!-- 						<id>stop-mail</id> -->
+<!-- 						<phase>post-integration-test</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>stop</goal> -->
+<!-- 						</goals> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+
+			<!-- Failsafe for integration testing -->
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-failsafe-plugin</artifactId>-->
+<!--				<configuration>-->
+<!--					<reuseForks>false</reuseForks>-->
+<!--					<forkCount>1</forkCount>-->
+<!--					<includes>-->
+<!--						<include>**/*.java</include>-->
+<!--					</includes>-->
+<!--					<skipTests>true</skipTests>-->
+<!--					<skipITs>true</skipITs>-->
+<!--				</configuration>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>integration-test</id>-->
+<!--						<goals>-->
+<!--							<goal>integration-test</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--					<execution>-->
+<!--						<id>verify</id>-->
+<!--						<goals>-->
+<!--							<goal>verify</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>eu.europa.ec.jrc.lca.registry.test.ui/**/*.java</exclude>
+					</excludes>
+					<reuseForks>false</reuseForks>
+					<forkCount>1</forkCount>
+					<skipTests>false</skipTests>
+					<systemPropertyVariables>
+						<java.naming.factory.initial>eu.europa.ec.jrc.lca.registry.TestInitialContextFactory</java.naming.factory.initial>
+					</systemPropertyVariables>
+
+				</configuration>
+				<!-- <executions> -->
+				<!-- <execution> -->
+				<!-- <phase>integration-test</phase> -->
+				<!-- <goals> -->
+				<!-- <goal>test</goal> -->
+				<!-- </goals> -->
+				<!-- <configuration> -->
+				<!-- <skip>true</skip> -->
+				<!-- </configuration> -->
+				<!-- </execution> -->
+				<!-- </executions> -->
+			</plugin>
+
+<!-- 			<plugin> -->
+<!-- 				<artifactId>maven-dependency-plugin</artifactId> -->
+<!-- 				<version>2.8</version> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>unpack-mysql</id> -->
+<!-- 						<phase>pre-integration-test</phase> -->
+<!-- 						<goals> -->
+<!-- 							<goal>unpack</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 							<artifactItems> -->
+<!-- 								<artifactItem> -->
+<!-- 									<groupId>com.github.mike10004</groupId> -->
+<!-- 									<artifactId>mysql-dist</artifactId> -->
+<!-- 									<version>${mysql-dist-version}</version> -->
+<!-- 									<classifier>${mysql.classifier}</classifier> -->
+<!-- 									<type>zip</type> -->
+<!-- 									<overWrite>false</overWrite> -->
+<!-- 									<outputDirectory>${project.build.directory}/mysql-dist</outputDirectory> -->
+<!-- 								</artifactItem> -->
+<!-- 							</artifactItems> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+
+<!-- 			<plugin> -->
+<!-- 				<groupId>com.github.mike10004</groupId> -->
+<!-- 				<artifactId>jcabi-mysql-maven-plugin</artifactId> -->
+<!-- 				<version>1.0r2</version> -->
+<!-- 				<executions> -->
+<!-- 					<execution> -->
+<!-- 						<id>mysql-test</id> -->
+<!-- 						<goals> -->
+<!-- 							<goal>classify</goal> -->
+<!-- 							<goal>start</goal> -->
+<!-- 							<goal>stop</goal> -->
+<!-- 						</goals> -->
+<!-- 						<configuration> -->
+<!-- 							<port>${test.mysql.port}</port> -->
+<!-- 							<data>${project.build.directory}/mysql-data</data> -->
+<!-- 						</configuration> -->
+<!-- 					</execution> -->
+<!-- 				</executions> -->
+<!-- 			</plugin> -->
+		</plugins>
+	</build>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>Registry-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>Commons</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- hsqldb driver -->
+		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>jakarta.mail</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.mail</groupId>
+			<artifactId>jakarta.mail-api</artifactId>
+		</dependency>
+
+
+		<!-- spring -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${org.springframework-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>5.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- Jersey -->
+
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-server</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.containers</groupId>
+			<artifactId>jersey-container-servlet</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-jaxb</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.glassfish.jersey.ext</groupId>
+			<artifactId>jersey-spring5</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>1.3.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.xml.bind</groupId>
+			<artifactId>jaxb-impl</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+		    <artifactId>flyway-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.codeborne</groupId>
+			<artifactId>selenide</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+				</exclusion>
+			</exclusions>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.codeborne</groupId>
+			<artifactId>selenide-testng</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.seleniumhq.selenium</groupId>
+					<artifactId>selenium-java</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<scope>test</scope>
+        </dependency>
+
+	</dependencies>
+
+</project>

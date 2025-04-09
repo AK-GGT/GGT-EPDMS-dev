@@ -1,0 +1,101 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<ui:composition>
+	<h:form id="validation" prependId="true">
+		<p:accordionPanel id="qqaAcordionPanel"
+			activeIndex="#{validationHandler.activeIndex}">
+			<p:tab title="#{i18n['admin.qualityChecker.accordion.title']}">
+				<p:growl id="growl" showDetail="true" sticky="false" />
+				<div>
+					<div class="clearLeft">
+						<p:dataTable id="sourceStockTable" var="source"
+							value="#{automaticQualityCheckHandler.stockListHandler.lazyModel}"
+							selection="#{automaticQualityCheckHandler.selectedStocks}"
+							emptyMessage="#{i18n['common.list.noneFound']}" lazy="true"
+							paginator="true" rows="15" draggableRows="false"
+							rowsPerPageTemplate="5,10,15,50"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+  		                                 {PreviousPageLink} {PageLinks} {NextPageLink}  
+ 		                                 {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']} 
+ 		                                 (#{automaticQualityCheckHandler.stockListHandler.lazyModel.rowCount} #{i18n['common.list.total']})"
+							rowStyleClass="#{Constants.DEFAULT_ROOTSTOCK_ID == source.id ? 'unselectable':''}"
+							widgetVar="sourceTable" style="width:50%;" sortBy="#{source.id}">
+
+							<p:ajax event="rowSelectCheckbox" process="@this"
+								update="@(.categorieswidth)" />
+							<p:ajax event="rowUnselectCheckbox" process="@this"
+								update="@(.categorieswidth)" />
+							<p:ajax event="toggleSelect" process="@this"
+								update="@(.categorieswidth)" />
+
+							<p:column style="text-align: center;" selectionMode="multiple"
+								width="20px;" />
+
+							<p:column headerText="#{i18n['admin.stock.id']}">
+								<h:outputText id="sourceID" value="#{source.name}" />
+								<p:tooltip id="tooltipSourceUuid" for="sourceID"
+									value="UUID: #{source.uuid.uuid}" />
+							</p:column>
+
+							<p:column headerText="#{i18n['admin.stock.name']}">
+								<h:outputText value="#{source.description.value}" />
+							</p:column>
+						</p:dataTable>
+
+
+						<p:panelGrid columns="3" layout="grid" styleClass="ui-noborder"
+							style="width: 50%;">
+							<p:panel>
+								<p:outputLabel for="thresholdId"
+									value="#{i18n['admin.qualityChecker.accordion.threshold']}" />
+								<p:spacer width="10" />
+								<p:spinner id="thresholdId"
+									value="#{automaticQualityCheckHandler.threshold}" min="0"
+									size="10" />
+								<p:spacer width="5" />
+								<h:outputText value="%" />
+							</p:panel>
+							<p:panel styleClass="warnThreshold">
+								<p:outputLabel for="thresholdWarnId"
+									value="#{i18n['admin.qualityChecker.accordion.warnThreshold']}"
+									styleClass="warnThreshold" />
+								<p:spacer width="10" />
+								<p:spinner id="thresholdWarnId"
+									value="#{automaticQualityCheckHandler.warnThreshold}" min="0"
+									size="10" />
+								<p:spacer width="5" />
+								<h:outputText value="%" />
+							</p:panel>
+							<p:panel>
+								<p:outputLabel value="#{i18n['admin.qualityCheck.showAll']}"
+									for="showAllId" />
+								<p:selectBooleanCheckbox id="showAllId"
+									value="#{automaticQualityCheckHandler.showAll}" />
+							</p:panel>
+						</p:panelGrid>
+					</div>
+				</div>
+				<div class="categorieswidth">
+					<p:commandButton styleClass="categorieswidth" id="qualityCheckBtn"
+						widgetVar="qualityCheckBtn"
+						action="#{automaticQualityCheckHandler.check}"
+						value="#{i18n['admin.qualityCheck.doQualityCheck']}" ajax="true"
+						disabled="#{automaticQualityCheckHandler.noStockSelected}"
+						onclick="PF('eventTable').clearFilters()"
+						actionListener="#{automaticQualityCheckHandler.clearAllFilters}"
+						update="logTable,resetEvents,growl,exportLogs,sourceStockTable" />
+				</div>
+				<div>
+					<ui:include src="qualityCheckResults.xhtml" />
+				</div>
+			</p:tab>
+		</p:accordionPanel>
+	</h:form>
+
+</ui:composition>
+</html>
+

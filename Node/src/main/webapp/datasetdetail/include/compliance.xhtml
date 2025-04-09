@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+short version of compliance declarations
+used in
+	- flow.xhtml
+	- flowproperty.xhtml
+	- unitgroup.xhtml
+
+via ui:param:
+	- xmlCompliances
+	- handler
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp">
+
+	<ui:repeat value="#{xmlCompliances}" var="compliance">
+		<p:panelGrid columns="3">
+			#{i18n['common.compliance']}
+			<h:panelGroup>
+				<div>
+					<soda:outputTextTooltip
+						outputTextId="referenceToComplianceSystem"
+						outputTextValue="#{i18n['common.referenceToComplianceSystem']}"
+						tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToComplianceSystem']}" />
+				</div>
+				<soda:dataListLinkOrText
+					dataListValue="#{handler.getMultilangWithFallback(lang, compliance.referenceToComplianceSystem.shortDescription)}"
+					outputLinkValue="#{handler.getReferenceUrlXml(compliance.referenceToComplianceSystem, url.source)}"
+					outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+			</h:panelGroup>
+			<h:panelGroup>
+				<div>
+					<soda:outputTextTooltip
+						outputTextId="approvalOfOverallCompliance"
+						outputTextValue="#{i18n['common.approvalOfOverallCompliance']}"
+						tooltipValue="#{i18n['datasetdetail.tooltip.dataset.approvalOfOverallCompliance']}" />
+				</div>
+				<span class="italic">#{compliance.approvalOfOverallCompliance.value}</span>
+			</h:panelGroup>
+		</p:panelGrid>
+	</ui:repeat>
+</ui:composition>

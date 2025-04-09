@@ -1,0 +1,116 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<p>#{i18n['public.proc.searchProcessForm']}.</p>
+	<h:form id="processSearchForm" prependId="false">
+		<div style="display: inline-block; margin-bottom: 0.5em;">
+			<p:commandButton value="#{i18n['public.search']}" action="#{processesSearchHandler.search}" ajax="false" />
+		</div>
+		<h:panelGroup id="selectPanel">
+			<div class="floatRight" style="margin-top: 1em;">
+				<h:outputLabel value="#{i18n['public.proc.searchAcrossNetwork']}" for="distributed" style="margin-right: 0.5em;" />
+				<h:selectBooleanCheckbox id="distributed" value="#{processesSearchHandler.distributedFilter}" rendered="#{applicationInfoBean.registryBasedNetworking}">
+					<p:ajax event="valueChange" process="@this" update="selectPanelWrapper" />
+				</h:selectBooleanCheckbox>
+				<h:selectBooleanCheckbox id="distributed2" value="#{processesSearchHandler.distributedFilter}" rendered="#{!applicationInfoBean.registryBasedNetworking}">
+				</h:selectBooleanCheckbox>
+			</div>
+			<h:panelGroup id="selectPanelWrapper" rendered="#{applicationInfoBean.registryBasedNetworking}">
+				<p:panel id="selectRegistryPanel" header="#{i18n['public.proc.registry']}" rendered="#{processesSearchHandler.distributedFilter!=null}">
+					<h:panelGrid columns="2">
+						<h:outputLabel value="#{i18n['public.proc.selectRegistry']}:" for="reg" />
+						<h:selectOneMenu id="reg" value="#{processesSearchHandler.registry}" required="true">
+							<f:selectItems value="#{registriesSelectItems.items}" />
+						</h:selectOneMenu>
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGroup>
+		</h:panelGroup>
+		<p:panel header="#{i18n['public.proc.searchProcess']}" id="processSearchPanel">
+			<p:focus context="processSearchPanel" />
+			<h:panelGrid columns="2">
+				<p:outputLabel value="#{i18n['common.name']}:" for="name" />
+				<p:inputText id="name" style="width: 300px;" value="#{processesSearchHandler.nameFilter}" />
+				<p:outputLabel value="#{i18n['public.proc.description']}:" for="description" />
+				<p:inputText id="description" style="width: 300px;" value="#{processesSearchHandler.descriptionFilter}" />
+			</h:panelGrid>
+		</p:panel>
+
+		<p:panel header="#{i18n['public.proc.complianceSystems']}">
+			<h:panelGrid columns="3" styleClass="tdVAlignTop">
+				<h:panelGroup>
+					<h:panelGroup styleClass="tdHAlignRight">
+						<p:selectManyMenu value="#{processesSearchHandler.complianceFilter}" id="compliance" style="width:400px;" scrollHeight="80">
+							<f:selectItems value="#{processesSearchHandler.complianceSystems}" />
+						</p:selectManyMenu>
+						<pe:tooltip for="location" mouseTracking="true" adjustX="10" adjustY="10" value="#{i18n['public.proc.hint.select']}" />
+					</h:panelGroup>
+				</h:panelGroup> 
+				<p:spacer width="15px"/>
+				<h:panelGroup>
+					<p:outputLabel value="#{i18n['public.proc.compliance.matchmode']}"  />
+					<p:importConstants type="de.iai.ilcd.webgui.controller.ui.ProcessesSearchHandler"/>
+					<p:selectOneRadio value="#{processesSearchHandler.complianceModeFilter}" id="complianceMode" layout="pageDirection">
+						<f:selectItem itemLabel="#{i18n['public.proc.compliance.matchmode.or']}" itemValue="#{ProcessesSearchHandler.FILTER_COMPLIANCE_MODE_OR}"/>
+						<f:selectItem itemLabel="#{i18n['public.proc.compliance.matchmode.and']}" itemValue="#{ProcessesSearchHandler.FILTER_COMPLIANCE_MODE_AND}"/>
+					</p:selectOneRadio>
+					<p:tooltip for="complianceMode" mouseTracking="true" adjustX="10" adjustY="10">
+						<h:outputText escape="false" value="#{i18n['public.proc.compliance.matchmode.tooltip']}"/>
+					</p:tooltip>
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:panel>
+
+		<p:panel header="#{i18n['public.proc.coverage']}">
+			<h:panelGrid columns="2" styleClass="tdVAlignTop">
+				<h:panelGroup>
+					<p:outputLabel value="#{i18n['public.proc.geoCoverage']}" for="location" />
+					<p:selectManyMenu value="#{processesSearchHandler.locationsFilter}" id="location" style="width:200px;" scrollHeight="70">
+						<f:selectItems value="#{processesSearchHandler.allLocations}" />
+					</p:selectManyMenu>
+					<pe:tooltip for="location" mouseTracking="true" adjustX="10" adjustY="10" value="#{i18n['public.proc.hint.select']}" />
+				</h:panelGroup>
+				<h:panelGroup>
+					<div>
+						<h:outputText value="#{i18n['common.dataset.refYear']}" />
+					</div>
+					<p:outputLabel value="#{i18n['public.proc.between']}" for="referenceYearLower" style="margin-right:0.5em;vertical-align:50%;" />
+					<p:selectOneMenu id="referenceYearLower" value="#{processesSearchHandler.referenceYearLowerFilter}" disabled="#{empty processesSearchHandler.referenceYears}">
+						<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionOption="true" />
+						<f:selectItems value="#{processesSearchHandler.referenceYears}" />
+					</p:selectOneMenu>
+					<p:outputLabel value="#{i18n['public.proc.and']}" for="referenceYearUpper" style="margin-left:0.5em;margin-right:0.5em;vertical-align:50%;" />
+					<p:selectOneMenu id="referenceYearUpper" value="#{processesSearchHandler.referenceYearUpperFilter}" disabled="#{empty processesSearchHandler.referenceYears}">
+						<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionOption="true" />
+						<f:selectItems value="#{processesSearchHandler.referenceYears}" />
+					</p:selectOneMenu>
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:panel>
+		<!--        <p:panel header="#{i18n['public.dataset.typeOf']}">-->
+		<p:panel>
+			<h:panelGrid columns="3">
+				<p:outputLabel value="#{i18n['public.dataset.typeOf']}" for="type" />
+				<p:selectOneMenu id="type" value="#{processesSearchHandler.typeFilter}">
+					<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionOption="true" />
+					<f:selectItems value="#{processesSearchHandler.types}" />
+				</p:selectOneMenu>
+				<h:panelGroup>
+					<p:outputLabel value="#{i18n['public.proc.only_parameterized']}" for="parameterized" style="margin-left:2em;margin-right:0.5em;vertical-align:top;" />
+					<p:selectBooleanCheckbox id="parameterized" value="#{processesSearchHandler.parameterizedFilter}" />
+				</h:panelGroup>
+			</h:panelGrid>
+		</p:panel>
+		<p:panel header="#{i18n['common.dataset.classif']}">
+			<p:pickList value="#{processesSearchHandler.pickAllClasses}" var="pClass" itemLabel="#{pClass}" itemValue="#{pClass}" addLabel="#{i18n['common.picklist.add']}"
+				addAllLabel="#{i18n['common.picklist.addAll']}" removeLabel="#{i18n['common.picklist.remove']}" removeAllLabel="#{i18n['common.picklist.removeAll']}">
+				<f:facet name="sourceCaption">#{i18n['public.proc.hint.selectClasses']}</f:facet>
+				<f:facet name="targetCaption">#{i18n['public.proc.hint.limitSearch']}</f:facet>
+			</p:pickList>
+		</p:panel>
+		<div class="buttonLeft">
+			<p:commandButton value="#{i18n['public.search']}" action="#{processesSearchHandler.search}" ajax="false" />
+		</div>
+	</h:form>
+
+</ui:composition>

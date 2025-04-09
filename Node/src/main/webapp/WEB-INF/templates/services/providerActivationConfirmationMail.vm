@@ -1,0 +1,26 @@
+<html>
+<head><title></title></head>
+<body>
+<p>
+#if ( "$!user.getFirstName()" == "" and "$!user.getLastName()" == "" )
+	Dear user,<br/>
+#else
+	Dear $user.getFirstName() $user.getLastName(),<br/>
+#end
+</p>
+<p>
+your account at $siteName has just been activated.
+</p>
+<p>
+You can now log in to our site with the login name $user.getUserName()<br/>
+</p>
+<p>
+You can change your auto generated password and other profile information after logging in using the "My profile" menu item.
+</p>
+<p>
+Thank you for registration!<br/>
+<br/>
+Your $siteName team
+</p>
+</body>
+</html>

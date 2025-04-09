@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:body>
+        <ui:composition template="#{conf.templatePath}/frontend.xhtml">
+            <ui:param name="pageTitle" value="Supported Languages - pick one:" />
+            <ui:define name="content">
+            <h:form>
+                <div class="flaggDiv">
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/uk.png" />
+                        <f:param name="lang" value="en" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/de.png" />
+                        <f:param name="lang" value="de" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/es.png" />
+                        <f:param name="lang" value="es" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/it.png" />
+                        <f:param name="lang" value="it" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/nl.png" />
+                        <f:param name="lang" value="nl" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/da.png" />
+                        <f:param name="lang" value="da" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/fr.png" />
+                        <f:param name="lang" value="fr" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/br.png" />
+                        <f:param name="lang" value="br" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/ru.png" />
+                        <f:param name="lang" value="ru" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/pl.png" />
+                        <f:param name="lang" value="pl" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/ja.png" />
+                        <f:param name="lang" value="ja" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/sv.png" />
+                        <f:param name="lang" value="sv" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/fi.png" />
+                        <f:param name="lang" value="fi" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                    <p:commandLink>
+                        <h:graphicImage value="templates/default/images/flagg/cn.png" />
+                        <f:param name="lang" value="zh" />
+                        <f:ajax render="@all" />
+                    </p:commandLink>
+                </div>
+             </h:form>
+
+
+
+                <ui:include src="/messages.xhtml" />
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

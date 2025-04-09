@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:a="http://xmlns.jcp.org/jsf/core">
+    <f:view contentType="text/html" locale="#{localeBean.locale}">
+        <h:head>
+            <title>#{pageTitle} - #{conf.applicationTitle}</title>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <meta http-equiv="Content-Language" content="en" />
+            <meta name="Keywords" content="list of keywords" />
+            <meta name="Description" content="description text" />
+			<ui:fragment rendered="#{!indexingAllowed}">
+				<meta name="robots" content="noindex, nofollow"/>
+			</ui:fragment>
+
+            <script src="#{conf.contextPath}#{conf.templatePath}/scripts/default.js" type="text/javascript"/>
+            <h:outputScript name="js/retina.min.js" rendered="#{conf.logoHighRes}" target="body"/>
+            
+            <link type="text/css" rel="stylesheet" href="#{conf.contextPath}#{conf.templatePath}/css/site.css" media="all" />
+			<h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/all.min-jsf.css" />
+			<h:outputStylesheet library="webjars" name="font-awesome/5.12.0/css/v4-shims.min-jsf.css" />
+        </h:head>
+    
+        <h:body>
+            <div class="minMax">
+                <div class="ui-helper-hidden-accessible" title="Accessibility tools">
+                    <ul>
+                        <li><a href="#content" accesskey="S">#{i18n['public.accessibility.main']}</a></li>
+                        <li><a href="#container">#{i18n['public.accessibility.naviMenu']}</a></li>
+                    </ul>
+                </div>
+    
+                <div class="header ui-widget-header ui-corner-all">
+                    <h:graphicImage rendered="#{conf.logoProvided and !conf.logoHighRes}" value="#{conf.logoPath}" alt="#{conf.applicationTitle}" />
+					<h:graphicImage rendered="#{conf.logoProvided and conf.logoHighRes}" value="#{conf.logoPath}" alt="#{conf.applicationTitle}">
+						<a:passThroughAttribute name="data-rjs" value="2"/>
+					</h:graphicImage>
+                    <div class="alignBottom">
+            			<p:link href="#{conf.contextPath}/" styleClass="title">
+	                    	<h:outputText value="#{conf.applicationTitle}"/>
+	                   </p:link>  
+	                   <br/> 
+	                   <p:link rendered="#{not empty conf.applicationSubTitle}" href="#{conf.contextPath}/" styleClass="subtitle">
+        	            	<h:outputText rendered="#{not empty conf.applicationSubTitle}" value="#{conf.applicationSubTitle}"/> 
+        	           </p:link>	  	
+                    </div>
+
+				<div class="icon-container">
+					<p:link href="#{conf.contextPath}/selectUILanguage.xhtml">
+						<i class="icon-flag fa fa-language"></i>
+					</p:link>
+				</div>
+
+				<div class="floatRight">
+					<h:panelGrid columns="2">
+						<h:form>
+							<ui:fragment
+								rendered="#{availableStocks.allStocksMeta.size() > 1}">
+								<p:outputLabel value="#{i18n['common.stock.selected']}:"
+									for="selectDataStock" />
+								<p:selectOneMenu id="selectDataStock"
+									class="selectDataStockHTMLClass"
+									value="#{stockSelection.currentStockName}"
+									valueChangeListener="#{stockSelection.stockChangeEventHandler}">
+									<f:selectItems value="#{availableStocks.allStocksMeta}"
+										var="stock" itemLabel="#{stock.name}"
+										itemValue="#{stock.name}" />
+									<f:ajax listener="#{stockSelection.navigate}" />
+								</p:selectOneMenu>
+							</ui:fragment>
+							<!-- 	<p:selectOneMenu id="selectLanguage" value="#{languageSelection.currentLanguage}" valueChangeListener="#{languageSelection.languageChangeEventHandler}">
+										<f:selectItems value="#{languageSelection.supportedLanguages}" var="language" itemLabel="#{language}" itemValue="#{language}" />
+										<f:ajax listener="#{languageSelection.navigate}" />
+									</p:selectOneMenu> -->
+						</h:form>
+					</h:panelGrid>
+				</div>
+				<ui:fragment rendered="#{not empty stockSelection.currentStock}">
+						<div class="clearRight selectedDataStock">
+							<h:form>
+								<div style="font-size: 16px ">#{i18n['common.stock']}: #{empty stockSelection.currentStock.longTitleValue ? stockSelection.currentStock.name : stockSelection.currentStock.longTitleValue}
+									<ui:fragment rendered="#{conf.displayConfig.showDownloadAllLink and stockSelection.exportAllowed}">
+										<p:commandLink style="font-size: 15px; text-decoration:underline" id="export" value="[ #{i18n['common.stock.export']} ]" actionListener="#{dataExportController.setStock(stockSelection.currentStock)}" icon="ui-icon-arrowthichk-s"
+					                                ajax="false">
+				    	                            <p:fileDownload value="#{dataExportController.file}"></p:fileDownload>
+				        	            </p:commandLink>
+			             	        <p:tooltip id="toolTipFade" for="export" value="#{i18n['common.stock.export.tooltip']}" />
+									</ui:fragment>
+			                	</div>
+			                </h:form>
+			            </div>	
+					</ui:fragment>
+                </div>
+    
+                <div>
+                    <ui:insert name="contentBody" />
+                </div>
+    
+                <div class="footer ui-widget-header ui-corner-all">
+                   <div id="rightFooter">
+						<h:panelGroup>
+							<ui:include src="/admin/common/include/privacyPolicyLinkExternal.xhtml"/>
+							<ui:include src="/admin/common/include/privacyPolicyLinkInternal.xhtml"/>
+							<h:outputText value=" | " rendered="#{conf.privacyPolicyURL != null}" />
+							<ui:include src="/admin/common/include/imprintLinkExternal.xhtml"/>
+							<ui:include src="/admin/common/include/imprintLinkInternal.xhtml"/>
+							<h:outputText value=" | " rendered="#{conf.imprintURL != null}" />
+						</h:panelGroup>
+						soda4LCA #{conf.appVersion}
+					</div>
+                    <div id="leftFooter">
+                        <h:panelGroup rendered="#{user.loggedIn}">
+                            <h:link outcome="#{url.user.profile}" value="#{i18n['common.profile']}" />
+                            |
+                            <h:link outcome="#{url.user.password}" value="#{i18n['common.password']}" />
+                            |
+                            <h:link outcome="#{url.user.logout}" value="#{i18n['public.user.logout']}" />
+                            <h:outputText value=" (#{i18n['admin.user']}: #{user.userName})" />
+                        </h:panelGroup>
+                        <h:panelGroup rendered="#{not user.loggedIn}">
+                            <h:link rendered="#{conf.registrationActivated}" outcome="#{url.user.registration}" value="#{i18n['public.user.register']}" />
+                            <h:outputText rendered="#{conf.registrationActivated}" value=" | " />
+                            <h:link outcome="#{url.user.login}" value="#{i18n['public.user.login']}" rendered="#{conf.displayConfig.showLoginLink}"/>
+							<h:outputText rendered="#{conf.oidcEnabled}" value=" | " />
+							<h:link outcome="/oidc.xhtml" value="OIDC login" rendered="#{conf.oidcEnabled}"/>
+                        </h:panelGroup>
+                    </div>
+                </div>
+            </div>
+        </h:body>
+    </f:view>
+</html>
+

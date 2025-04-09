@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<soda:menuBar
+		action_saveEntry="#{stockHandler.saveEntry}"
+		action_saveCloseEntry="#{stockHandler.saveCloseEntry}"
+		action_saveNewEntry="#{stockHandler.saveNewEntry}"
+		btnLabel_manageList="#{i18n['admin.stock.manageList']}"
+		btnOutcome_manageList="#{url.stock.manageList}"
+		spacerHeight_afterToolbar="#{spacerHeight_afterToolbar}"
+		spacerHeight_beforeToolbar="#{spacerHeight_beforeToolbar}"
+		update="@(#messages), @(#stockTabs)" />
+
+</ui:composition>

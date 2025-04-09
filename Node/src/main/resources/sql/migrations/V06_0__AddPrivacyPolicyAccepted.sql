@@ -1,0 +1,1 @@
+ALTER TABLE `user` ADD `privacy_policy_accepted` boolean DEFAULT false AFTER `organization`;

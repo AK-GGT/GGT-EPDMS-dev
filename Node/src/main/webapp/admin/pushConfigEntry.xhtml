@@ -1,0 +1,145 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+
+<!-- 
+ui:params:
+	- nameEditable: name field editable?
+	- pwShown: show password field
+	- handler: handler to use (must have getPushTarget method)
+ -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:shiro="http://shiro.apache.org/tags">
+    <ui:composition>
+    <p:focus context="generalForm" />
+    
+    	<p:panel id="pushConfigMetaData" header="#{i18n['admin.pushConfig.metaData']}" >
+    		<p:panelGrid columns="2">
+    			<p:outputLabel for="pushNameIn" value="#{i18n['admin.pushConfig.name']}" rendered="#{editable}"/>
+    			<p:inputText id="pushNameIn" value="#{pushConfigHandler.pushConfig.name}" required="true" requiredMessage="#{i18n['admin.pushConfig.nameRequired']}" rendered="#{editable}">
+				</p:inputText>
+				
+				<p:outputLabel for="pushNameOut" value="#{i18n['admin.pushConfig.name']}" rendered="#{not editable}"/>
+				<h:outputText id="pushNameOut" value="#{pushConfigHandler.pushConfig.name}" rendered="#{not editable}"/>
+				
+				<p:outputLabel for="isFavouriteCheck" value="#{i18n['admin.pushConfig.favourite']}" rendered="#{editable}"/>
+				<p:selectBooleanCheckbox id="isFavouriteCheck" value="#{pushConfigHandler.favourite}" rendered="#{editable}"/>
+				
+				<p:outputLabel for="isFavouriteOut" value="#{i18n['admin.pushConfig.favourite']}" rendered="#{not editable}"/>
+				<h:outputText id="isFavouriteOut" styleClass="#{pushConfigHandler.favourite ? 'fa fa-check' : ''}" rendered="#{not editable}"/>
+							
+				<p:outputLabel for="dependenciesModeOut" value="#{i18n['admin.dependencies']}" rendered="#{not editable}" />
+				<h:outputText id="dependenciesModeOut" value="#{i18n['admin.dependencies.'.concat(pushConfigHandler.pushConfig.dependenciesMode)]}" rendered="#{not editable}" />
+						
+				<p:outputLabel for="dependenciesModeIn" value="#{i18n['admin.dependencies']}" rendered="#{editable}"/>
+				<p:selectOneMenu id="dependenciesModeIn" value="#{pushConfigHandler.pushConfig.dependenciesMode}" required="true" requiredMessage="#{i18n['admin.pushConfig.dependencyRequired']}" converter="#{dependenciesOptionConverter}" rendered="#{editable}">
+					<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+					<f:selectItems value="#{pushConfigHandler.dependenciesOptions.dependenciesOptionsValues}" var="d" itemLabel="#{i18n['admin.dependencies.'.concat(d)]}" itemValue="#{d}" />
+					<p:ajax update="@this messages"/>
+				</p:selectOneMenu>
+					
+					<p:outputLabel for="lastPushDate" value="#{i18n['admin.pushConfig.lastPushDate']}" rendered="#{not editable}" />
+    			<h:outputText id="lastPushDate" value="#{pushConfigHandler.pushConfig.lastPushDate}" rendered="#{not editable}" />
+    			
+    			<p:outputLabel for="lastJobState" value="#{i18n['admin.pushConfig.lastJobState']}" rendered="#{not editable}" />
+    			<h:outputText id="lastJobState" value="#{pushConfigHandler.pushConfig.lastJobState}" rendered="#{not editable}" />
+    		</p:panelGrid>	
+    	</p:panel>
+    	
+		<p:panelGrid id="pushConfigSourceTarget" columns="2" columnClasses="fifty-percent, fortyfive-percent" layout="grid" style="width:100%;">   
+			<p:panel header="#{i18n['admin.pushConfig.source']}" rendered="#{editable}">
+				<p:dataTable id="sourceStockTable"
+	                         var="source"
+	                         value="#{pushConfigHandler.stockListHandler.lazyModel}"
+	                         selection="#{pushConfigHandler.pushConfig.source}"
+	                         emptyMessage="#{i18n['common.list.noneFound']}" 
+	                         lazy="true" paginator="true" rows="15" draggableRows="false"
+		                     rowsPerPageTemplate="5,10,15,50"
+		                     paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+  		                                 {PreviousPageLink} {PageLinks} {NextPageLink}  
+ 		                                 {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']} 
+ 		                                 (#{pushConfigHandler.stockListHandler.lazyModel.rowCount} #{i18n['common.list.total']})" 
+		                     rowStyleClass="#{Constants.DEFAULT_ROOTSTOCK_ID == source.id ? 'unselectable':''}" 
+		                     widgetVar="sourceTable">
+	                                 
+					<p:column style="text-align: center;" selectionMode="single" width="20px;"/>
+							
+					<p:column headerText="#{i18n['admin.stock.id']}" > 
+						<h:outputText id="sourceID" value="#{source.name}"/>
+						<p:tooltip id="tooltipSourceUuid" for="sourceID" value="UUID: #{source.uuid.uuid}"/>
+					</p:column>
+	                        
+	                <p:column headerText="#{i18n['common.type']}" width="10%">
+	                	<h:outputText value="#{source.root ? i18n['admin.stock.type.rds.short'] : i18n['admin.stock.type.ds.short']}" />
+	                </p:column>
+	
+	                <p:column headerText="#{i18n['admin.stock.name']}" >
+	                    <h:outputText value="#{source.description.value}" />
+	                </p:column>
+	                							
+	                <p:column headerText="#{i18n['admin.stock.uuid']}" >
+	                    <h:outputText value="#{source.uuid.uuid}"/>
+	                </p:column>
+	            </p:dataTable>
+	        </p:panel>
+	        <p:panel header="#{i18n['admin.pushConfig.source']}" rendered="#{not editable}" styleClass="#{(pushConfigHandler.importedDataSetsAfterPushAsString == '') or (pushConfigHandler.importedDataSetsAfterPushAsString > 0) ? 'notPushed' : 'pushed'}">
+	            <p:panelGrid columns="2" columnClasses="pushSourceLeft, pushSourceRight" styleClass="panelgridwidth">
+	            	<p:outputLabel for="showSourceID" value="#{i18n['admin.stock.id']}" />
+	                <h:outputText id="showSourceID" value="#{pushConfigHandler.pushConfig.source.name}">
+	                	<p:tooltip id="toolTipSourceUuid" for="showSourceID" value="#{pushConfigHandler.pushConfig.source.uuid.uuid}" /> 
+	                </h:outputText>
+	                    
+	                <p:outputLabel for="showSourceName" value="#{i18n['admin.stock.name']}" />
+					<h:outputText id="showSourceName" value="#{pushConfigHandler.pushConfig.source.description.value}" />
+							
+					<p:outputLabel for="showSourceType" value="#{i18n['common.type']}" />
+					<h:outputText id="showSourceType" value="#{pushConfigHandler.pushConfig.source.root ? i18n['admin.stock.type.rds.short'] : i18n['admin.stock.type.ds.short']}" />
+						
+					<p:outputLabel for="showSourceDataSetCount" value="#{i18n['admin.pushConfig.dataSetCount']}" />
+					<h:outputText id="showSourceDataSetCount" value="#{pushConfigHandler.dataSetCountAsString}" />
+						
+						
+									 
+				</p:panelGrid>
+				<f:facet name="footer">
+					<p:panelGrid columns="2" columnClasses="pushSourceLeft, pushSourceRight" styleClass="panelgridwidth">
+						<p:outputLabel for="showSourceImportedDataSets" value="#{i18n['admin.pushConfig.importedDataSetsAfterPush']}"/>
+						<h:outputText id="showSourceImportedDataSets" value="#{pushConfigHandler.importedDataSetsAfterPushAsString}" >
+						</h:outputText>
+					</p:panelGrid>
+				</f:facet>
+					
+	        </p:panel>
+	            
+			<p:panel id="targetInfo" header="#{i18n['admin.pushConfig.pushTarget']}" >
+				<p:panelGrid columns="2" styleClass="panelgridwidth">
+	                <p:outputLabel for="targetSelect" value="#{i18n['admin.pushConfig.targetConfig']}" rendered="#{editable}"/>
+	                <p:selectOneMenu id="targetSelect" value="#{pushConfigHandler.pushConfig.target}" required="true" requiredMessage="#{i18n['admin.pushConfig.targetRequired']}" converter="targetConverter" rendered="#{editable}">
+						<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+						<f:selectItems value="#{pushConfigHandler.pushTargets}" var="p" itemLabel="#{p.name}" itemValue="#{p}"/>
+						<p:ajax update="@this messages targetInfo"/>
+					</p:selectOneMenu>
+							
+					<p:outputLabel for="targetName" value="#{i18n['admin.pushTarget']}" rendered="#{not editable}"/>
+					<h:outputText id="targetName" value="#{pushConfigHandler.pushConfig.target.name}" rendered="#{not editable}"/>
+													
+					<p:outputLabel for="nodeName" value="#{i18n['admin.pushTarget.node']}" />
+					<h:outputText id="nodeName" value="#{pushConfigHandler.pushConfig.target.targetName}" />
+						
+					<p:outputLabel for="nodeId" value="#{i18n['admin.pushTarget.nodeId']}" />
+					<h:outputText id="nodeId" value="#{pushConfigHandler.pushConfig.target.targetID}" />
+						
+					<p:outputLabel for="stockID" value="#{i18n['admin.pushTarget.targetDs']}" />
+					<h:outputText id="stockID" value="#{pushConfigHandler.pushConfig.target.targetDsName}" >
+						<p:tooltip id="tooltipTargetStock" for="stockID" value="UUID: #{pushConfigHandler.pushConfig.target.targetDsUuid}"/>
+					</h:outputText>
+									 
+				</p:panelGrid>
+	  		</p:panel>
+      	</p:panelGrid>
+    </ui:composition>
+</html>

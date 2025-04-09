@@ -1,0 +1,2 @@
+ALTER TABLE `user` ADD `institution` varchar(255) DEFAULT NULL AFTER `GENDER`;
+ALTER TABLE `user` ADD `phone` varchar(255) DEFAULT NULL AFTER `PASSWORD_HASH_SALT`;

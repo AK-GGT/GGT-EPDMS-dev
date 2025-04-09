@@ -1,0 +1,297 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Test for soda4LCA" verbose="10">
+   <test name="Basic tests" preserve-order="true">
+      <classes>
+         <class name="edu.kit.soda4lca.test.ui.basic.T001Absolut_BasicTest">
+            <methods>
+               <include name="absolut_Basic" />
+               <include name="basic_Login" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T010Basic_AdminTest">
+            <methods>
+               <include name="adminBasic" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T011OrganisationsTest">
+            <methods>
+               <include name="newOrganisations" />
+               <include name="manageOrganisations" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T012UsersTest">
+            <methods>
+               <include name="newUsers" />
+               <include name="manageUsers" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T013GroupsTest">
+            <methods>
+               <include name="newGroups" />
+               <include name="manageGroups" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T014StockTest">
+            <methods>
+               <include name="newStocks" />
+               <include name="manageStocks" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T017AssignDataStockTest">
+            <methods>
+               <include name="assignProcessDataTest" />
+               <include name="assignLCIAMethodsDataTest" />
+               <include name="assignElementaryFlowsDataTest" />
+               <include name="assignProductFlowsDataTest" />
+               <include name="assignFlowPropertiesDataTest" />
+               <include name="assignUnitGroupsDataTest" />
+               <include name="assignSourcesDataTest" />
+               <include name="assignContactsDataTest" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T015ImportExportTest">
+            <methods>
+               <include name="importData" />
+               <include name="exportData" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T075AssignRemoveStockTest">
+            <methods>
+               <include name="testAssignRemoveData" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T017StockTest_hidden">
+            <methods>
+               <include name="testHiddenStocks" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T018Export_XLSTest">
+            <methods>
+               <include name="exportProcessesPageDataAsXLS"/>
+               <include name="exportProcessesAllDataAsXLS"/>
+               <include name="exportLCIAMethodsPageDataAsXLS"/>
+               <include name="exportLCIAMethodsAllDataAsXLS"/>
+               <include name="exportElementaryFlowsPageDataAsXLS"/>
+               <include name="exportElementaryFlowsAllDataAsXLS"/>
+               <include name="exportProductFlowsPageDataAsXLS"/>
+               <include name="exportProductFlowsAllDataAsXLS"/>
+               <include name="exportFlowPropertiesPageDataAsXLS"/>
+               <include name="exportFlowPropertiesAllDataAsXLS"/>
+               <include name="exportUnitGroupsPageDataAsXLS"/>
+               <include name="exportUnitGroupsAllDataAsXLS"/>
+               <include name="exportSourcesPageDataAsXLS"/>
+               <include name="exportSurcesAllDataAsXLS"/>
+               <include name="exportContactsPageDataAsXLS"/>
+               <include name="exportContactsAllDataAsXLS"/>
+            </methods>
+         </class>
+         <!-- disable for consistent pipeline fail due to yet unknown reason -->
+<!--         <class name="edu.kit.soda4lca.test.ui.admin.T019TagsTest">-->
+<!--            <methods>-->
+<!--               <include name="testDataPush"/>-->
+<!--               <include name="testDataPushImport"/>-->
+<!--            </methods>-->
+<!--         </class>-->
+<!--         <class name="edu.kit.soda4lca.test.ui.admin.T080CustomReportsTest">-->
+<!--            <methods>-->
+<!--               <include name="testCustomReports"/>-->
+<!--            </methods>-->
+<!--         </class>-->
+<!--         <class name="edu.kit.soda4lca.test.ui.admin.T100UserRegistrationTest">-->
+<!--            <methods>-->
+<!--               <include name="testRequired"/>-->
+<!--               <include name="testAllFields"/>-->
+<!--               <include name="testAddTerms"/>-->
+<!--            </methods>-->
+<!--         </class>-->
+         <class name="edu.kit.soda4lca.test.ui.admin.T030ManageDataSetsTest">
+            <methods>
+               <include name="manageProcesses" />
+               <include name="manageLCIAMethods" />
+               <include name="manageElementaryFlows" />
+               <include name="manageProductFlows" />
+               <include name="manageFlowProperties" />
+               <include name="manageUnitGroups" />
+               <include name="manageSources" />
+               <include name="manageContacts" />
+            </methods>
+         </class>
+         <!--       <class name="edu.kit.soda4lca.test.ui.admin.T016ConfigurationTest"> -->
+         <!--         <methods> -->
+         <!--           <include name="configuration" /> -->
+         <!--         </methods> -->
+         <!--       </class>  -->
+         <class name="edu.kit.soda4lca.test.ui.basic.T020BrowseDataSetsTest">
+            <methods>
+               <include name="testProcesses" />
+               <include name="testLCIAMethods" />
+               <include name="testElementaryFlows" />
+               <include name="testProductFlows" />
+               <include name="testFlowProperties" />
+               <include name="testUnitGroups" />
+               <include name="testSources" />
+               <include name="testContacts" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.basic.T021AccessRightsTest">
+            <methods>
+               <include name="accesRights" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.basic.T022Advanced_LoginTest">
+            <methods>
+               <include name="Advanced_LoginTest" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T040NodesTest">
+            <methods>
+               <include name="newNodes" />
+               <include name="manageNodes"/>
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T041SearchProcessesTest">
+            <methods>
+               <include name="searchProcesses" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T042SourceAttachmentsTest">
+            <methods>
+               <include name="testSourceAttachment1" />
+               <include name="testSourceAttachment2" />
+               <include name="testSourceAttachment3" />
+               <include name="testSourceAttachmentImportedByApi" />
+               <include name="testSourceAttachmentImportedByApi2" />
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T050Export_UsersTest">
+            <methods>
+               <include name="exportUsers"/>
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T060PushTargetTest">
+            <methods>
+               <include name="testBeginCreate"/>
+               <include name="testChange"/>
+               <include name="testDelete"/>
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T071PushConfigTest">
+            <methods>
+               <include name="testBeginCreatePushConfig"/>
+               <include name="testChange"/>
+               <include name="testFavourite"/>
+               <include name="testDelete"/>
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T072PushStockTest">
+            <methods>
+               <include name="testDataPush"/>
+               <include name="testDataPushImport"/>
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T080CustomReportsTest">
+            <methods>
+               <include name="testCustomReports"/>
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T100UserRegistrationTest">
+            <methods>
+               <include name="testRequired"/>
+               <include name="testAllFields"/>
+               <include name="testAddTerms"/>
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T090FilterTest">
+            <methods>
+               <include name="testFilters"/>
+            </methods>
+
+         </class>
+         <!-- <class name="edu.kit.soda4lca.test.ui.admin.T110AuthTokenTest">
+            <methods>
+               <include name="testAllowedUser"/>
+ tmp disable              <include name="testAllowedUserLaterNot"/>
+ tmp disable              <include name="testAPIKeyAfterNotTracked"/>
+         <include name="testAllowedUserGET"/>
+ 	  		<include name="testAllowedUserLaterNotGET"/>
+ tmp disable              <include name="testAPIKeyAfterNotTrackedGET"/>
+ tmp disable              <include name="testNotAllowedUser"/>
+               <include name="testrandomAPIKey"/>
+            </methods>
+         </class> -->
+         <class name="edu.kit.soda4lca.test.ui.admin.T120DatasetAssignAPITest">
+            <methods>
+               <include name="testProcesses"/>
+               <include name="testLICIAMethods"/>
+               <include name="testElementaryFlows"/>
+               <include name="testProductFlows"/>
+               <include name="testFlowPorperties"/>
+               <include name="testSources"/>
+               <include name="testFilters"/>
+               <include name="testContacts"/>
+               <include name="unassign_previously_api_assigned_data_set_from_data_stock_via_api"/>
+               <include name="unassign_previously_api_assigned_data_set_from_data_stock_via_ui"/>
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T121DatasetRemoveAPITest">
+            <methods>
+               <include name="testProcesses"/>
+               <include name="testLICIAMethods"/>
+               <include name="testElementaryFlows"/>
+               <!--  	  		<include name="testProductFlows"/> -->
+               <include name="testFlowPorperties"/>
+               <include name="testSources"/>
+               <include name="testUnitGroups"/>
+               <include name="testContacts"/>
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T122DataSetTagAPITest">
+            <methods>
+               <include name="assignTagToProcess"/>
+            </methods>
+         </class>
+         <class name="edu.kit.soda4lca.test.ui.admin.T130ExtendedJsonAPITest">
+            <methods>
+               <include name="assertThatExtendedJsonViewExists"/>
+               <include name="assertUrlForReferenceToOriginalEPDsAreResolved"/>
+               <include name="assertMaterialPropertiesAreCompleteAndCorrect"/>
+               <include name="assertEPDExtendedJSONViewContainsCorrect_flowProperties_typeOfFlow_resultingFlowAmount_referenceFlow"/>
+               <include name="assertILCDExtendedJSONViewContainsCorrect_flowProperties_typeOfFlow_resultingFlowAmount_referenceFlow_classification_location"/>
+            </methods>
+         </class>
+      </classes>
+   </test>
+   <test name="Interaction with Node using Bearer Token. jwtAuth integration test: https://trello.com/c/V19Aiw3Y">
+      <classes>
+         <class name="edu.kit.soda4lca.test.ui.admin.T150JWTTokenTest">
+            <methods>
+               <include name="createTokenFromAPI"/>
+               <include name="createTokenFromUI"/>
+               <include name="listDatasetByToken"/>
+               <include name="exportDatasetsByToken"/>
+               <include name="importZipByToken"/>
+               <include name="attemptViolateDatastockPermission"/>
+               <include name="useExpiredToken"/>
+               <include name="invalidPublicKey"/>
+            </methods>
+         </class>
+      </classes>
+   </test>
+   <test name="Test caching mechanism for data stock exports (Zip, csv, ...)">
+      <classes>
+         <class name="edu.kit.soda4lca.test.ui.admin.t151ExportCacheTest.T151ExportCacheTest">
+            <methods>
+               <include name="assert_cache_invalidated_when_UI_modifying_stock_state"/>
+               <include name="assert_cache_invalidated_when_API_modifying_stock_state"/>
+               <include name="assert_stock_flagged_unmodified_when_UI_exported"/>
+               <include name="assert_stock_flagged_unmodified_when_API_exported"/>
+               <include name="assert_unmodified_stocks_use_cache_for_export" />
+               <include name="assert_modified_data_stocks_are_exported_fresh"/>
+               <include name="assert_not_previously_exported_data_stocks_are_exported_and_produce_cache"/>
+               <include name="assert_data_stocks_with_missing_cache_file_are_exported_and_produce_cache"/>
+            </methods>
+         </class>
+      </classes>
+   </test>
+</suite>

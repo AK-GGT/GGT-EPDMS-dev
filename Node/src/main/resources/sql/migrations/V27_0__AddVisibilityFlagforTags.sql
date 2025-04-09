@@ -1,0 +1,1 @@
+ALTER TABLE `tag` ADD `visible` boolean NULL DEFAULT false;

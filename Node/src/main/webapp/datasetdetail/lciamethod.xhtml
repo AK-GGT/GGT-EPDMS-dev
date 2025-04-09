@@ -1,0 +1,866 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	
+	<f:metadata>
+		<f:viewParam name="uuid" value="#{lciamethodHandler.dataSetUuidString}" />
+		<f:viewParam name="version" value="#{lciamethodHandler.dataSetVersionString}" />
+		<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{lciamethodHandler.postViewParamInit(true)}" />
+	</f:metadata>
+	
+	<h:body>
+		<ui:composition template="./datasetTemplateDetailView.xhtml">
+			<ui:param name="dataset" value="#{lciamethodHandler.lciamethod}" />
+			<ui:param name="lciamethod" value="#{lciamethodHandler.lciamethod}" />
+			<ui:param name="xmlLciamethod" value="#{lciamethodHandler.xmlDataset}" />
+			<ui:param name="xmlLciamethodAdminInfo" value="#{xmlLciamethod.administrativeInformation}" />
+			<ui:param name="xmlLciamethodDataSetInfo" value="#{xmlLciamethod.LCIAMethodInformation.dataSetInformation}" />
+			<ui:param name="xmlLciamethodTime" value="#{xmlLciamethod.LCIAMethodInformation.time}" />
+			<ui:param name="xmlLciamethodQuantRef" value="#{xmlLciamethod.LCIAMethodInformation.quantitativeReference}" />
+			<ui:param name="xmlLciamethodGeography" value="#{xmlLciamethod.LCIAMethodInformation.geography}" />
+			<ui:param name="xmlLciamethodImpactModel" value="#{xmlLciamethod.LCIAMethodInformation.impactModel}" />
+			<ui:param name="xmlLciamethodModelValid" value="#{xmlLciamethod.modellingAndValidation}" />
+			<ui:param name="xmlLciamethodNormalisationAndWeighting" value="#{xmlLciamethodModelValid.LCIAMethodNormalisationAndWeighting}" />
+			<ui:param name="xmlLciamethodReview" value="#{xmlLciamethodModelValid.validation.review}" />
+			<ui:param name="xmlLciamethodCharactFactors" value="#{xmlLciamethod.characterisationFactors}" />
+			<ui:param name="lang" value="#{localeBean.locale.language}" />
+			<ui:param name="pageTitleDatasetName" value="#{lciamethod.name.getValueWithFallback(lang)}" />
+			<ui:param name="pageTitleDatasetType" value="#{i18n['common.lciaMethod.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+			<ui:define name="content">
+				<p:accordionPanel id="accPanel" multiple="true" widgetVar="accPanelWidget" activeIndex="0,1,2,3">
+					<!-- section -->
+					<p:tab title="#{i18n['common.lciaMethod.inflected']}#{i18n['delimiter']}#{i18n['common.info']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+						<p:panelGrid>
+							<!-- subsection -->
+							<p:row>
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.dataSetInformation']}
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="name"
+										outputTextValue="#{i18n['common.name']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.name']}" />
+								</p:column>
+								<p:column>
+									#{lciamethod.name.getValueWithFallback(lang)}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty lciamethod.methodology}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="methodology"
+										outputTextValue="#{i18n['public.lciam.belongsToMethodology']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.methodology']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{lciamethod.methodology}">
+										<ui:param name="methodology" value="#{dataListStyledVar}" />
+										#{methodology}
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty xmlLciamethodDataSetInfo.classificationInformation.classification}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="classification"
+										outputTextValue="#{i18n['common.dataset.classif']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.classification']}" />
+								</p:column>
+								<p:column>
+									<ui:include src="./include/classNameLevel.xhtml">
+										<ui:param name="xmlClassification" value="#{xmlLciamethodDataSetInfo.classificationInformation.classification}" />
+									</ui:include>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty lciamethod.impactCategory}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="impactCategory"
+										outputTextValue="#{i18n['public.lciam.impactCategory']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.impactCategory']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{lciamethod.impactCategory}">
+										<ui:param name="impactCat" value="#{dataListStyledVar}" />
+										#{impactCat.value}
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty lciamethod.areaOfProtection}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="areaOfProtection"
+										outputTextValue="#{i18n['public.lciam.areaOfProtection']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.areaOfProtection']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{lciamethod.areaOfProtection}">
+										<ui:param name="area" value="#{dataListStyledVar}" />
+										#{area.value}
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty lciamethod.impactIndicator}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="impactIndicator"
+										outputTextValue="#{i18n['public.lciam.impactInd']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.impactIndicator']}" />
+								</p:column>
+								<p:column>
+									#{lciamethod.impactIndicator}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty lciamethod.description.getValueWithFallback(lang)}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="generalComment"
+										outputTextValue="#{i18n['public.dataset.comment']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.generalComment']}" />
+								</p:column>
+								<p:column>
+									#{lciamethod.description.getValueWithFallback(lang)}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty xmlLciamethodDataSetInfo.referenceToExternalDocumentation}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToExternalDocumentation"
+										outputTextValue="#{i18n['public.lciam.referenceToExternalDocumentation']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceToExternalDocumentation']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{xmlLciamethodDataSetInfo.referenceToExternalDocumentation}">
+										<ui:param name="ref" value="#{dataListStyledVar}" />
+										<soda:dataListLinkOrText
+											dataListValue="#{lciamethodHandler.getMultilangWithFallback(lang, ref.shortDescription)}"
+											outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(ref, url.source)}"
+											outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+											repeatValue="#{ref.subReference}" />
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<!-- subsection -->
+							<p:row rendered="#{not empty xmlLciamethodQuantRef.referenceQuantity}">
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.quantitativeReference']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty xmlLciamethodQuantRef}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceQuantity"
+										outputTextValue="#{i18n['public.lciam.referenceQuantity']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceQuantity']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListLinkOrText
+										dataListValue="#{lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodQuantRef.referenceQuantity.shortDescription)}"
+										outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(xmlLciamethodQuantRef.referenceQuantity, url.flowProperty)}"
+										outputLinkTitle="#{i18n['common.flowProperty.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+								</p:column>
+							</p:row>
+							<!-- subsection -->
+							<ui:param name="notEmpty_refYear" value="#{not empty lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodTime.referenceYear).value}" />
+							<ui:param name="notEmpty_duration" value="#{not empty lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodTime.duration).value}" />
+							<ui:param name="notEmpty_timeRepresentativenessDescription" value="#{not empty lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodTime.timeRepresentativenessDescription).value}" />
+							<p:row rendered="#{notEmpty_refYear
+											or notEmpty_duration
+											or notEmpty_timeRepresentativenessDescription}">
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.timeRepresentativeness']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_refYear}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceYear"
+										outputTextValue="#{i18n['common.dataset.refYear']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceYear']}" />
+								</p:column>
+								<p:column>
+									#{lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodTime.referenceYear).value}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_duration}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="duration"
+										outputTextValue="#{i18n['public.lciam.durationOfImpact']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.duration']}" />
+								</p:column>
+								<p:column>
+									#{lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodTime.duration).value}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_timeRepresentativenessDescription}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="timeRepresentativenessDescription"
+										outputTextValue="#{i18n['common.timeRepresentativenessDescription']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.timeRepresentativenessDescription']}" />
+								</p:column>
+								<p:column>
+									#{lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodTime.timeRepresentativenessDescription).value}
+								</p:column>
+							</p:row>
+							<!-- subsection -->
+							<ui:param name="notEmpty_interventionLocation" value="#{not empty xmlLciamethodGeography.interventionLocation.value}" />
+							<ui:param name="notEmpty_interventionSubLocation" value="#{not empty xmlLciamethodGeography.interventionSubLocation}" />
+							<ui:param name="notEmpty_impactLocation" value="#{not empty xmlLciamethodGeography.impactLocation.value}" />
+							<ui:param name="notEmpty_geographicalRepresentativenessDescription" value="#{not empty lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodGeography.geographicalRepresentativenessDescription).value}" />
+							<p:row rendered="#{notEmpty_interventionLocation
+											or notEmpty_interventionSubLocation
+											or notEmpty_impactLocation
+											or notEmpty_geographicalRepresentativenessDescription}">
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.geographicalRepresentativeness']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_interventionLocation}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="interventionLocation"
+										outputTextValue="#{i18n['public.lciam.interventionLocation']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.interventionLocation']}" />
+								</p:column>
+								<p:column>
+									#{xmlLciamethodGeography.interventionLocation.value}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_interventionSubLocation}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="interventionSubLocation"
+										outputTextValue="#{i18n['public.lciam.interventionSubLocation']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.interventionSubLocation']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{xmlLciamethodGeography.interventionSubLocation}">
+										<ui:param name="interventionSubLoc" value="#{dataListStyledVar}" />
+										#{interventionSubLoc.value}
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_impactLocation}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="impactLocation"
+										outputTextValue="#{i18n['public.lciam.impactLocation']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.impactLocation']}" />
+								</p:column>
+								<p:column>
+									#{xmlLciamethodGeography.impactLocation.value}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_geographicalRepresentativenessDescription}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="geographicalRepresentativenessDescription"
+										outputTextValue="#{i18n['common.descriptionOfRestrictions']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.geographicalRepresentativenessDescription']}" />
+								</p:column>
+								<p:column>
+									#{lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodGeography.geographicalRepresentativenessDescription).value}
+								</p:column>
+							</p:row>
+							<!-- subsection -->
+							<ui:param name="notEmpty_modelName" value="#{not empty xmlLciamethodImpactModel.modelName}" />
+							<ui:param name="notEmpty_modelDescription" value="#{not empty lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodImpactModel.modelDescription).value}" />
+							<ui:param name="notEmpty_refToModelSource" value="#{not empty xmlLciamethodImpactModel.referenceToModelSource}" />
+							<ui:param name="notEmpty_refToIncludedMethods" value="#{not empty xmlLciamethodImpactModel.referenceToIncludedMethods}" />
+							<ui:param name="notEmpty_consideredMechanisms" value="#{not empty lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodImpactModel.consideredMechanisms).value}" />
+							<ui:param name="notEmpty_refToMethodologyFlowChart" value="#{not empty xmlLciamethodImpactModel.referenceToMethodologyFlowChart}" />
+							<p:row rendered="#{notEmpty_modelName
+											or notEmpty_modelDescription
+											or notEmpty_refToModelSource
+											or notEmpty_refToIncludedMethods
+											or notEmpty_consideredMechanisms
+											or notEmpty_refToMethodologyFlowChart}">
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['public.lciam.impactModel']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_modelName}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="modelName"
+										outputTextValue="#{i18n['public.lciam.modelName']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.modelName']}" />
+								</p:column>
+								<p:column>
+									#{xmlLciamethodImpactModel.modelName}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_modelDescription}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="modelDescription"
+										outputTextValue="#{i18n['public.lciam.modelDescription']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.modelDescription']}" />
+								</p:column>
+								<p:column>
+									#{lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodImpactModel.modelDescription).value}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_refToModelSource}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToModelSource"
+										outputTextValue="#{i18n['public.lciam.referenceToModelSource']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceToModelSource']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{xmlLciamethodImpactModel.referenceToModelSource}">
+										<ui:param name="refModelSource" value="#{dataListStyledVar}" />
+										<soda:dataListLinkOrText
+											dataListValue="#{lciamethodHandler.getMultilangWithFallback(lang, refModelSource.shortDescription)}"
+											outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(refModelSource, url.source)}"
+											outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_refToIncludedMethods}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToIncludedMethods"
+										outputTextValue="#{i18n['public.lciam.referenceToIncludedMethods']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceToIncludedMethods']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{xmlLciamethodImpactModel.referenceToIncludedMethods}">
+										<ui:param name="refMethod" value="#{dataListStyledVar}" />
+										<soda:dataListLinkOrText
+											dataListValue="#{lciamethodHandler.getMultilangWithFallback(lang, refMethod.shortDescription)}"
+											outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(refMethod, url.lciaMethod)}"
+											outputLinkTitle="#{i18n['common.lciaMethod.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_consideredMechanisms}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="consideredMechanisms"
+										outputTextValue="#{i18n['public.lciam.consideredMechanisms']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.consideredMechanisms']}" />
+								</p:column>
+								<p:column>
+									#{lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodImpactModel.consideredMechanisms).value}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_refToMethodologyFlowChart}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToMethodologyFlowChart"
+										outputTextValue="#{i18n['public.lciam.referenceToMethodologyFlowChart']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceToMethodologyFlowChart']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{xmlLciamethodImpactModel.referenceToMethodologyFlowChart}">
+										<ui:param name="refChart" value="#{dataListStyledVar}" />
+										<soda:dataListLinkOrText
+											dataListValue="#{lciamethodHandler.getMultilangWithFallback(lang, refChart.shortDescription)}"
+											outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(refChart, url.source)}"
+											outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:tab>
+					<!-- section -->
+					<p:tab rendered="#{not empty xmlLciamethodModelValid}" title="#{i18n['common.modellingValidation']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+						<p:panelGrid>
+							<p:row rendered="#{not empty lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodModelValid.useAdviceForDataSet).value}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceYear"
+										outputTextValue="#{i18n['public.dataset.useAdvice']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.useAdviceForDataSet']}" />
+								</p:column>
+								<p:column>
+									#{lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodModelValid.useAdviceForDataSet).value}
+								</p:column>
+							</p:row>
+							<!-- subsection -->
+							<ui:param name="notEmpty_type" value="#{not empty lciamethod.type.value}" />
+							<ui:param name="notEmpty_lciaMethodPrinciple" value="#{not empty xmlLciamethodNormalisationAndWeighting.LCIAMethodPrinciple}" />
+							<ui:param name="notEmpty_deviationsFromLCIAMethodPrinciple" value="#{not empty xmlLciamethodNormalisationAndWeighting.deviationsFromLCIAMethodPrinciple}" />
+							<ui:param name="notEmpty_normalisation" value="#{not empty xmlLciamethodNormalisationAndWeighting.normalisation}" />
+							<ui:param name="notEmpty_refToUsableNormalisationDataSets" value="#{not empty xmlLciamethodNormalisationAndWeighting.referenceToUsableNormalisationDataSets}" />
+							<ui:param name="notEmpty_normalisationDescription" value="#{not empty xmlLciamethodNormalisationAndWeighting.normalisationDescription}" />
+							<ui:param name="notEmpty_refToIncludedNormalisationDataSets" value="#{not empty xmlLciamethodNormalisationAndWeighting.referenceToIncludedNormalisationDataSets}" />
+							<ui:param name="notEmpty_weighting" value="#{not empty xmlLciamethodNormalisationAndWeighting.weighting}" />
+							<ui:param name="notEmpty_refToUsableWeightingDataSets" value="#{not empty xmlLciamethodNormalisationAndWeighting.referenceToUsableWeightingDataSets}" />
+							<ui:param name="notEmpty_weightingDescription" value="#{not empty xmlLciamethodNormalisationAndWeighting.weightingDescription}" />
+							<ui:param name="notEmpty_refToIncludedWeightingDataSets" value="#{not empty xmlLciamethodNormalisationAndWeighting.referenceToIncludedWeightingDataSets}" />
+							<p:row rendered="#{notEmpty_type
+											or notEmpty_lciaMethodPrinciple
+											or notEmpty_deviationsFromLCIAMethodPrinciple
+											or notEmpty_normalisation
+											or notEmpty_refToUsableNormalisationDataSets
+											or notEmpty_normalisationDescription
+											or notEmpty_refToIncludedNormalisationDataSets
+											or notEmpty_weighting
+											or notEmpty_refToUsableWeightingDataSets
+											or notEmpty_weightingDescription
+											or notEmpty_refToIncludedWeightingDataSets}">
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['public.lciam.normalisationAndWeighting']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_type}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="typeOfDataSet"
+										outputTextValue="#{i18n['public.dataset.typeOf']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.typeOfDataSet']}" />
+								</p:column>
+								<p:column>
+									#{lciamethod.type.value}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_lciaMethodPrinciple}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="lciaMethodPrinciple"
+										outputTextValue="#{i18n['public.lciam.lciaMethodPrinciple']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.lciaMethodPrinciple']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{xmlLciamethodNormalisationAndWeighting.LCIAMethodPrinciple}">
+										<ui:param name="lciaMethodPrinciple" value="#{dataListStyledVar}" />
+										#{lciaMethodPrinciple.value}
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_deviationsFromLCIAMethodPrinciple}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="deviationsFromLCIAMethodPrinciple"
+										outputTextValue="#{i18n['public.lciam.deviationsFromLCIAMethodPrinciple']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.deviationsFromLCIAMethodPrinciple']}" />
+								</p:column>
+								<p:column>
+									#{lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodNormalisationAndWeighting.deviationsFromLCIAMethodPrinciple).value}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_normalisation}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="normalisation"
+										outputTextValue="#{i18n['public.lciam.normalisation']}?"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.normalisation']}" />
+								</p:column>
+								<p:column>
+									#{xmlLciamethodNormalisationAndWeighting.normalisation ? i18n['common.button.yes'] : i18n['common.button.no']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_refToUsableNormalisationDataSets}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToUsableNormalisationDataSets"
+										outputTextValue="#{i18n['public.lciam.referenceToUsableNormalisationDataSets']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceToUsableNormalisationDataSets']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{xmlLciamethodNormalisationAndWeighting.referenceToUsableNormalisationDataSets}">
+										<ui:param name="refUsableNormDataSet" value="#{dataListStyledVar}" />
+										<soda:dataListLinkOrText
+											dataListValue="#{lciamethodHandler.getMultilangWithFallback(lang, refUsableNormDataSet.shortDescription)}"
+											outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(refUsableNormDataSet, url.source)}"
+											outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+											repeatValue="#{refUsableNormDataSet.subReference}" />
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_normalisationDescription}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="normalisationDescription"
+										outputTextValue="#{i18n['public.lciam.normalisationDescription']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.normalisationDescription']}" />
+								</p:column>
+								<p:column>
+									#{lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodNormalisationAndWeighting.normalisationDescription).value}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_refToIncludedNormalisationDataSets}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToIncludedNormalisationDataSets"
+										outputTextValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceToIncludedNormalisationDataSets']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceToIncludedNormalisationDataSets']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{xmlLciamethodNormalisationAndWeighting.referenceToIncludedNormalisationDataSets}">
+										<ui:param name="refInclNormDataSet" value="#{dataListStyledVar}" />
+										<soda:dataListLinkOrText
+											dataListValue="#{lciamethodHandler.getMultilangWithFallback(lang, refInclNormDataSet.shortDescription)}"
+											outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(refInclNormDataSet, url.source)}"
+											outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+											repeatValue="#{refInclNormDataSet.subReference}" />
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_weighting}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="weighting"
+										outputTextValue="#{i18n['public.lciam.weighting']}?"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.weighting']}" />
+								</p:column>
+								<p:column>
+									#{xmlLciamethodNormalisationAndWeighting.weighting ? i18n['common.button.yes'] : i18n['common.button.no']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_refToUsableWeightingDataSets}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToUsableWeightingDataSets"
+										outputTextValue="#{i18n['public.lciam.referenceToUsableWeightingDataSets']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceToUsableWeightingDataSets']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{xmlLciamethodNormalisationAndWeighting.referenceToUsableWeightingDataSets}">
+										<ui:param name="refUsableWeightDataSet" value="#{dataListStyledVar}" />
+										<soda:dataListLinkOrText
+											dataListValue="#{lciamethodHandler.getMultilangWithFallback(lang, refUsableWeightDataSet.shortDescription)}"
+											outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(refUsableWeightDataSet, url.source)}"
+											outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+											repeatValue="#{refUsableWeightDataSet.subReference}" />
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_weightingDescription}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="weightingDescription"
+										outputTextValue="#{i18n['public.lciam.weightingDescription']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.weightingDescription']}" />
+								</p:column>
+								<p:column>
+									#{lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodNormalisationAndWeighting.weightingDescription).value}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{notEmpty_refToIncludedWeightingDataSets}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToIncludedWeightingDataSets"
+										outputTextValue="#{i18n['public.lciam.referenceToIncludedWeightingDataSets']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceToIncludedWeightingDataSets']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{xmlLciamethodNormalisationAndWeighting.referenceToIncludedWeightingDataSets}">
+										<ui:param name="refInclWeightDataSet" value="#{dataListStyledVar}" />
+										<soda:dataListLinkOrText
+											dataListValue="#{lciamethodHandler.getMultilangWithFallback(lang, refInclWeightDataSet.shortDescription)}"
+											outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(refInclWeightDataSet, url.lciaMethod)}"
+											outputLinkTitle="#{i18n['common.lciaMethod.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<!-- subsection -->
+							<p:row rendered="#{not empty xmlLciamethodModelValid.dataSources.referenceToDataSource}">
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['public.lciam.dataSources']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty xmlLciamethodModelValid.dataSources.referenceToDataSource}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="referenceToDataSource"
+										outputTextValue="#{i18n['public.lciam.dataSources']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceToDataSource']}" />
+								</p:column>
+								<p:column>
+									<soda:dataListStyled dataListValue="#{xmlLciamethodModelValid.dataSources.referenceToDataSource}">
+										<ui:param name="refDataSource" value="#{dataListStyledVar}" />
+										<soda:dataListLinkOrText
+											dataListValue="#{lciamethodHandler.getMultilangWithFallback(lang, refDataSource.shortDescription)}"
+											outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(refDataSource, url.source)}"
+											outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+											repeatValue="#{refDataSource.subReference}" />
+									</soda:dataListStyled>
+								</p:column>
+							</p:row>
+							<!-- subsection -->
+							<p:row rendered="#{not empty xmlLciamethodModelValid.completeness.completenessImpactCoverage
+											or not empty xmlLciamethodModelValid.completeness.inventoryItems}">
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.completeness']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty xmlLciamethodModelValid.completeness.completenessImpactCoverage}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="completenessImpactCoverage"
+										outputTextValue="#{i18n['public.lciam.completenessImpactCoverage']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.completenessImpactCoverage']}" />
+								</p:column>
+								<p:column>
+									#{xmlLciamethodModelValid.completeness.completenessImpactCoverage}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty xmlLciamethodModelValid.completeness.inventoryItems}">
+								<p:column styleClass="ui-state-hover transp">
+									<soda:outputTextTooltip
+										outputTextId="inventoryItems"
+										outputTextValue="#{i18n['public.lciam.inventoryItems']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.inventoryItems']}" />
+								</p:column>
+								<p:column>
+									#{xmlLciamethodModelValid.completeness.inventoryItems}
+								</p:column>
+							</p:row>
+							<!-- subsection -->
+							<p:row rendered="#{not empty xmlLciamethodReview}">
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.validation']}
+								</p:column>
+							</p:row>
+							<p:row rendered="#{not empty xmlLciamethodReview}">
+								<p:column colspan="2">
+									<p:dataTable value="#{xmlLciamethodReview}" var="review" styleClass="lotsofcolumns">
+										<p:column>
+											<f:facet name="header">
+												<soda:outputTextTooltip
+													outputTextId="typeOfReview"
+													outputTextValue="#{i18n['common.typeOfReview']}"
+													tooltipValue="#{i18n['datasetdetail.tooltip.dataset.typeOfReview']}" />
+											</f:facet>
+											#{review.type.value}
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<soda:outputTextTooltip
+													outputTextId="scopeMethodsOfReview"
+													outputTextValue="#{i18n['common.scopeMethodsOfReview']}"
+													tooltipValue="#{i18n['datasetdetail.tooltip.dataset.scopeMethodsOfReview']}" />
+											</f:facet>
+											<p:dataTable rendered="#{not empty review.scope}" value="#{review.scope}" var="scope">
+												<p:column>
+													<f:facet name="header">
+														#{i18n['common.scopeName']}
+													</f:facet>
+													#{scope.name.value}
+												</p:column>
+												<p:column>
+													<f:facet name="header">
+														#{i18n['common.methodName']}
+													</f:facet>
+													<soda:dataListStyled dataListValue="#{scope.method}">
+														<ui:param name="method" value="#{dataListStyledVar}" />
+														#{method.name.value}
+													</soda:dataListStyled>
+												</p:column>
+											</p:dataTable>
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<soda:outputTextTooltip
+													outputTextId="reviewDetails"
+													outputTextValue="#{i18n['public.proc.reviewDetails']}"
+													tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.reviewDetails']}" />
+											</f:facet>
+											#{lciamethodHandler.getMultilangWithFallback(lang, review.reviewDetails).value}
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<soda:outputTextTooltip
+													outputTextId="reviewerNameInstitution"
+													outputTextValue="#{i18n['common.reviewerNameInstitution']}"
+													tooltipValue="#{i18n['datasetdetail.tooltip.dataset.reviewerNameInstitution']}" />
+											</f:facet>
+											<soda:dataListStyled dataListValue="#{review.referenceToNameOfReviewerAndInstitution}">
+												<ui:param name="refReviewer" value="#{dataListStyledVar}" />
+												<soda:dataListLinkOrText
+													dataListValue="#{lciamethodHandler.getMultilangWithFallback(lang, refReviewer.shortDescription)}"
+													outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(refReviewer, url.contact)}"
+													outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+											</soda:dataListStyled>
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<soda:outputTextTooltip
+													outputTextId="otherReviewDetails"
+													outputTextValue="#{i18n['common.otherReviewDetails']}"
+													tooltipValue="#{i18n['datasetdetail.tooltip.dataset.otherReviewDetails']}" />
+											</f:facet>
+											#{lciamethodHandler.getMultilangWithFallback(lang, review.otherReviewDetails).value}
+										</p:column>
+										<p:column>
+											<f:facet name="header">
+												<soda:outputTextTooltip
+													outputTextId="referenceToCompleteReviewReport"
+													outputTextValue="#{i18n['common.referenceToCompleteReviewReport']}"
+													tooltipValue="#{i18n['datasetdetail.tooltip.dataset.referenceToCompleteReviewReport']}" />
+											</f:facet>
+											<soda:dataListLinkOrText
+												dataListValue="#{lciamethodHandler.getMultilangWithFallback(lang, review.referenceToCompleteReviewReport.shortDescription)}"
+												outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(review.referenceToCompleteReviewReport, url.source)}"
+												outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+										</p:column>
+									</p:dataTable>
+								</p:column>
+							</p:row>
+							<!-- subsection -->
+							<p:row rendered="#{not empty xmlLciamethodModelValid.complianceDeclarations.compliance}">
+								<p:column colspan="2" styleClass="ui-state-hover">
+									#{i18n['common.compliance']}
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						<ui:include src="./include/complianceAll.xhtml">
+							<ui:param name="xmlCompliances" value="#{xmlLciamethodModelValid.complianceDeclarations.compliance}" />
+							<ui:param name="handler" value="#{lciamethodHandler}" />
+						</ui:include>
+					</p:tab>
+					<ui:include src="./include/tab_administrative_lciam.xhtml">
+						<ui:param name="datasetHandler" value="#{lciamethodHandler}" />
+						<ui:param name="dataset" value="#{lciamethod}" />
+					</ui:include>
+					
+					<!-- section -->
+					<p:tab rendered="#{not empty xmlLciamethodCharactFactors.factor}" title="#{i18n['public.lciam.characterisationFactors']}" titletip="#{i18n['button.collapse']}" titleStyleClass="ui-state-highlight">
+						<p:dataTable value="#{xmlLciamethodCharactFactors.factor}" var="factor" styleClass="lotsofcolumns">
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="referenceToFlowDataSet"
+										outputTextValue="#{i18n['common.flow']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceToFlowDataSet']}" />
+								</f:facet>
+								<soda:switchLinkOrText
+									outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(factor.referenceToFlowDataSet, url.flow)}"
+									outputLinkTitle="#{i18n['common.flow']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+									outputTextValue="#{lciamethodHandler.getMultilangWithFallback(lang, factor.referenceToFlowDataSet.shortDescription).value}" />
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="classification"
+										outputTextValue="#{i18n['common.dataset.classif']}" />
+								</f:facet>
+								<c:set var="category" value="#{lciamethodHandler.getCategory(factor.referenceToFlowDataSet.refObjectId)}"/>
+								<h:outputText value="#{category != null ? category : 'not available'}"/>
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="location"
+										outputTextValue="#{i18n['common.dataset.location']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.location']}" />
+								</f:facet>
+								#{factor.location}
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="exchangeDirection"
+										outputTextValue="#{i18n['common.dataset.exchangeDirection']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.exchangeDirection']}" />
+								</f:facet>
+								#{factor.exchangeDirection.value}
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="meanValue"
+										outputTextValue="#{i18n['common.meanValue']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.meanValue']}" />
+								</f:facet>
+								#{factor.meanValue}
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="minimumValue"
+										outputTextValue="#{i18n['common.minimumValue']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.minimumValue']}" />
+								</f:facet>
+								#{factor.minimumValue}
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="maximumValue"
+										outputTextValue="#{i18n['common.maximumValue']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.maximumValue']}" />
+								</f:facet>
+								#{factor.maximumValue}
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="uncertaintyDistributionType"
+										outputTextValue="#{i18n['common.uncertaintyDistributionType.wrapped']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.uncertaintyDistributionType']}" />
+								</f:facet>
+								#{factor.uncertaintyDistributionType.value}
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="relativeStandardDeviation95In"
+										outputTextValue="#{i18n['common.relativeStdDev.wrapped']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.relativeStandardDeviation95In']}" />
+								</f:facet>
+								#{factor.relativeStandardDeviation95In} %
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="dataDerivationTypeStatus"
+										outputTextValue="#{i18n['common.dataDerivationTypeStatus.wrapped']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.dataset.dataDerivationTypeStatus']}" />
+								</f:facet>
+								#{factor.dataDerivationTypeStatus.value}
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="deviatingRecommendation"
+										outputTextValue="#{i18n['public.lciam.deviatingRecommendation']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.deviatingRecommendation']}" />
+								</f:facet>
+								#{factor.deviatingRecommendation.value}
+							</p:column>
+							<p:column>
+								<f:facet name="header">
+									<soda:outputTextTooltip
+										outputTextId="referenceToDataSource"
+										outputTextValue="#{i18n['public.lciam.referenceToDataSource']}"
+										tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceToDataSource']}" />
+								</f:facet>
+								<ui:param name="sourceRef" value="#{factor.referencesToDataSource.referenceToDataSource}" />
+								<soda:switchLinkOrText
+									outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(sourceRef, url.source)}"
+									outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+									outputTextValue="#{lciamethodHandler.getMultilangWithFallback(lang, sourceRef.shortDescription).value}"
+									repeatValue="#{sourceRef.subReference}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+				</p:accordionPanel>
+				
+				<ui:fragment rendered="#{conf.displayConfig.showBackLinks}">
+					<ui:include src="./include/backLinks.xhtml">
+						<ui:param name="linkDetailOutcome" value="#{url.lciaMethod.getDetail(lciamethod)}" />
+						<ui:param name="linkListOutcome" value="#{url.lciaMethod.list}" />
+						<ui:param name="linkValue" value="#{i18n['common.lciaMethod.inflected']}" />
+					</ui:include>
+				</ui:fragment>
+			</ui:define>
+		</ui:composition>
+	</h:body>
+</html>

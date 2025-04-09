@@ -1,0 +1,192 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"  
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:body>
+        <ui:composition template="/admin/layout/adminDesign.xhtml">
+            <ui:param name="pageTitle" value="#{i18n['admin.user.manageList']}" />
+            <ui:define name="content">
+                <h:form id="tableForm" prependId="false">	             
+                    <p:commandButton id="deleteBtn"
+                                     value="#{i18n['admin.deleteSelected']}"
+                                     onclick="PF('confirmDelete').show()"
+                                     type="button"
+                                     disabled="#{userListHandler.nothingSelected}" />
+                    <p:confirmDialog message="#{i18n['admin.confirmMsg.deleteSelected']}?"
+                                     header="#{i18n['admin.confirmDlg.delete']}"
+                                     severity="alert"
+                                     widgetVar="confirmDelete">
+                        <div class="confirmDlgButtons">
+                            <p:commandButton value="#{i18n['admin.cancel']}"
+                                             type="button"
+                                             onclick="PF('confirmDelete').hide()" />
+                            <p:commandButton value="#{i18n['admin.ok']}"
+                                             action="#{userListHandler.deleteSelected}"
+                                             oncomplete="PF('confirmDelete').hide()"
+                                             ajax="false"
+                                             update="messages userTable" />
+                        </div>
+                    </p:confirmDialog>
+
+                    <ui:include src="/messages.xhtml" />
+                    
+     				<div class="floatRight movedown">
+						<p:commandButton id="exportUsers" value="#{i18n['admin.export.datasets']}" update="userTable" ajax="false">
+		     				<p:dataExporter type="xls" target="userTable" postProcessor="#{datasetListDocumentView.postProcessXLS}" fileName="#{i18n['admin.users']}"/>
+						</p:commandButton>
+					</div>
+
+                    <p:dataTable id="userTable"
+                                 var="usr" 
+                                 value="#{userListHandler.lazyModel}"
+                                 lazy="true"
+                                 paginator="true"
+                                 rows="15" rowsPerPageTemplate="5,10,15,50"
+                                 selection="#{userListHandler.selectedUsers}"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                                 {PreviousPageLink} {PageLinks} {NextPageLink}
+                                 {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']}
+                                 (#{userListHandler.lazyModel.rowCount} #{i18n['common.list.total']})"
+                                 rowStyleClass="#{Constants.ADMIN_ID == usr.id ? 'unselectable':''}"
+                                 emptyMessage="#{i18n['common.list.noneFound']}"
+                                 sortBy="#{usr.id}">
+                                 
+                        <c:set var="booleanColumnWidth" value="60px" />
+                        
+                        <p:ajax event="rowSelectCheckbox" process="@this" update="@(#deleteBtn)" />
+                        <p:ajax event="rowUnselectCheckbox" process="@this" update="@(#deleteBtn)" />
+                        <p:ajax event="toggleSelect" process="@this" update="@(#deleteBtn)" />
+                                 
+                                 
+                        <p:column style="text-align: center;" selectionMode="multiple" width="20px;" />
+
+                        <p:column headerText="#{i18n['admin.user.order']}" width="30px;"
+                                  sortBy="#{usr.id}">
+                        </p:column>
+
+                        <p:column headerText="#{i18n['admin.user.name']}"
+                        	sortBy="#{usr.userName}"
+                        	filterBy="#{usr.userName}">
+                            <h:link outcome="#{url.user.edit}" value="#{usr.userName}">
+                                <f:param name="userId" value="#{usr.id}" />
+                            </h:link>
+                            <h:outputText rendered="#{Constants.ADMIN_ID == usr.id}" value=" (#{i18n['admin.notDeletable']})" styleClass="notDeletableInfo" />
+                        </p:column>
+                                          
+                        <p:column
+                        	rendered="#{user.hasSuperAdminPermission()}" style="width:#{booleanColumnWidth}" exportable="false">
+                        	
+                        	<f:facet name="header">
+                        		<p>
+	                        		<p:outputLabel>#{i18n['admin.user.accessRight.superadmin']}</p:outputLabel>                    		
+                        		</p>
+                        		<p:triStateCheckbox value="#{userListHandler.superAdminPermissionFilter}">
+                        			<p:ajax event="change" update="userTable"/>
+                        		</p:triStateCheckbox>
+                        	</f:facet>
+                        	
+                            <div style="text-align: center;">
+                                <h:outputText style="display: inline-block" rendered="#{usr.superAdminPermission}" styleClass="fa fa-check" />
+                            </div>
+                        </p:column>                        
+                        <p:column headerText="#{i18n['admin.user.accessRight.superadmin']}" rendered="#{user.hasSuperAdminPermission()}" visible="false">
+                                <h:outputText rendered="#{usr.superAdminPermission}" value="X"/>
+                        </p:column>
+                        
+                        <p:column headerText="#{i18n['admin.user.lastName']}"
+                        	sortBy="#{usr.lastName}"
+                        	filterBy="#{usr.lastName}">
+                            <h:outputText value="#{usr.lastName}" />
+                        </p:column>
+                        
+                        <p:column headerText="#{i18n['admin.user.firstName']}"
+                        	sortBy="#{usr.firstName}"
+                        	filterBy="#{usr.firstName}">
+                            <h:outputText value="#{usr.firstName}" />
+                        </p:column>
+
+                        <p:column headerText="#{i18n['common.email']}"
+                        	sortBy="#{usr.email}"
+                        	filterBy="#{usr.email}">
+                            <h:outputText value="#{usr.email}" />
+                        </p:column>
+
+                        <p:column headerText="#{i18n['admin.org']}"
+                            sortBy="#{usr.organization}"
+                            filterBy="#{usr.organization.name}">
+                        <h:outputText value="#{usr.organization.name}" />
+                        </p:column>
+                        
+                        <p:column rendered="#{conf.sectors}" headerText="#{i18n['public.user.registration.sector']}" exportable="false">
+               				<ui:repeat value="#{usr.sector.toArray()}" var="sector">
+    	                        <h:outputText value="#{sector}" /><br/>
+    	                    </ui:repeat>
+                        </p:column>  
+                        <p:column rendered="#{conf.sectors}" headerText="#{i18n['public.user.registration.sector']}" exportable="true" visible="false">
+	                        <h:outputText value="#{usr.sectorAsString}" />
+                        </p:column>  
+    
+                        <p:column rendered="#{conf.sectors}" headerText="#{i18n['public.user.registration.sectorother']}">
+                            <h:outputText value="#{usr.sectorOther}" />
+                        </p:column>  
+                        
+                        <p:column headerText="#{i18n['common.user.jobposition']}" visible="false">
+                            <h:outputText value="#{usr.jobPosition}" />
+                        </p:column>  
+                                              
+                        <p:column headerText="#{i18n['admin.user.institution']}"
+                        	sortBy="#{usr.institution}"
+                        	filterBy="#{usr.institution}">
+                            <h:outputText value="#{usr.institution}" />
+                        </p:column>
+                                                
+                        <p:column headerText="#{i18n['admin.user.phone']}" visible="false">
+                            <h:outputText value="#{usr.phone}" />
+                        </p:column>
+                        
+                        <p:column headerText="#{i18n['admin.user.purpose']}" visible="false">
+                            <h:outputText value="#{usr.dsPurpose}" />x
+                        </p:column>
+
+                  		<p:columns var="additionalTerm" value="#{additionalTermsBean.additionalTerms}"
+                  			style="width:#{booleanColumnWidth}" rendered="#{additionalTermsBean.renderAdditionalTerms}"
+                  			headerText="#{additionalTerm.title}" exportable="false">
+                  			
+                  			<f:facet name="header">
+                        		<p>
+	                        		<p:outputLabel>#{additionalTerm.title}</p:outputLabel>                    		
+                        		</p>
+                        		<p:triStateCheckbox value="#{userListHandler.getAddTermsFilterAccessor(additionalTerm.title).addTermFilterState}">
+                        			<p:ajax event="change" update="userTable"/>
+                        		</p:triStateCheckbox>                        	</f:facet>
+                  			
+							<div style="text-align: center;">
+                                <h:outputText style="display: inline-block" rendered="#{usr.acceptedAdditionalTermsMap[additionalTerm.title]}" styleClass="fa fa-check" />
+                            </div>
+                  		</p:columns>
+                  		<p:columns var="additionalTerm" value="#{additionalTermsBean.additionalTerms}" rendered="#{additionalTermsBean.renderAdditionalTerms}" headerText="#{additionalTerm.title}" exportable="true" visible="false">
+	                        <h:outputText rendered="#{usr.acceptedAdditionalTermsMap[additionalTerm.title]}" value="X" />
+                  		</p:columns>
+
+
+                  		<p:column rendered="#{conf.acceptPrivacyPolicy}" headerText="#{i18n['common.privacyPolicy.accepted']}" style="width:#{booleanColumnWidth}" exportable="false">
+							<div style="text-align: center;">
+                                <h:outputText style="display: inline-block" rendered="#{usr.privacyPolicyAccepted}" styleClass="fa fa-check" />
+                            </div>
+                  		</p:column>
+                  		<p:column rendered="#{conf.acceptPrivacyPolicy}" headerText="#{i18n['common.privacyPolicy.accepted']}" exportable="true" visible="false">
+	                        <h:outputText rendered="#{usr.privacyPolicyAccepted}" value="X"/>
+                  		</p:column>
+
+                    </p:dataTable>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

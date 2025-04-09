@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+      
+    <f:metadata>
+        <f:viewParam name="pushTargetId" value="#{pushTargetHandler.entryIdString}" />
+        <f:event type="javax.faces.event.PreRenderViewEvent" listener="#{pushTargetHandler.postViewParamInit}" />
+    </f:metadata>
+
+    <h:body>
+        <ui:composition template="/admin/layout/adminDesign.xhtml">
+            <ui:param name="pageTitle" value="#{pushTargetHandler.editable ? i18n['admin.pushTarget.edit'] : i18n['admin.pushTarget.show']}: #{pushTargetHandler.pushTarget.name}" />
+            <ui:define name="content">
+                <p>
+					<h:outputText rendered="#{pushTargetHandler.editable}" value="#{i18n['common.mandatoryFields']}"/>
+				</p>
+
+                <h:form id="generalForm" prependId="false">
+
+                    <ui:include src="/admin/pushTargetEntry.xhtml">
+	                    <ui:param name="nameEditable" value="true" />
+	                   	<ui:param name="editable" value="#{pushTargetHandler.editable}"/>
+	                    <ui:param name="pwShown" value="false" />
+	                    <ui:param name="handler" value="#{pushTargetHandler}" />
+                    </ui:include>
+                    
+
+                    <div id="buttons" class="buttonCenter" >
+                    	<p:commandButton id="change" 
+                    					value="#{i18n['admin.pushTarget.edit']}"
+                    					action="#{pushTargetHandler.changeEditable(true)}" 
+                    					rendered="#{not pushTargetHandler.editable}"
+                    					icon="fa fa-edit" 
+                    					ajax="false"/>
+                        <p:commandButton id="save" value="#{i18n['admin.pushTarget.changePushTargetInfo']}"
+                                         action="#{pushTargetHandler.saveEntry}" rendered="#{pushTargetHandler.editable}"
+                                         icon="fa fa-check"
+                                         ajax="false" >
+                                         <f:actionListener binding="#{pushTargetHandler.changeEditable(false)}" />
+                                         </p:commandButton>
+                                         
+                        <p:commandButton id="cancel" value="#{i18n['admin.pushConfig.cancel']}"
+                                         action="#{pushTargetHandler.changeEditable(false)}" rendered="#{pushTargetHandler.editable}"
+                                         icon="fa fa-ban"
+                                         update="messages save" ajax="false"/>
+                    </div>
+                    <ui:include src="/messages.xhtml" />
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
+

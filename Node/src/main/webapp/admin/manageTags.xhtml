@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:body>
+    <ui:composition template="/admin/layout/adminDesign.xhtml">
+        <ui:param name="pageTitle" value="#{i18n['admin.tags.edit']}" />
+        <ui:define name="content">
+        <p:panel style="width: 70%" id="tagPanel">
+            <h:form id="tagsEditor">
+
+                <!-- <div class="ui-g">
+                        <div class="ui-g-12">
+                             <p:commandButton value="#{i18n['admin.tags.add']}" styleClass="ui-priority-primary" process="@this" 
+                                action="#{tagHandler.onAddNew()}" oncomplete="PF('tagTable').addRow();" />
+                        </div>
+                    </div> -->
+                <div class="floatRight">
+                        <p:commandButton id="btnSave" update=":tagsEditor" actionListener="#{tagHandler.save}"
+                            value="#{i18n['admin.save']}" disabled="#{!tagHandler.dirty}" />
+                        <p:button id="btnCancel" outcome="manageTags" value="#{i18n['admin.cancel']}" />
+                </div>
+
+                <p:commandButton id="btnAdd" value="#{i18n['admin.tags.edit.add']}"
+                    update=":tagsEditor:tagTable :tagsEditor:btnSave"
+                    actionListener="#{tagHandler.onAddNew}" />
+                    
+                <p:remoteCommand name="onCellEdit" update=":tagsEditor:tagTable :tagsEditor:btnSave" />
+                <p:remoteCommand name="onCellEditCancel" update=":tagsEditor:tagTable :tagsEditor:btnSave" />
+
+                <!-- TODO: datatable window too big, empty cells too small -->
+                <p:dataTable id="tagTable" editable="true" editMode="cell" var="tag"
+                    value="#{tagHandler.allTags}" rowKey="#{tag.name}" emptyMessage="#{i18n['admin.tags.empty']}"
+                    selection="#{tagHandler.selectedTag}" selectionMode="single" autoupdate="true">
+                                  
+                    <p:ajax event="cellEdit" listener="#{tagHandler.onCellEdit}" oncomplete="onCellEdit()" />
+                    <p:ajax event="contextMenu" listener = "#{tagHandler.onContextMenu}" />
+
+                    <p:column id="namesCol" headerText="#{i18n['admin.tags.tag.name']}"
+                        resizable="true" sortBy="#{tag.name}" style="width:33%; height:1em" >
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{tag.name}" />
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText value="#{tag.name}" style="width:80%" validator="de.iai.ilcd.webgui.validators.TagInputValidator" />
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column id="descCol" headerText="#{i18n['admin.tags.tag.description']}"
+                        resizable="true" sortBy="#{tag.description}" style="height:1em" >
+                        <p:cellEditor>
+                            <f:facet name="output">
+                                <h:outputText value="#{tag.description}" />
+                            </f:facet>
+                            <f:facet name="input">
+                                <p:inputText value="#{tag.description}" style="width:80%" validator="de.iai.ilcd.webgui.validators.TagInputValidator" />
+                            </f:facet>
+                        </p:cellEditor>
+                    </p:column>
+                    <p:column id="visibilityCol" headerText="#{i18n['admin.tags.visibility']}" >
+                    	<p:cellEditor>
+                    		<f:facet name="output">
+                    			<h:outputLabel value="#{i18n['admin.tags.tag.visible']}: "/>
+                    			<p:selectBooleanCheckbox value="#{tag.visible}"/>
+                    		</f:facet>
+                    		<f:facet name="input">
+                    			<h:outputLabel value=" #{i18n['admin.tags.tag.visible']}: "/>
+                    			<p:selectBooleanCheckbox value="#{tag.visible}">
+	                    			<p:ajax update="tagTable"/>
+                    			</p:selectBooleanCheckbox>
+                    		</f:facet>
+                    	</p:cellEditor>
+                    </p:column>
+                    <p:rowEditor />
+
+                </p:dataTable>
+
+                <p:contextMenu for="tagTable">
+                    <p:menuitem id="addMenuBtn" value="#{i18n['admin.tags.edit.add']}"
+                        actionListener="#{tagHandler.onAddNew}"
+                        update=":tagsEditor:tagTable :tagsEditor:btnSave" icon="fa fa-plus" />
+                    <p:menuitem id="delMenuBtn" value="#{i18n['admin.tags.edit.delete']}"
+                        actionListener="#{tagHandler.removeTag(tagHandler.selectedTag)}"
+                        update=":tagsEditor:tagTable :tagsEditor:btnSave" icon="fa fa-trash" />
+                </p:contextMenu>
+
+            </h:form>
+            </p:panel>
+
+            <ui:include src="/messages.xhtml" />
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>
+

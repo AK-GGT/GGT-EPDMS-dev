@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+	example usages:
+	
+	<soda:switchLinkOrText
+		outputLinkValue="#{processHandler.getReferenceUrl(process.ownerReference, url.contact)}"
+		outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+		outputTextValue="#{process.ownerReference.shortDescription.getValueWithFallback(lang)}" />
+	
+	<soda:switchLinkOrText
+		outputLinkValue="#{flowpropertyHandler.getReferenceUrl(flowProperty.referenceToUnitGroup, url.unitGroup)}"
+		outputLinkTitle="#{i18n['common.unitGroup.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+		outputTextValue="#{flowProperty.unitGroupName.getValueWithFallback(lang)}"
+		outputTextValueUnit="#{flowProperty.defaultUnit}" />
+
+	<ui:repeat value="#{exchange.refToDataSource}" var="refToDataSource">
+		<soda:switchLinkOrText
+			outputLinkValue="#{processHandler.getReferenceUrl(refToDataSource, url.source)}"
+			outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+			outputTextValue="#{refToDataSource.shortDescription.getValueWithFallback(lang)}"
+			repeatValue="#{refToDataSource.subReferences}" />
+	</ui:repeat>
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	
+	<composite:interface>
+		<composite:attribute name="outputLinkValue" />
+		<composite:attribute name="outputLinkTitle" />
+		<composite:attribute name="outputTextValue" />
+		<composite:attribute name="outputTextValueUnit" />
+		<composite:attribute name="repeatValue" />
+	</composite:interface>
+	
+	<composite:implementation>
+		<div id="switchInline">
+			<pe:switch id="switch" value="#{not empty cc.attrs.outputLinkValue}">
+				<pe:case value="#{true}">
+					<h:outputLink value="#{cc.attrs.outputLinkValue}" title="#{cc.attrs.outputLinkTitle}">
+						#{cc.attrs.outputTextValue}<h:outputText value=" (#{cc.attrs.outputTextValueUnit})" rendered="#{not empty cc.attrs.outputTextValueUnit}" />
+					</h:outputLink>
+				</pe:case>
+				<pe:case value="#{false}">
+					#{cc.attrs.outputTextValue}
+					<h:outputText value=" (#{cc.attrs.outputTextValueUnit})" rendered="#{not empty cc.attrs.outputTextValueUnit}" />
+				</pe:case>
+			</pe:switch>
+			<ui:repeat value="#{cc.attrs.repeatValue}" var="subRef" varStatus="subRefStatus">
+				<h:outputText value=" (" rendered="#{subRefStatus.first}" />
+				#{subRef}
+				<h:outputText value=", " rendered="#{not subRefStatus.last}" />
+				<h:outputText value=")" rendered="#{subRefStatus.last}" />
+			</ui:repeat>
+		</div>
+	</composite:implementation>
+</html>

@@ -1,0 +1,56 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:body>
+	<ui:composition template="/admin/layout/adminDesign.xhtml">
+		<ui:param name="pageTitle" value="#{i18n['admin.categories.categorydefinitions.manage']}" />
+		<ui:define name="content">
+
+			<h:form id="catDefs" enctype="multipart/form-data" prependId="false">
+
+				<p class="boldText">#{i18n['admin.profileUpload.msg']}:</p>
+				<p>#{i18n['admin.importUpload.msgDragDrop']}.</p>
+				<p:fileUpload id="documentToUpload"
+					description="#{i18n['admin.fileUpload.description']}"
+					allowTypes="/(\.|\/)(xml)$/" 
+					listener="#{categoryDefinitionsHandler.handleFileUpload}" 
+					multiple="true"
+					update="@form"
+					style="padding-bottom:10px"
+					mode="advanced"
+					dragDropSupport="true"
+					auto="true"
+					label="#{i18n['admin.fileUpload.browse']}"
+					oncomplete="PF('checkboxDT').update" />
+				<ui:include src="/messages.xhtml" />
+
+				<p:dataTable id="checkboxDT" var="categorySystem" value="#{categoryDefinitionsHandler.categorySystems}"
+					selectionMode="single" selection="#{categoryDefinitionsHandler.selectedItem}" rowKey="#{categorySystem.name}"
+					tableStyle="width:fixed" style="margin-bottom:0">
+					<f:facet name="header">
+				    	#{i18n['admin.categories.categorydefinitions']}
+				    </f:facet>
+					<p:column headerText="#{i18n['admin.categories.categorysystem.name']}">
+						<h:outputText value="#{categorySystem.name}" />
+					</p:column>
+					<f:facet name="footer">
+						<p:commandButton id="deleteItemBtn" widgetVar="deleteItemBtn" action="#{categoryDefinitionsHandler.deleteItem}"
+							value="#{i18n['admin.deleteSelected']}" disabled="#{empty categoryDefinitionsHandler.selectedItem}" ajax="false" />
+						<p:button id="editItemBtn" outcome="editCategoryDefinitions"
+							value="#{i18n['admin.categories.categorydefinitions.edit']}"
+							disabled="#{empty categoryDefinitionsHandler.selectedItem}"
+							styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+							<f:param name="id" value="#{categoryDefinitionsHandler.selectedItem.id}" />
+						</p:button>
+					</f:facet>
+					<p:ajax event="rowSelect" update="deleteItemBtn,editItemBtn" />
+					<p:ajax event="rowUnselect" update="deleteItemBtn,editItemBtn" />
+					<p:ajax event="toggleSelect" update="@this" process="@this" />
+				</p:dataTable>
+
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

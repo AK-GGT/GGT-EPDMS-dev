@@ -1,0 +1,13 @@
+ALTER TABLE  `contact` ADD `IMPORTDATE` datetime DEFAULT NULL;
+
+ALTER TABLE  `flowproperty` ADD `IMPORTDATE` datetime DEFAULT NULL;
+
+ALTER TABLE  `flow_common` ADD `IMPORTDATE` datetime DEFAULT NULL;
+
+ALTER TABLE  `lciamethod` ADD `IMPORTDATE` datetime DEFAULT NULL;
+
+ALTER TABLE  `process` ADD `IMPORTDATE` datetime DEFAULT NULL;
+
+ALTER TABLE  `source` ADD `IMPORTDATE` datetime DEFAULT NULL;
+
+ALTER TABLE  `unitgroup` ADD `IMPORTDATE` datetime DEFAULT NULL;

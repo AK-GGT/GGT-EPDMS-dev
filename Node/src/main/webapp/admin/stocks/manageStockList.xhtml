@@ -1,0 +1,156 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://java.sun.com/jsf/core" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <h:body>
+        <ui:composition template="/admin/layout/adminDesign.xhtml">
+            <ui:param name="pageTitle" value="#{i18n['admin.stock.manageList']}" />
+            <ui:define name="content">
+                <h:form id="tableForm" prependId="false">
+                    <div class="floatRight">
+                        <p:button id="newRootStockBtn" value="#{i18n['admin.rootStock.new']}" outcome="#{url.rootStock.getNew()}" style="margin-right:1em;">
+                            <f:param name="stockType" value="rds" />
+                        </p:button>
+                        <p:button id="newStockBtn" value="#{i18n['admin.stock.new']}" outcome="#{url.stock.getNew()}">
+                            <f:param name="stockType" value="ds" />
+                        </p:button>                      
+                    </div>
+					<div class="floatLeft">
+	                    <p:commandButton id="deleteBtn" value="#{i18n['admin.deleteSelected']}" onclick="PF('confirmDelete').show()" type="button"
+    	                    disabled="#{stockListHandler.nothingSelected}"/>
+					</div>
+					
+					<c:if test="#{applicationInfoBean.showRegistrationControls}">
+						<div class="floatLeft">
+							<ui:include src="/admin/common/include/registrationControls.xhtml">
+								<ui:param name="processListHandler" value="#{stockListHandler.processListHandler}"/>
+								<ui:param name="registrationHandler" value="#{stockListHandler}"/>
+								<ui:param name="includeActions" value="true"/>
+							</ui:include>
+						</div>
+					</c:if>
+					
+					<div class="floatLeft">
+						<p:selectBooleanCheckbox value="#{stockListHandler.showHidden}" itemLabel="#{i18n['admin.stock.showHidden']}" style="padding: 5px;">
+							<p:ajax update="@(#stockTable)" />
+							<p:ajax update="@(#selectDataStock)" />
+						</p:selectBooleanCheckbox>
+					</div>
+                        
+                    <p:confirmDialog message="#{i18n['admin.confirmMsg.deleteSelected']}?" header="#{i18n['admin.confirmDlg.delete']}" severity="alert" widgetVar="confirmDelete">
+                        <div class="confirmDlgButtons">
+                            <p:commandButton value="#{i18n['admin.cancel']}" type="button" onclick="PF('confirmDelete').hide()"></p:commandButton>
+                            <p:commandButton value="#{i18n['admin.ok']}" action="#{stockListHandler.deleteSelected}" oncomplete="PF('confirmDelete').hide()" ajax="false"
+                                update="messages stockTable"></p:commandButton>
+                        </div>
+                    </p:confirmDialog>
+
+                    <ui:include src="/messages.xhtml"></ui:include>
+
+					<div class="clearLeft">
+		                <p:dataTable id="stockTable" var="stock" value="#{stockListHandler.lazyModel}" lazy="true" paginator="true" rows="15" draggableRows="true"
+	                        rowsPerPageTemplate="5,10,15,50" selection="#{stockListHandler.selectedStocks}"
+	                        paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+	                                 {PreviousPageLink} {PageLinks} {NextPageLink}
+	                                 {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']}
+	                                 (#{stockListHandler.lazyModel.rowCount} #{i18n['common.list.total']})"
+	                        rowStyleClass="#{Constants.DEFAULT_ROOTSTOCK_ID == stock.id ? 'unselectable':''}" emptyMessage="#{i18n['common.list.noneFound']}" widgetVar="stockTable">
+	
+	                        <p:ajax event="rowSelectCheckbox" process="@this" update="@form"/>
+	                        <p:ajax event="rowUnselectCheckbox" process="@this" update="@form"/>
+	                        <p:ajax event="toggleSelect" process="@this" update="@form"/>
+	        				<p:ajax event="rowReorder" listener="#{stockListHandler.onRowReorder}" />
+	
+	                        <p:column exportable="false" style="text-align: center;" selectionMode="multiple" width="15"/>
+	
+	                        <p:column headerText="#{i18n['common.type']}" sortable="true" sortBy="#{stock.root}" width="50">
+	                            <h:outputText value="#{stock.root ? i18n['admin.stock.type.rds.short'] : i18n['admin.stock.type.ds.short']}"/>
+	                        </p:column>
+	
+	                        <p:column headerText="#{i18n['admin.stock.id']}" sortable="true" sortBy="#{stock.name}" width="15%">
+	                            <h:link outcome="#{url.stock.edit}" value="#{stock.name}">
+	                                <f:param name="stockId" value="#{stock.id}" />
+	                            </h:link>
+	                            <h:outputText rendered="#{Constants.DEFAULT_ROOTSTOCK_ID == stock.id}" value=" (#{i18n['admin.notDeletable']})" styleClass="notDeletableInfo"/>
+	                        </p:column>
+	
+	                        <p:column headerText="#{i18n['admin.stock.name']}" width="25%">
+	                            <h:outputText value="#{stock.longTitle.defaultValue}"/>
+	                        </p:column>
+	
+	                        <p:column headerText="#{i18n['admin.org']}" sortable="true" sortBy="#{stock.ownerOrganization.name}" width="15%">
+	                            <h:outputText value="#{stock.ownerOrganization.name}"/>
+	                        </p:column>
+	
+	                        <p:column exportable="false" headerText="#{i18n['admin.stock.accessRights.user']}" style="text-align:center;" width="75">
+	                            <p:button icon="fa fa-search" title="#{i18n['admin.stock.accessRights.user']} #{i18n['admin.forEntry']} '#{stock.name}'"
+	                                outcome="#{url.rootStock.edit}">
+	                                <f:param name="stockId" value="#{stock.id}" />
+	                                <f:param name="tabId" value="1" />
+	                            </p:button>
+	                        </p:column>
+	
+	                        <p:column exportable="false" headerText="#{i18n['admin.stock.accessRights.group']}" style="text-align:center;" width="75">
+	                            <p:button icon="fa fa-search" title="#{i18n['admin.stock.accessRights.group']} #{i18n['admin.forEntry']} '#{stock.name}'"
+	                                outcome="#{url.rootStock.edit}">
+	                                <f:param name="stockId" value="#{stock.id}" />
+	                                <f:param name="tabId" value="2" />
+	                            </p:button>
+	                        </p:column>
+	
+	                        <p:column exportable="false" headerText="#{i18n['admin.stock.assignedDataSets']}" style="text-align:center;" width="75">
+	                            <p:button icon="fa fa-search" title="#{i18n['admin.stock.assignedDataSets']} #{i18n['admin.forEntry']} '#{stock.name}'"
+	                                outcome="#{url.rootStock.edit}">
+	                                <f:param name="stockId" value="#{stock.id}" />
+	                                <f:param name="tabId" value="3" />
+	                            </p:button>
+	                        </p:column>
+	
+	                        <p:column exportable="false" headerText="#{i18n['admin.export.stock']}" style="text-align:center;" width="#{!(conf.enableCSVExport  or conf.adminOnlyExport) ? 80 : 120}">
+	                            <h:panelGroup>
+	                              <p:commandButton value="#{i18n['admin.export.xml']}" actionListener="#{dataExportController.setStock(stock)}"
+	                                   ajax="false" disabled="#{validationHandler.isNoDataToValidate(stock.id)}">
+	                                   <p:fileDownload value="#{dataExportController.file}"/>
+	                              </p:commandButton>
+	                              <p:commandButton value="#{i18n['admin.export.csv']}" actionListener="#{dataExportController.setStock(stock)}"
+	                                   ajax="false" disabled="#{validationHandler.isNoDataToValidate(stock.id)}" rendered="#{conf.enableCSVExport or conf.adminOnlyExport}">
+	                                   <p:importEnum type="de.iai.ilcd.model.datastock.ExportType" var="ExportTypeValues"/>
+	                                   <p:fileDownload value="#{dataExportController.getCSVFile(ExportTypeValues.CSV_EPD)}"/>
+	                              </p:commandButton>
+	                            </h:panelGroup>
+	                			<p:tooltip id="toolTipFadeExport" for="exportButtons" value="#{i18n['admin.stock.noDataToExport']}" 
+	                				position="top" rendered="#{validationHandler.noDataToValidate}" />
+	                        </p:column>
+	
+          					<p:column exportable="false" style="text-align:center;" width="90">
+          						<h:panelGroup id="validateB">
+          							<p:button value="#{i18n['admin.validate']}"
+          								outcome="#{validationHandler.datastockValidationView}"
+          								disabled="#{validationHandler.noDataToValidate}">
+          								<f:param name="stockId" value="#{stock.id}" />
+          								<f:param name="stockName" value="#{stock.name}" />
+          							</p:button>
+          						</h:panelGroup>
+          						<p:tooltip id="toolTipFadeValidate" for="validateB"
+          							value="#{i18n['admin.stock.noDataToValidate']}"
+          							rendered="#{validationHandler.noDataToValidate}"
+          							position="top" />
+          					</p:column>
+	
+	                    </p:dataTable>
+					</div>
+					
+                   	<div class="floatRight" style="display:inline-block;padding-top:10px;">
+                    	<h:outputLabel value="#{i18n['admin.export.exportAllVersions']}"/>
+                    	<p:selectOneMenu layout="pageDirection" value="#{dataExportController.exportMode}">
+							<f:selectItems value="#{dataExportController.exportModes}" var="exportMode"
+								itemValue="#{exportMode}" itemLabel="#{i18n['admin.exportmode.'.concat(exportMode)]}" />
+						</p:selectOneMenu>
+                   	</div>
+
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

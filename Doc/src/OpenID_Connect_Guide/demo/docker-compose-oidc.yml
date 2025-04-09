@@ -1,0 +1,180 @@
+#   __________________________
+# / FOR DEMO PURPOSES ONLY    \
+# |                           |
+# \ DON'T USE FOR PRODUCTION /
+#  -------------------------
+#         \   ^__^
+#          \  (oo)\_______
+#             (__)\       )\/\
+#                 ||----w |
+#                 ||     ||
+
+version: '3.8'
+
+# Update /etc/hosts with
+# 127.0.0.1 localhost keycloak blinky pinky inky clyde
+services:
+  keycloak:
+    container_name: keycloak
+    hostname: keycloak
+    image: quay.io/keycloak/keycloak:16.1.1
+    ports:
+        - 8080:8080
+        - 8443:8443
+    environment:
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: admin
+        KC_DB: mysql
+        KC_DB_PASSWORD: root
+        KC_DB_USERNAME: root
+        # KC_DB_URL: jdbc:mysql://mysql57_oidc/keycloak_db
+        KEYCLOAK_IMPORT: /tmp/realm-export.json
+        JAVA_OPTS_APPEND: "-Dkeycloak.profile.feature.upload_scripts=enabled"
+    # depends_on:
+    #   - mysql57_oidc
+    volumes:
+      - ./realm-export.json:/tmp/realm-export.json
+    # command: 
+    #   - "-b 0.0.0.0 -Dkeycloak.import=/tmp/realm-export.json"
+    networks:
+      net_oidc:
+
+
+  mysql57_oidc:
+    image: mysql:5.7
+    command: --max_connections=1000 --max_allowed_packet=256M --character-set-server=utf8 --collation-server=utf8_general_ci --tls-version='TLSv1.2'
+    container_name: mysql57_oidc
+    hostname: mysql57_oidc
+    restart: always
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: 'root'
+      MYSQL_DATABASE: 'keycloak_db'
+    volumes:
+      - ./oidc_schema.sql:/docker-entrypoint-initdb.d/1.sql
+    networks:
+        net_oidc:
+
+
+  blinky:
+    container_name: "blinky"
+    hostname: "blinky"
+    image: okworx/soda4lca:7.x-branch
+    restart: on-failure
+    environment:
+      MYSQL_DATABASE: blinky_db
+      MYSQL_HOST: mysql57_oidc
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      CATALINA_PORT: 8081
+      NODE_TITLE: Blinky
+      OIDC_BASEURI: http://keycloak:8080/auth
+      OIDC_REALM: soda-relm
+      OIDC_DISCOVERYURI: http://keycloak:8080/auth/realms/soda-relm/.well-known/openid-configuration
+      OIDC_CLIENTID: soda4lca-client
+      OIDC_SECRET: boyBIOfjCTd7kxL1Wvx0GyjFrzvjqWDQ
+      OIDC_CLIENTAUTHENTICATIONMETHOD: client_secret_basic
+      OIDC_PREFERREDJWSALGORITHM: RS256
+      OIDC_SCOPE: openid
+      OIDC_CALLBACKURL: http://blinky:8081/postauth/
+      OIDC_CALLBACKFILTERDEFAULTURL: http://blinky:8081/postauth/
+      OIDC_ROLEMAPPINGS: ROLE_A, 3, READ, EXPORT; ADMIN, 4, READ, EXPORT, IMPORT, CREATE, WRITE; ROLE_B, 2, READ, EXPORT; ROLE_C, 4, READ, EXPORT
+    ports:
+      - 8081:8081
+    depends_on:
+      - mysql57_oidc
+    networks:
+      net_oidc:
+
+  pinky:
+    container_name: "pinky"
+    hostname: "pinky"
+    image: okworx/soda4lca:7.x-branch
+    restart: on-failure
+    environment:
+      MYSQL_DATABASE: pinky_db
+      MYSQL_HOST: mysql57_oidc
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      CATALINA_PORT: 8082
+      NODE_TITLE: Pinky
+      OIDC_BASEURI: http://keycloak:8080/auth
+      OIDC_REALM: soda-relm
+      OIDC_DISCOVERYURI: http://keycloak:8080/auth/realms/soda-relm/.well-known/openid-configuration
+      OIDC_CLIENTID: soda4lca-client
+      OIDC_SECRET: boyBIOfjCTd7kxL1Wvx0GyjFrzvjqWDQ
+      OIDC_CLIENTAUTHENTICATIONMETHOD: client_secret_basic
+      OIDC_PREFERREDJWSALGORITHM: RS256
+      OIDC_SCOPE: openid
+      OIDC_CALLBACKURL: http://pinky:8082/postauth/
+      OIDC_CALLBACKFILTERDEFAULTURL: http://pinky:8082/postauth/
+      OIDC_ROLEMAPPINGS: ROLE_A, 3, READ, EXPORT; ADMIN, 4, READ, EXPORT, IMPORT, CREATE, WRITE; ROLE_B, 2, READ, EXPORT; ROLE_C, 4, READ, EXPORT
+    ports:
+      - 8082:8082
+    depends_on:
+      - mysql57_oidc
+    networks:
+      net_oidc:
+
+  inky:
+    container_name: "inky"
+    hostname: "inky"
+    image: okworx/soda4lca:7.x-branch
+    restart: on-failure
+    environment:
+      MYSQL_DATABASE: inky_db
+      MYSQL_HOST: mysql57_oidc
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      CATALINA_PORT: 8083
+      NODE_TITLE: Inky
+      OIDC_BASEURI: http://keycloak:8080/auth
+      OIDC_REALM: soda-relm
+      OIDC_DISCOVERYURI: http://keycloak:8080/auth/realms/soda-relm/.well-known/openid-configuration
+      OIDC_CLIENTID: soda4lca-client
+      OIDC_SECRET: boyBIOfjCTd7kxL1Wvx0GyjFrzvjqWDQ
+      OIDC_CLIENTAUTHENTICATIONMETHOD: client_secret_basic
+      OIDC_PREFERREDJWSALGORITHM: RS256
+      OIDC_SCOPE: openid
+      OIDC_CALLBACKURL: http://inky:8083/postauth/
+      OIDC_CALLBACKFILTERDEFAULTURL: http://inky:8083/postauth/
+      OIDC_ROLEMAPPINGS: ROLE_A, 3, READ, EXPORT; ADMIN, 4, READ, EXPORT, IMPORT, CREATE, WRITE; ROLE_B, 2, READ, EXPORT; ROLE_C, 4, READ, EXPORT
+    ports:
+      - 8083:8083
+    depends_on:
+      - mysql57_oidc
+    networks:
+      net_oidc:
+
+  clyde:
+    container_name: "clyde"
+    hostname: "clyde"
+    image: okworx/soda4lca:7.x-branch
+    restart: on-failure
+    environment:
+      MYSQL_DATABASE: clyde_db
+      MYSQL_HOST: mysql57_oidc
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      CATALINA_PORT: 8084
+      NODE_TITLE: Clyde
+      OIDC_BASEURI: http://keycloak:8080/auth
+      OIDC_REALM: soda-relm
+      OIDC_DISCOVERYURI: http://keycloak:8080/auth/realms/soda-relm/.well-known/openid-configuration
+      OIDC_CLIENTID: soda4lca-client
+      OIDC_SECRET: boyBIOfjCTd7kxL1Wvx0GyjFrzvjqWDQ
+      OIDC_CLIENTAUTHENTICATIONMETHOD: client_secret_basic
+      OIDC_PREFERREDJWSALGORITHM: RS256
+      OIDC_SCOPE: openid
+      OIDC_CALLBACKURL: http://clyde:8084/postauth/
+      OIDC_CALLBACKFILTERDEFAULTURL: http://clyde:8084/postauth/
+      OIDC_ROLEMAPPINGS: ROLE_A, 3, READ, EXPORT; ADMIN, 4, READ, EXPORT, IMPORT, CREATE, WRITE; ROLE_B, 2, READ, EXPORT; ROLE_C, 4, READ, EXPORT
+    ports:
+      - 8084:8084
+    depends_on:
+      - mysql57_oidc
+    networks:
+      net_oidc:
+
+networks:
+  net_oidc:

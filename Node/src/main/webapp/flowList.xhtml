@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+       xmlns:f="http://java.sun.com/jsf/core"
+       xmlns:h="http://java.sun.com/jsf/html"
+       xmlns:p="http://primefaces.org/ui"
+       xmlns:ui="http://java.sun.com/jsf/facelets"
+       template="#{conf.templatePath}/frontend.xhtml">
+    <ui:param name="pageTitle" value="#{activeMenu == 'eflow' ? i18n['common.elementaryFlow'] : i18n['common.productFlow']}#{i18n['delimiter']}#{i18n['public.datasets']}" />
+    <ui:define name="content">
+
+        <h:form id="tableForm" prependId="false">
+
+           <p:dataTable id="flowTable" var="flow" lazy="true"
+                         value="#{flowsHandler.lazyDataModel}" paginator="true"
+                         rows="100" rowsPerPageTemplate="50,100,150,500"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                         		 {PreviousPageLink} {PageLinks} {NextPageLink}
+                         		 {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']}"
+                         currentPageReportTemplate="#{i18n['common.list.currentEntries']}: {totalRecords} 
+                         		 (#{flowsHandler.lazyDataModel.loadTotalElementCount()} #{i18n['common.list.total']})
+                         		 (#{i18n['common.list.page']} {currentPage} #{i18n['common.list.of']} {totalPages})"
+                         emptyMessage="#{i18n['common.list.noneFound']}">
+
+                <p:column style="width:35%" sortBy="#{flow.name.defaultValue}" filterBy="#{flow.name}" headerText="#{i18n['common.name']}" rendered="#{(not typeColumn and conf.displayConfig.showElementaryFlowName) or (typeColumn and conf.displayConfig.showProductFlowName)}">
+                    <h:link outcome="#{urlgenerator.getDetail(flow)}" value="#{flow.name.defaultValue}" title="#{flow.uuidAsString}   #{flow.version}" />
+                </p:column>
+
+                <p:column style="width:10%" sortBy="#{flow.type.value}" headerText="#{i18n['common.type']}" rendered="#{typeColumn and conf.displayConfig.showProductFlowType}">
+                    <h:outputText value="#{flow.type.value}" />
+                    <br />
+                </p:column>
+
+                <p:column style="width:35%" sortBy="#{flow.classification.classHierarchyAsString}" headerText="#{i18n['public.dataset.cat']}" rendered="#{(not typeColumn and conf.displayConfig.showElementaryFlowCategory) or (typeColumn and conf.displayConfig.showProductFlowCategory)}">
+                    <h:outputText rendered="#{flow.elementaryFlow and conf.displayConfig.showElementaryFlowCategory}"
+                                  value="#{flow.categorization.classHierarchyAsString}" />
+                    <h:outputText rendered="#{not flow.elementaryFlow and conf.displayConfig.showProductFlowCategory}"
+                                  value="#{flow.classification.classHierarchyAsString}" />
+                </p:column>
+
+                <p:column style="width:10%" sortBy="#{flow.referenceFlowProperty.flowPropertyName.defaultValue}" headerText="#{i18n['public.flow.refProperty']}" rendered="#{(not typeColumn and conf.displayConfig.showElementaryFlowRefProperty) or (typeColumn and conf.displayConfig.showProductFlowRefProperty)}">
+                    <h:outputText value="#{flow.referenceFlowProperty.flowPropertyName.defaultValue}" />
+                </p:column>
+
+                <p:column style="width:10%" sortBy="#{flow.referenceFlowProperty.flowPropertyUnit}" headerText="#{i18n['public.flow.refPropertyUnit']}" rendered="#{(not typeColumn and conf.displayConfig.showElementaryFlowRefPropertyUnit) or (typeColumn and conf.displayConfig.showProductFlowRefPropertyUnit)}">
+                    <h:outputText value="#{flow.referenceFlowProperty.flowPropertyUnit}" />
+                </p:column>
+
+            </p:dataTable>
+        </h:form>
+
+    </ui:define>
+</ui:composition>

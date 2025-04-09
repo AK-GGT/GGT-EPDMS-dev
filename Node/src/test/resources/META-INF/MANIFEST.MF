@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+BUILD-TIMESTAMP: 2015-03-31 10:21:18
+VERSION-TAG: 2.1.0-SNAPSHOT
+APP-TITLE-SHORT: ILCD Node
+Built-By: a550578
+Build-Jdk: 1.7.0_80-ea
+APP-TITLE: ILCD Node
+Created-By: Apache Maven 3.2.3
+VERSION: 2.1.0-SNAPSHOT
+Archiver-Version: Plexus Archiver
+

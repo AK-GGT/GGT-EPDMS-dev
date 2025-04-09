@@ -1,0 +1,54 @@
+<suite name="Test for soda4LCA" verbose="10">
+<!--   <parameter name="selenium.host" value="localhost" />
+  <parameter name="selenium.port" value="3737" />
+  <parameter name="selenium.browser" value="*firefox" />
+  <parameter name="selenium.url" value="http://demo.opensourcecms.com/wordpress/" />  -->
+ 
+  <test name="Basic tests" preserve-order="true">
+    <classes>
+      <class name="eu.europa.ec.jrc.lca.registry.test.ui.T001Registry_LoginTest">
+        <methods>
+          <include name="login" />
+        </methods>
+      </class>
+      <class name="eu.europa.ec.jrc.lca.registry.test.ui.T002RegistriesTest">
+        <methods>
+          <include name="newRegistries" />
+          <include name="editRegistries"/>
+          <include name="deleteRegistries"/>
+          <include name="registerRegistries"/>
+        </methods>
+      </class>
+      <class name="eu.europa.ec.jrc.lca.registry.test.ui.T003Registry_NodesManagementTest">
+        <methods>
+          <include name="rejectRegistryNodes" />
+          <include name="registerRegistryForDeregister"/>
+          <include name="acceptRegistryNodes"/>
+          <include name="deregisterRegistryNodes"/>
+          <include name="registerRegistryAfterDeregistration"/>
+          <include name="acceptRegistryNodeAfterDeregistration"/>          
+        </methods>
+      </class>
+      <class name="eu.europa.ec.jrc.lca.registry.test.ui.T004SynchronizeAndRegistryDatasetsTest">
+        <methods>
+          <include name="synchronizeData"/>
+          <include name="registryDatasets" />
+        </methods>
+      </class>
+      <class name="eu.europa.ec.jrc.lca.registry.test.ui.T005Registry_DatasetsManagementTest">
+        <methods>
+          <include name="rejectRegistryDatasets" />
+          <include name="acceptRegistryDatasets" />
+          <include name="deregisterRegistryDatasets" />
+        </methods> 
+       </class>
+       <class name="eu.europa.ec.jrc.lca.registry.test.ui.T006RegistriesEndTest">
+        <methods>
+          <include name="deregisterRegistries"/>
+          <include name="deregisterDatasets" />
+          <include name="deregisterRegistry"/>
+        </methods>
+      </class>
+    </classes>
+  </test>
+</suite>

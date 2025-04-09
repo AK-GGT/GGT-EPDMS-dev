@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+via ui:param:
+	- linkDetailOutcome
+	- linkListOutcome
+	- linkValue
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp">
+	
+	<div id="backLinks">
+		#{utilStr['unicodeChar.blackLeftPointer']}&#160;<h:link outcome="#{linkDetailOutcome}" value="#{i18n['common.backTo']} #{linkValue}#{i18n['delimiter']}#{i18n['public.dataset.datasetOverviewPage']}" />
+		<span style="white-space:pre">&#09;</span>
+		#{utilStr['unicodeChar.blackLeftPointer']}&#160;<h:link outcome="#{linkListOutcome}" value="#{i18n['common.backTo']} #{linkValue}#{i18n['delimiter']}#{i18n['public.datasets']}" />
+		<span style="white-space:pre">&#09;</span>
+		#{utilStr['unicodeChar.blackLeftPointer']}&#160;<h:link outcome="#{url.index}" value="#{i18n['common.backTo']} #{conf.applicationTitle}" />
+		<span style="white-space:pre">&#09;</span>
+	</div>
+</ui:composition>

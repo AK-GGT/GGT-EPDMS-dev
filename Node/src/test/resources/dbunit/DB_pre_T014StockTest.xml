@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <organization id="1" name="Default Organization"/>
+  <organization id="2" name="Organization1" ORGANISATIONUNIT="test" CITY="Budapest" COUNTRY="HU" STREETADDRESS="Müegyetem rkp. 9-11." ZIPCODE="1111" SECTOR_ID="7"/>
+  <organization id="3" name="Organization2" ORGANISATIONUNIT="test" CITY="Budapest" COUNTRY="HU" STREETADDRESS="Müegyetem rkp. 9-11." ZIPCODE="1111" SECTOR_ID="3"/>
+  <organization id="4" name="Organization3" ORGANISATIONUNIT="test" CITY="Budapest" COUNTRY="HU" STREETADDRESS="Müegyetem rkp. 9-11." ZIPCODE="1111" SECTOR_ID="1"/>
+  <user ID="1" EMAIL="admin@admin.admin" PASSWORD_HASH="8800cc078f01fe328c838ef40245671ae9ddb41ecefc2cff9b25546d0de77d18bdefeb4cdac5e120e094b9b0c9b0439be4166cbd1924d7f9c9ddf2c4b9959473" PASSWORD_HASH_SALT="wqugu4btwsqau!6bb6ie" super_admin_permission="true" USERNAME="admin" organization="1"/>
+  <user ID="2" DSPURPOSE="Just for test" EMAIL="john@iai.kit.edu" FIRSTNAME="John" GENDER="m" JOBPOSITION="junior java developer" LASTNAME="Smith" PASSWORD_HASH="9389d09466eb4a137289c1aa7f51b7f614923dbe3b5de40b3143b45f4ecabef8a922314b3641750e376719776bb090022ac2ca2a9cdabccf96241e4dbdccc273" PASSWORD_HASH_SALT="BzMf3OL1r3DPF0SNMuQD" super_admin_permission="false" TITLE="Mr" USERNAME="User1" CITY="Budapest" COUNTRY="HU" STREETADDRESS=" Irinyi u. 1-17." ZIPCODE="1234" organization="2"/>
+  <user ID="3" DSPURPOSE="Just for test" EMAIL="peter@iai.kit.edu" FIRSTNAME="Peter" GENDER="m" JOBPOSITION="java tester" LASTNAME="Tailor" PASSWORD_HASH="1a5f989a36aa71248a7f7a36ce2f2a83905cdcde3481a91ad114e71a9be166fef79dbd16dcc8db446b1277d94b3e3a7dacc52a141fc39d14d0402e9fd2d11ee8" PASSWORD_HASH_SALT="6TbOooloBzokztBDK3Km" super_admin_permission="false" TITLE="Mr" USERNAME="User2" CITY="Budapest" COUNTRY="HU" STREETADDRESS=" Irinyi u. 1-17." ZIPCODE="1111" organization="2"/>
+  <user ID="4" DSPURPOSE="Just for test" EMAIL="whatever@iai.kit.edu" FIRSTNAME="What" GENDER="m" JOBPOSITION="humorist" LASTNAME="Ever" PASSWORD_HASH="80b802665ddd46e99a9d62acd75c739501364a561b055272ccf13dc2202444068a437d60c6150feed3b9918a161efe15e2da434bf46b8a4292c1e19db0d9b11d" PASSWORD_HASH_SALT="H8wrqsbvLd1DjLicqD4J" super_admin_permission="false" TITLE="Mr" USERNAME="User3" CITY="Budapest" COUNTRY="HU" STREETADDRESS=" Irinyi u. 1-17." ZIPCODE="1111" organization="2"/>
+  <user ID="5" DSPURPOSE="Just for test" EMAIL="sara@iai.kit.edu" FIRSTNAME="Sara" GENDER="f" JOBPOSITION="junior java developer" LASTNAME="Smith" PASSWORD_HASH="ff2f0d6fcdc402659ef21c7168f94fc0748e6be11efc4b91bd746d0c8ffe13bd370452f1741bef3a4f720df443072730873097ca010de3985b040660d594b3ab" PASSWORD_HASH_SALT="nwU9L!skRGoJxrJ6zTPE" super_admin_permission="false" TITLE="Mrs" USERNAME="User4" CITY="Budapest" COUNTRY="HU" STREETADDRESS=" Irinyi u. 1-17." ZIPCODE="1111" organization="2"/>
+  <user ID="6" DSPURPOSE="Just for test" EMAIL="alice@iai.kit.edu" FIRSTNAME="Alice" GENDER="f" JOBPOSITION="junior java developer" LASTNAME="Regenkurt" PASSWORD_HASH="258e1b9b5a3e4ccffb71534e0f3b4fa800b4605b20b09823ed8d2ffb38d73c58c17ea05ee52bef1c6ee6970936aeff92857cc3c8c687bf9fb3b33cea7e5ec8da" PASSWORD_HASH_SALT="RxQnMy9S860byJKkwDm6" super_admin_permission="false" TITLE="Ms" USERNAME="User5" CITY="Budapest" COUNTRY="HU" STREETADDRESS=" Irinyi u. 1-17." ZIPCODE="1111" organization="2"/>
+  <user ID="7" DSPURPOSE="Just for test" EMAIL="ceo@iai.kit.edu" FIRSTNAME="Alexander" GENDER="m" JOBPOSITION="senior java developer" LASTNAME="Alexandrius" PASSWORD_HASH="89c2b829bcbb8371a607c31c89e7c252274538c4fa7c77f78bcc167bd094a6d114b00ad941085be7459d9798c11420c5a8ee801f01cdf804ac37fa005d57b189" PASSWORD_HASH_SALT="PGFizn0zsCFY38fQaRWu" super_admin_permission="false" TITLE="Dr" USERNAME="User6" CITY="Budapest" COUNTRY="HU" STREETADDRESS=" Irinyi u. 1-17." ZIPCODE="1111" organization="3"/>
+  <user ID="8" DSPURPOSE="Just for test" EMAIL="noidea@iai.kit.edu" FIRSTNAME="Idea" GENDER="m" JOBPOSITION="I&apos;ve no idea what doing here" LASTNAME="No" PASSWORD_HASH="8e59cd102f9f7def0abd888c944c1a06c136463edd7240f30de7502514c09f316bdd51b43e868478d895fb259f4551dbedadea16ab1c2347c76cb66f514d3898" PASSWORD_HASH_SALT="KXq3mo0FCzwFC!3IatGA" super_admin_permission="false" TITLE="Mr" USERNAME="User7" CITY="Budapest" COUNTRY="HU" STREETADDRESS=" Irinyi u. 1-17." ZIPCODE="1111" organization="3"/>
+  <user ID="10" DSPURPOSE="Just for test" EMAIL="admin@iai.kit.edu" FIRSTNAME="John" GENDER="m" JOBPOSITION="admin" LASTNAME="Root" PASSWORD_HASH="ba2b04c4076356b1ade97184df6fd71b4779f525596930f420b74dad7ee82401de960a2c7bd8217ec86986fcdb7dacac58b1229da820cbfc14c0dd1da8308290" PASSWORD_HASH_SALT="lYBJOD1WAU4F6pgqXoGJ" super_admin_permission="true" TITLE="Mr" USERNAME="Admin1" CITY="Budapest" COUNTRY="HU" STREETADDRESS=" Irinyi u. 1-17." ZIPCODE="1111" organization="2"/>
+  <user ID="11" DSPURPOSE="Just for test" EMAIL="webmaster@iai.kit.edu" FIRSTNAME="Java" GENDER="m" JOBPOSITION="webmaster" LASTNAME="Script" PASSWORD_HASH="e8a71f5e432d439d70c01e83a085a27fb2246c074fbeaab92b8b0bc8d6fe9685f663977bfb1a2783d5493db30f6bf7925b806ce8fdc555d5c2023e1a188d1b60" PASSWORD_HASH_SALT="5wW3EyFsgg4zQviINw2m" super_admin_permission="true" TITLE="Mr" USERNAME="Admin2" CITY="Budapest" COUNTRY="HU" STREETADDRESS=" Irinyi u. 1-17." ZIPCODE="1111" organization="2"/>
+  <user ID="12" DSPURPOSE="Just for test" EMAIL="designer@iai.kit.edu" FIRSTNAME="Kathy" GENDER="m" JOBPOSITION="designer" LASTNAME="Artist" PASSWORD_HASH="06f6877fe255d09d9145a7f2b97e672efec860033a96f808c0bca85fb88761ee77ea013668a8b124a675f8676cda01385ae772fb9aacb536db251769bff6fa21" PASSWORD_HASH_SALT="uLTG!9coScdy!mKTvFOA" super_admin_permission="true" TITLE="Ms" USERNAME="Admin3" CITY="Budapest" COUNTRY="HU" STREETADDRESS=" Irinyi u. 1-17." ZIPCODE="1111" organization="3"/>
+  <usergroup ID="2" GROUPNAME="Tools" organization="1"/>
+  <usergroup ID="102" GROUPNAME="Admin" organization="1"/>
+  <usergroup ID="103" GROUPNAME="Group1" organization="2"/>
+  <usergroup ID="104" GROUPNAME="Group2" organization="2"/>
+  <usergroup ID="105" GROUPNAME="Group3" organization="3"/>
+  <usergroup ID="106" GROUPNAME="Group4" organization="2"/>
+  <usergroup_user users_ID="1" groups_ID="102"/>
+  <usergroup_user users_ID="2" groups_ID="103"/>
+  <usergroup_user users_ID="2" groups_ID="104"/>
+  <usergroup_user users_ID="3" groups_ID="104"/>
+  <usergroup_user users_ID="4" groups_ID="103"/>
+  <usergroup_user users_ID="10" groups_ID="103"/>
+  <usergroup_user users_ID="11" groups_ID="104"/>
+  <datastock ID="1" datastock_type="rds" name="default" UUID="39be0b9b-683b-4bb8-b1f2-32320cb2cbfe" owner_organization="1" display_props_id="1"/>
+  <datastock_description datastock_id="1" value="This is the default root data stock" lang="en"/>
+  <datastock_display_props ID="1" hidden="false" ordinal="0"/>
+  <datastock_longtitle datastock_id="1" value="Default root data stock" lang="en"/>
+  <stock_access_right ID="1" access_right_type="User" stock_id="1" ug_id="0" value="9"/>
+</dataset>

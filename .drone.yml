@@ -1,0 +1,121 @@
+kind: pipeline
+type: kubernetes
+name: default
+
+steps:
+
+# Restore maven repository before testing (optional)
+- name: restore-cache
+  image: plugins/s3-cache
+  settings:
+    debug: true
+    filename: maven_repository.tar
+    pull: true
+    endpoint:
+      from_secret: MINIO_ENDPOINT
+    access_key:
+      from_secret: ACCESSKEY
+    secret_key:
+      from_secret: SECRETKEY
+    restore: true
+    mount:
+      - .m2
+
+# Hier geschieht die magie
+# Maven repository location is changed from default /root/.m2 to /drone/src/.m2
+- name: test
+  image: okworx/sodabuilder:11
+  pull: always
+  commands:
+  - ./PrePipeline.sh
+  - mvn org.apache.maven.plugins:maven-install-plugin:3.0.0-M1:install-file -Dfile=$(find Node/lib/primefaces/ -name '*.jar') -Duser.home='/drone/src'
+#  - mvn org.apache.maven.plugins:maven-install-plugin:3.0.0-M1:install-file -Dfile=Node/lib/ilcd-validation/ilcd-validation-2.3.1u1.jar -DpomFile=Node/lib/ilcd-validation/ilcd-validation-2.3.1u1.pom -Duser.home='/drone/src'
+  - mvn -B clean verify -Pexternaldb_ci,headless -Dmaven.wagon.http.pool=false -Duser.home='/drone/src'
+
+
+# Push artifacts on failure (optional)
+# Since 'build' directory folder that contains reports is expected to exists on failure only
+
+# Using s3-cache to push artifacts is kinda gimmicky, but oh well  ¯\_(ツ)_/¯
+- name: publish-artifacts
+  image: plugins/s3-cache
+  when:
+    status:
+      - failure
+  settings:
+    debug: true
+    # build number as suffix
+    filename: artifacts-build-${DRONE_BUILD_NUMBER}.tar
+    pull: false
+    endpoint:
+      from_secret: MINIO_ENDPOINT
+    access_key:
+      from_secret: ACCESSKEY
+    secret_key:
+      from_secret: SECRETKEY
+    rebuild: true
+    mount:
+      - Node/build
+
+# Rebuild maven repository on tag AND successful test (optional)
+- name: rebuild-maven
+  image: plugins/s3-cache
+  when:
+    status:
+      - success
+    event:
+      - push
+      # - tag
+  settings:
+    debug: true
+    filename: maven_repository.tar
+    pull: false
+    endpoint:
+      from_secret: MINIO_ENDPOINT
+    access_key:
+      from_secret: ACCESSKEY
+    secret_key:
+      from_secret: SECRETKEY
+    rebuild: true
+    mount:
+      - .m2
+
+
+# flush when maven dependencies go stale (optional)
+- name: flush
+  image: plugins/s3-cache:1
+  settings:
+    debug: true
+    filename: maven_repository.tar
+    pull: false
+    endpoint:
+      from_secret: MINIO_ENDPOINT
+    access_key:
+      from_secret: ACCESSKEY
+    secret_key:
+      from_secret: SECRETKEY
+    flush: true
+    flush_age: 14
+
+
+- name: slack
+  image: plugins/slack
+  when:
+    status: [ success, failure ]
+  settings:
+    webhook:
+      from_secret: SLACKWEBHOOK
+    channel: drone_ci
+    link_names: true
+    template: >
+      {{#success build.status}}
+      ✅ [{{repo.name}}] build {{build.number}}
+        on {{build.branch}} ({{truncate build.commit 8}}) succeeded. ⏱️ took {{since build.started}}.
+        ${DRONE_COMMIT_MESSAGE}
+        Good job. <{{build.author}} ${DRONE_COMMIT_AUTHOR_NAME} > {{build.link}}
+      {{else}}
+        ❌ [{{repo.name}}] build {{build.number}}
+        on {{build.branch}} ({{truncate build.commit 8}}) failed. ⏱️ took {{since build.started}}.
+        ${DRONE_COMMIT_MESSAGE}
+        Fix me please. <@drone_ci> <@someone>. Blame <{{build.author}} ${DRONE_COMMIT_AUTHOR_NAME} > {{build.link}}
+      {{/success}}

@@ -1,0 +1,372 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <Contact_DESCRIPTION/>
+  <Contact_NAME/>
+  <FlowProperty_DESCRIPTION/>
+  <FlowProperty_NAME/>
+  <Flow_DESCRIPTION/>
+  <Flow_NAME/>
+  <LCIAMethod_DESCRIPTION/>
+  <LCIAMethod_NAME/>
+  <LifeCycleModel_DESCRIPTION/>
+  <LifeCycleModel_NAME/>
+  <Process_DESCRIPTION/>
+  <Process_NAME/>
+  <Source_DESCRIPTION/>
+  <Source_NAME/>
+  <UnitGroup_DESCRIPTION/>
+  <UnitGroup_NAME/>
+  <category/>
+  <categorydefinition/>
+  <categorysystem/>
+  <categorysystem_category/>
+  <categorysystem_categorydefinition/>
+  <classification/>
+  <classification_clclass/>
+  <clclass/>
+  <compliancesystem/>
+  <contact/>
+  <contact_classifications/>
+  <contact_languages/>
+  <contact_shortname/>
+  <dataqualityindicator/>
+  <dataset_deregistration_reason/>
+  <dataset_registration_data/>
+  <datastock ID="1" datastock_type="rds" name="default" UUID="6b60a6c8-65cd-40e2-971d-a7ce3bfa161a" owner_organization="1" display_props_id="1"/>
+  <datastock ID="2" datastock_type="rds" name="root_api_import_target" UUID="a1227959-9f43-46ae-9870-fb44ee29fd97" owner_organization="1" display_props_id="2"/>
+  <datastock ID="3" datastock_type="rds" name="root_ui_import_target" UUID="c006c2eb-777f-4bd8-ae65-cc8b30e40d99" owner_organization="1"/>
+  <datastock ID="4" datastock_type="rds" name="root_ui_move_target" UUID="de2af75a-f767-453d-9e43-292cd96e0020" owner_organization="1"/>
+  <datastock ID="5" datastock_type="ds" name="logical_api_assign_target" UUID="6e4b8d89-3832-4cca-b0d0-fb4d661aec42" owner_organization="1" display_props_id="3"/>
+  <datastock ID="6" datastock_type="ds" name="logical_ui_assign_target" UUID="07d1f2f6-281c-4646-a921-12d211bdc1d6" owner_organization="1" display_props_id="4"/>
+  <datastock ID="7" datastock_type="rds" name="root_unmodified_with_cache" UUID="9a1ba521-8314-4836-88ea-9ff8e4d38e55" owner_organization="1"/>
+  <datastock ID="8" datastock_type="rds" name="root_missing_cache_file" UUID="c849abd1-1ea4-46f3-9d6c-5bc516a7974c" owner_organization="1"/>
+  <datastock ID="9" datastock_type="rds" name="root_modified_with_cache" UUID="d69b2c0c-b257-462b-bb80-74b5adb111ff" owner_organization="1"/>
+  <datastock ID="10" datastock_type="rds" name="root_no_cache" UUID="efe4cd73-03da-4503-8050-05e55c85b25c" owner_organization="1"/>
+  <datastock ID="11" datastock_type="ds" name="logical_unmodified_with_cache" UUID="c54f2cc2-fcfc-43df-a2dd-f8e254e2ad46" owner_organization="1" display_props_id="5"/>
+  <datastock ID="12" datastock_type="ds" name="logical_missing_cache_file" UUID="83a171e0-1ead-45a4-87df-fd184bdad3b5" owner_organization="1" display_props_id="6"/>
+  <datastock ID="13" datastock_type="ds" name="logical_modified_with_cache" UUID="e7a91dec-784d-49d4-8932-769c9e241128" owner_organization="1" display_props_id="7"/>
+  <datastock ID="14" datastock_type="ds" name="logical_no_cache" UUID="b890cf19-6809-42d3-bf6d-06e36214f918" owner_organization="1" display_props_id="8"/>
+  <datastock_contact/>
+  <datastock_description datastock_id="1" value="This is the default root data stock" lang="en"/>
+  <datastock_description datastock_id="2" value="" lang="de"/>
+  <datastock_description datastock_id="3" value="" lang="de"/>
+  <datastock_description datastock_id="4" value="" lang="de"/>
+  <datastock_description datastock_id="5" value="" lang="de"/>
+  <datastock_description datastock_id="6" value="" lang="de"/>
+  <datastock_description datastock_id="7" value="" lang="de"/>
+  <datastock_description datastock_id="8" value="" lang="de"/>
+  <datastock_description datastock_id="9" value="" lang="de"/>
+  <datastock_description datastock_id="10" value="" lang="de"/>
+  <datastock_description datastock_id="11" value="" lang="de"/>
+  <datastock_description datastock_id="12" value="" lang="de"/>
+  <datastock_description datastock_id="13" value="" lang="de"/>
+  <datastock_description datastock_id="14" value="" lang="de"/>
+  <datastock_display_props ID="1" hidden="0" ordinal="0"/>
+  <datastock_display_props ID="2" hidden="0"/>
+  <datastock_display_props ID="3" hidden="0"/>
+  <datastock_display_props ID="4" hidden="0"/>
+  <datastock_display_props ID="5" hidden="0"/>
+  <datastock_display_props ID="6" hidden="0"/>
+  <datastock_display_props ID="7" hidden="0"/>
+  <datastock_display_props ID="8" hidden="0"/>
+  <datastock_export_tag ID="11" datastock_id="1" mode="0" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:15:14.0"/>
+  <datastock_export_tag ID="12" datastock_id="1" mode="0" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:15:59.0"/>
+  <datastock_export_tag ID="13" datastock_id="1" mode="0" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:16:06.0"/>
+  <datastock_export_tag ID="14" datastock_id="1" mode="1" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:15:14.0"/>
+  <datastock_export_tag ID="15" datastock_id="1" mode="1" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:15:59.0"/>
+  <datastock_export_tag ID="16" datastock_id="1" mode="1" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:16:06.0"/>
+  <datastock_export_tag ID="17" datastock_id="1" mode="2" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:15:14.0"/>
+  <datastock_export_tag ID="18" datastock_id="1" mode="2" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:15:59.0"/>
+  <datastock_export_tag ID="19" datastock_id="1" mode="2" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:16:06.0"/>
+  <datastock_export_tag ID="21" datastock_id="2" mode="0" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="22" datastock_id="2" mode="0" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="23" datastock_id="2" mode="0" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="24" datastock_id="2" mode="1" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="25" datastock_id="2" mode="1" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="26" datastock_id="2" mode="1" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="27" datastock_id="2" mode="2" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="28" datastock_id="2" mode="2" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="29" datastock_id="2" mode="2" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="31" datastock_id="3" mode="0" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:15:14.0"/>
+  <datastock_export_tag ID="32" datastock_id="3" mode="0" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:15:59.0"/>
+  <datastock_export_tag ID="33" datastock_id="3" mode="0" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:16:06.0"/>
+  <datastock_export_tag ID="34" datastock_id="3" mode="1" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:15:14.0"/>
+  <datastock_export_tag ID="35" datastock_id="3" mode="1" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:15:59.0"/>
+  <datastock_export_tag ID="36" datastock_id="3" mode="1" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:16:06.0"/>
+  <datastock_export_tag ID="37" datastock_id="3" mode="2" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:15:14.0"/>
+  <datastock_export_tag ID="38" datastock_id="3" mode="2" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:15:59.0"/>
+  <datastock_export_tag ID="39" datastock_id="3" mode="2" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:16:06.0"/>
+  <datastock_export_tag ID="41" datastock_id="4" mode="0" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="42" datastock_id="4" mode="0" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="43" datastock_id="4" mode="0" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="44" datastock_id="4" mode="1" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="45" datastock_id="4" mode="1" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="46" datastock_id="4" mode="1" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="47" datastock_id="4" mode="2" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="48" datastock_id="4" mode="2" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="49" datastock_id="4" mode="2" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="51" datastock_id="5" mode="0" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="52" datastock_id="5" mode="0" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="53" datastock_id="5" mode="0" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="54" datastock_id="5" mode="1" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="55" datastock_id="5" mode="1" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="56" datastock_id="5" mode="1" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="57" datastock_id="5" mode="2" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="58" datastock_id="5" mode="2" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="59" datastock_id="5" mode="2" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="61" datastock_id="6" mode="0" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="62" datastock_id="6" mode="0" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="63" datastock_id="6" mode="0" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="64" datastock_id="6" mode="1" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="65" datastock_id="6" mode="1" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="66" datastock_id="6" mode="1" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="67" datastock_id="6" mode="2" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="68" datastock_id="6" mode="2" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="69" datastock_id="6" mode="2" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="71" datastock_id="7" mode="0" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="72" datastock_id="7" mode="0" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="73" datastock_id="7" mode="0" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="74" datastock_id="7" mode="1" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="75" datastock_id="7" mode="1" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="76" datastock_id="7" mode="1" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="77" datastock_id="7" mode="2" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:21:30.0"/>
+  <datastock_export_tag ID="78" datastock_id="7" mode="2" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:21:40.0"/>
+  <datastock_export_tag ID="79" datastock_id="7" mode="2" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:21:47.0"/>
+  <datastock_export_tag ID="81" datastock_id="8" mode="0" type="0" modified="0" file="" timestamp="2022-12-14 15:30:45.0"/>
+  <datastock_export_tag ID="82" datastock_id="8" mode="0" type="1" modified="0" file="" timestamp="2022-12-14 15:30:52.0"/>
+  <datastock_export_tag ID="83" datastock_id="8" mode="0" type="2" modified="0" file="" timestamp="2022-12-14 15:30:59.0"/>
+  <datastock_export_tag ID="84" datastock_id="8" mode="1" type="0" modified="0" file="" timestamp="2022-12-14 15:30:45.0"/>
+  <datastock_export_tag ID="85" datastock_id="8" mode="1" type="1" modified="0" file="" timestamp="2022-12-14 15:30:52.0"/>
+  <datastock_export_tag ID="86" datastock_id="8" mode="1" type="2" modified="0" file="" timestamp="2022-12-14 15:30:59.0"/>
+  <datastock_export_tag ID="87" datastock_id="8" mode="2" type="0" modified="0" file="" timestamp="2022-12-14 15:30:45.0"/>
+  <datastock_export_tag ID="88" datastock_id="8" mode="2" type="1" modified="0" file="" timestamp="2022-12-14 15:30:52.0"/>
+  <datastock_export_tag ID="89" datastock_id="8" mode="2" type="2" modified="0" file="" timestamp="2022-12-14 15:30:59.0"/>
+  <datastock_export_tag ID="91" datastock_id="9" mode="0" type="2" modified="1" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:26:57.0"/>
+  <datastock_export_tag ID="92" datastock_id="9" mode="0" type="1" modified="1" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:27:12.0"/>
+  <datastock_export_tag ID="93" datastock_id="9" mode="0" type="0" modified="1" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:27:20.0"/>
+  <datastock_export_tag ID="94" datastock_id="9" mode="1" type="2" modified="1" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:26:57.0"/>
+  <datastock_export_tag ID="95" datastock_id="9" mode="1" type="1" modified="1" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:27:12.0"/>
+  <datastock_export_tag ID="96" datastock_id="9" mode="1" type="0" modified="1" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:27:20.0"/>
+  <datastock_export_tag ID="97" datastock_id="9" mode="2" type="2" modified="1" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:26:57.0"/>
+  <datastock_export_tag ID="98" datastock_id="9" mode="2" type="1" modified="1" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:27:12.0"/>
+  <datastock_export_tag ID="99" datastock_id="9" mode="2" type="0" modified="1" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:27:20.0"/>
+  <datastock_export_tag ID="111" datastock_id="11" mode="0" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:30:45.0"/>
+  <datastock_export_tag ID="112" datastock_id="11" mode="0" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:30:52.0"/>
+  <datastock_export_tag ID="113" datastock_id="11" mode="0" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:30:59.0"/>
+  <datastock_export_tag ID="114" datastock_id="11" mode="1" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:30:45.0"/>
+  <datastock_export_tag ID="115" datastock_id="11" mode="1" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:30:52.0"/>
+  <datastock_export_tag ID="116" datastock_id="11" mode="1" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:30:59.0"/>
+  <datastock_export_tag ID="117" datastock_id="11" mode="2" type="0" modified="0" file="   path to zip dummy goes here   " timestamp="2022-12-14 15:30:45.0"/>
+  <datastock_export_tag ID="118" datastock_id="11" mode="2" type="1" modified="0" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:30:52.0"/>
+  <datastock_export_tag ID="119" datastock_id="11" mode="2" type="2" modified="0" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:30:59.0"/>
+  <datastock_export_tag ID="121" datastock_id="12" mode="0" type="0" modified="0" file="" timestamp="2022-12-14 15:30:45.0"/>
+  <datastock_export_tag ID="122" datastock_id="12" mode="0" type="1" modified="0" file="" timestamp="2022-12-14 15:30:52.0"/>
+  <datastock_export_tag ID="123" datastock_id="12" mode="0" type="2" modified="0" file="" timestamp="2022-12-14 15:30:59.0"/>
+  <datastock_export_tag ID="124" datastock_id="12" mode="1" type="0" modified="0" file="" timestamp="2022-12-14 15:30:45.0"/>
+  <datastock_export_tag ID="125" datastock_id="12" mode="1" type="1" modified="0" file="" timestamp="2022-12-14 15:30:52.0"/>
+  <datastock_export_tag ID="126" datastock_id="12" mode="1" type="2" modified="0" file="" timestamp="2022-12-14 15:30:59.0"/>
+  <datastock_export_tag ID="127" datastock_id="12" mode="2" type="0" modified="0" file="" timestamp="2022-12-14 15:30:45.0"/>
+  <datastock_export_tag ID="128" datastock_id="12" mode="2" type="1" modified="0" file="" timestamp="2022-12-14 15:30:52.0"/>
+  <datastock_export_tag ID="129" datastock_id="12" mode="2" type="2" modified="0" file="" timestamp="2022-12-14 15:30:59.0"/>
+  <datastock_export_tag ID="131" datastock_id="13" mode="0" type="2" modified="1" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:33:19.0"/>
+  <datastock_export_tag ID="132" datastock_id="13" mode="0" type="1" modified="1" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:33:27.0"/>
+  <datastock_export_tag ID="133" datastock_id="13" mode="0" type="0" modified="1" file="   path to zip goes here   " timestamp="2022-12-14 15:33:34.0"/>
+  <datastock_export_tag ID="134" datastock_id="13" mode="1" type="2" modified="1" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:33:19.0"/>
+  <datastock_export_tag ID="135" datastock_id="13" mode="1" type="1" modified="1" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:33:27.0"/>
+  <datastock_export_tag ID="136" datastock_id="13" mode="1" type="0" modified="1" file="   path to zip goes here   " timestamp="2022-12-14 15:33:34.0"/>
+  <datastock_export_tag ID="137" datastock_id="13" mode="2" type="2" modified="1" file="   path to comma separated csv dummy goes here   " timestamp="2022-12-14 15:33:19.0"/>
+  <datastock_export_tag ID="138" datastock_id="13" mode="2" type="1" modified="1" file="   path to dot separated csv dummy goes here   " timestamp="2022-12-14 15:33:27.0"/>
+  <datastock_export_tag ID="139" datastock_id="13" mode="2" type="0" modified="1" file="   path to zip goes here   " timestamp="2022-12-14 15:33:34.0"/>
+  <datastock_flow_elementary/>
+  <datastock_flow_product/>
+  <datastock_flowproperty/>
+  <datastock_lciamethod/>
+  <datastock_lifecyclemodel/>
+  <datastock_longtitle datastock_id="1" value="Default root data stock" lang="en"/>
+  <datastock_longtitle datastock_id="1" value="" lang="de"/>
+  <datastock_longtitle datastock_id="2" value="" lang="de"/>
+  <datastock_longtitle datastock_id="3" value="" lang="de"/>
+  <datastock_longtitle datastock_id="4" value="" lang="de"/>
+  <datastock_longtitle datastock_id="5" value="" lang="de"/>
+  <datastock_longtitle datastock_id="6" value="" lang="de"/>
+  <datastock_longtitle datastock_id="7" value="" lang="de"/>
+  <datastock_longtitle datastock_id="8" value="" lang="de"/>
+  <datastock_longtitle datastock_id="9" value="" lang="de"/>
+  <datastock_longtitle datastock_id="10" value="" lang="de"/>
+  <datastock_longtitle datastock_id="11" value="" lang="de"/>
+  <datastock_longtitle datastock_id="12" value="" lang="de"/>
+  <datastock_longtitle datastock_id="13" value="" lang="de"/>
+  <datastock_longtitle datastock_id="14" value="" lang="de"/>
+  <datastock_process/>
+  <datastock_source/>
+  <datastock_tag/>
+  <datastock_unitgroup/>
+  <digitalfile/>
+  <downstreamprocess/>
+  <exchange/>
+  <exchange_amounts/>
+  <exchange_comment/>
+  <flow_common/>
+  <flow_common_classification/>
+  <flow_common_languages/>
+  <flow_elementary/>
+  <flow_locationofsupply/>
+  <flow_product/>
+  <flow_product_material_property/>
+  <flow_product_material_property_definition/>
+  <flow_propertydescriptions/>
+  <flow_synonyms/>
+  <flowproperty/>
+  <flowproperty_classifications/>
+  <flowproperty_languages/>
+  <flowproperty_synonyms/>
+  <flowpropertydescription/>
+  <flowpropertydescription_description/>
+  <glad_database_properties/>
+  <glad_registration_data/>
+  <globalreference/>
+  <globalreference_shortdescription/>
+  <globalreference_subreferences/>
+  <jobmetadata/>
+  <lciamethod/>
+  <lciamethod_areaofprotection/>
+  <lciamethod_classifications/>
+  <lciamethod_impactcategory/>
+  <lciamethod_languages/>
+  <lciamethod_lciamethodcharacterisationfactor/>
+  <lciamethod_methodology/>
+  <lciamethod_ti_durationdescription/>
+  <lciamethod_ti_referenceyeardescription/>
+  <lciamethodcharacterisationfactor/>
+  <lciamethodcharfactor_description/>
+  <lciaresult/>
+  <lciaresult_amounts/>
+  <lciaresult_comment/>
+  <lcimethodinformation/>
+  <lcm_administrativeinformation/>
+  <lcm_administrativeinformation_commissionerandgoal/>
+  <lcm_administrativeinformation_dataentryby/>
+  <lcm_administrativeinformation_publicationandownership/>
+  <lcm_administrativeinformation_ref_generator/>
+  <lcm_commissionerandgoal_intendedapplications/>
+  <lcm_commissionerandgoal_project/>
+  <lcm_commissionerandgoal_referencetocommissioner/>
+  <lcm_dataentry_ref_datasetformat/>
+  <lcm_dataentry_ref_entity_entr_data/>
+  <lcm_publicationandownership_ref_datasetversion/>
+  <lcm_publicationandownership_ref_entities_w_exc_access/>
+  <lcm_publicationandownership_userestrictions/>
+  <lifecyclemodel/>
+  <lifecyclemodel_administrativeinformation/>
+  <lifecyclemodel_classifications/>
+  <lifecyclemodel_compliancesystem/>
+  <lifecyclemodel_dataSourcestreatmentetc/>
+  <lifecyclemodel_datasetinformation_basename/>
+  <lifecyclemodel_datasetinformation_functionalunitflowproperties/>
+  <lifecyclemodel_datasetinformation_generalcomment/>
+  <lifecyclemodel_datasetinformation_mixandlocationTypes/>
+  <lifecyclemodel_datasetinformation_treatmentstandardsroutes/>
+  <lifecyclemodel_diagram/>
+  <lifecyclemodel_languages/>
+  <lifecyclemodel_processinstance/>
+  <lifecyclemodel_referencetoexternaldocmentation/>
+  <lifecyclemodel_referencetoresultingprocess/>
+  <lifecyclemodel_reviews/>
+  <lifecyclemodel_technology_groups/>
+  <lifecyclemodel_technology_processes/>
+  <networknode/>
+  <organization id="1" name="Default Organization"/>
+  <outputexchange/>
+  <outputexchange_downstreamprocess/>
+  <process/>
+  <process_accessinformation/>
+  <process_classifications/>
+  <process_compliancesystem/>
+  <process_datasetgenerator/>
+  <process_datasource/>
+  <process_exchange/>
+  <process_geography/>
+  <process_languages/>
+  <process_lciaresult/>
+  <process_lciaresult_clclass_statistics/>
+  <process_lcimethodapproaches/>
+  <process_locationrestriction/>
+  <process_preceding_versions/>
+  <process_quantref_otherreference/>
+  <process_quantref_referenceids/>
+  <process_reference_to_original_epd/>
+  <process_reference_to_publisher/>
+  <process_review/>
+  <process_safetymargins_description/>
+  <process_scenario/>
+  <process_synonyms/>
+  <process_tag/>
+  <process_technicalpurpose/>
+  <process_technologydescription/>
+  <process_timedescription/>
+  <process_timeinformation/>
+  <process_useadvice/>
+  <process_userestrictions/>
+  <processinstance_connections/>
+  <processinstance_memberofgroup/>
+  <processinstance_parameters/>
+  <processname_base/>
+  <processname_location/>
+  <processname_route/>
+  <processname_unit/>
+  <pushconfig/>
+  <pushtarget/>
+  <quantitativereference/>
+  <registration_data/>
+  <registry/>
+  <review/>
+  <review_dataqualityindicator/>
+  <review_globalreference/>
+  <review_methods/>
+  <review_otherreviewdetails/>
+  <review_reviewdetails/>
+  <review_scopeofreview/>
+  <scenario/>
+  <scenario_description/>
+  <scopeofreview/>
+  <source/>
+  <source_citation/>
+  <source_classifications/>
+  <source_globalreference/>
+  <source_languages/>
+  <source_shortName/>
+  <stock_access_right ID="1" access_right_type="User" stock_id="1" ug_id="0" value="9"/>
+  <stock_access_right ID="2" access_right_type="User" stock_id="1" ug_id="1" value="1023"/>
+  <stock_access_right ID="3" access_right_type="User" stock_id="2" ug_id="0" value="0"/>
+  <stock_access_right ID="4" access_right_type="User" stock_id="3" ug_id="0" value="0"/>
+  <stock_access_right ID="5" access_right_type="User" stock_id="4" ug_id="0" value="0"/>
+  <stock_access_right ID="6" access_right_type="User" stock_id="5" ug_id="0" value="0"/>
+  <stock_access_right ID="7" access_right_type="User" stock_id="6" ug_id="0" value="0"/>
+  <stock_access_right ID="8" access_right_type="User" stock_id="7" ug_id="0" value="0"/>
+  <stock_access_right ID="9" access_right_type="User" stock_id="8" ug_id="0" value="0"/>
+  <stock_access_right ID="10" access_right_type="User" stock_id="9" ug_id="0" value="0"/>
+  <stock_access_right ID="11" access_right_type="User" stock_id="10" ug_id="0" value="0"/>
+  <stock_access_right ID="12" access_right_type="User" stock_id="11" ug_id="0" value="0"/>
+  <stock_access_right ID="13" access_right_type="User" stock_id="12" ug_id="0" value="0"/>
+  <stock_access_right ID="14" access_right_type="User" stock_id="13" ug_id="0" value="0"/>
+  <stock_access_right ID="15" access_right_type="User" stock_id="14" ug_id="0" value="0"/>
+  <t_node_credentials/>
+  <t_nonce/>
+  <t_registry_credentials/>
+  <tag/>
+  <technology_group/>
+  <technology_groups_details/>
+  <unit/>
+  <unit_description/>
+  <unitgroup/>
+  <unitgroup_classifications/>
+  <unitgroup_languages/>
+  <unitgroup_unit/>
+  <user ID="1" EMAIL="admin@admin.admin" PASSWORD_HASH="8800cc078f01fe328c838ef40245671ae9ddb41ecefc2cff9b25546d0de77d18bdefeb4cdac5e120e094b9b0c9b0439be4166cbd1924d7f9c9ddf2c4b9959473" PASSWORD_HASH_SALT="wqugu4btwsqau!6bb6ie" apikey="BLfdGoHCOBBgbr000myVmqm4QUpQgJkejlpsTLmnL9ycXJ1vxgz5TCMtqW09yezJvxPzy2dOmOmavIu22duwes!QCami!1lzRpC8gHSSIIXPr5qsrgkJYeDNujUlcph2hPP8LHx1Ie688IR858CjzTz7J8JRUUU95MQzk9wDF76BEA5dQrLHJtroO2bbBoJSkEdpfPpttS3srzsPTUsGIILcwNCYTsv0s6NecWCuNVug!nrJnt73JhkhzYzbPH8Bq08h8l7t7!ANPfGW1hjVeC1dpds8Nt6Lhgy!7GriYIBIcAmdMzkexJ7GxduMF2jPM3vzWA0!nt1nIQela7sxh1hHOW1hUI1xNDdg!zuh9gieKKP2lSpgk!gun69l4GkGP6Lv9I3eH1r517gMpnmmIQmziaF3dKjw6Vk8pXP7bqjKCG9O3OIGVadjPG0CNXcVsv8BVpBz4GjfPoch2WtlLvnPzTYn51DgrjssBLguJGKWmwgKQDJdT1Y8VApz1zN7pAeHEhsP55KlQU4axRXJRKMIaSxl0iUagfNXgCe57Scw8JzxU4G8JERJJeeW1dH0Ktmse70TKdBree5OHBPz49c6MbDlTMS7DHa9xGy6CEvDVMxx6CnfjHWvFRzseKhInKUrtGDG11IJ4EoTmEpDFt3xIR85uy8Tz7V7ezdWePxvQAAbzNpp5QFSuLilE7eVxdVfJ!dOSePSNFS9jIwoaH6352TAA7OemioXbF2279BzDqMhLYdF0KBvaPoISAwWGQxmeJCs2OgWrg8GxS2TAwxIGfF1sB7z43h2t6PIidqcJg5UTMrqE0zPXsEzwAIhdb4xSbWF5j!er6o!FkwBaJ!FluzxUu4QO1qQb!!0WJKqz8qs6iSA30LPJWsDYFnA!ziqHn6rvIXjMpxaW7yYVLrseB!6le81msBCGOzgJjCRast5!KpPDTsm2cBTAPyk3xA34XFphr6YlAl8HCc56deON9Nri!x8yc2JzCUhOhgLGeiz2Ml7OKxonADwsL99lKg0HzJWVhqMCiaAS6SxUw4wo18s7xCs0NkrzIH153Wfrlg" apikeyallowed="1" super_admin_permission="1" USERNAME="admin" organization="1" privacy_policy_accepted="0" password_expired="0"/>
+  <user_acceptedaddterms/>
+  <user_sector/>
+  <usergroup ID="2" GROUPNAME="Tools" organization="1"/>
+  <usergroup ID="102" GROUPNAME="Admin" organization="1"/>
+  <usergroup_user users_ID="1" groups_ID="102"/>
+  <xmlfile/>
+</dataset>

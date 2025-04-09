@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+via ui:param:
+	- datasetHandler
+	- dataset
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	template="tab_administrative_template.xhtml">
+	
+	<ui:define name="after_referenceToPersonOrEntityEnteringTheData">
+		<ui:param name="notEmpty_refToEntity" value="#{not empty xmlLciamethodAdminInfo.dataEntryBy.recommendationBy.referenceToEntity}" />
+		<ui:param name="notEmpty_level" value="#{not empty xmlLciamethodAdminInfo.dataEntryBy.recommendationBy.level.value}" />
+		<ui:param name="notEmpty_meaning" value="#{not empty lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodAdminInfo.dataEntryBy.recommendationBy.meaning).value}" />
+		<p:row rendered="#{notEmpty_refToEntity
+						or notEmpty_level
+						or notEmpty_meaning}">
+			<p:column colspan="2" styleClass="ui-state-hover">
+				#{i18n['public.lciam.officialRecommendation']}
+			</p:column>
+		</p:row>
+		<p:row rendered="#{notEmpty_refToEntity}">
+			<p:column styleClass="ui-state-hover transp">
+				<soda:outputTextTooltip
+					outputTextId="referenceToEntity"
+					outputTextValue="#{i18n['public.lciam.referenceToEntity']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.referenceToEntity']}" />
+			</p:column>
+			<p:column>
+				<soda:dataListStyled dataListValue="#{xmlLciamethodAdminInfo.dataEntryBy.recommendationBy.referenceToEntity}">
+					<ui:param name="refEntity" value="#{dataListStyledVar}" />
+					<soda:switchLinkOrText
+						outputLinkValue="#{lciamethodHandler.getReferenceUrlXml(refEntity, url.contact)}"
+						outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+						outputTextValue="#{lciamethodHandler.getMultilangWithFallback(lang, refEntity.shortDescription).value}" />
+				</soda:dataListStyled>
+			</p:column>
+		</p:row>
+		<p:row rendered="#{notEmpty_level}">
+			<p:column styleClass="ui-state-hover transp">
+				<soda:outputTextTooltip
+					outputTextId="level"
+					outputTextValue="#{i18n['public.lciam.level']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.level']}" />
+			</p:column>
+			<p:column>
+				#{xmlLciamethodAdminInfo.dataEntryBy.recommendationBy.level.value}
+			</p:column>
+		</p:row>
+		<p:row rendered="#{notEmpty_meaning}">
+			<p:column styleClass="ui-state-hover transp">
+				<soda:outputTextTooltip
+					outputTextId="meaning"
+					outputTextValue="#{i18n['public.lciam.meaning']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.lciamethod.meaning']}" />
+			</p:column>
+			<p:column>
+				#{lciamethodHandler.getMultilangWithFallback(lang, xmlLciamethodAdminInfo.dataEntryBy.recommendationBy.meaning).value}
+			</p:column>
+		</p:row>
+	</ui:define>
+	
+	<ui:define name="copyright">
+		<p:row rendered="#{not empty xmlLciamethod.administrativeInformation.publicationAndOwnership.copyright}">
+			<p:column styleClass="ui-state-hover transp">
+				<soda:outputTextTooltip
+					outputTextId="copyright"
+					outputTextValue="#{i18n['public.proc.copyright']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.dataset.copyright']}" />
+			</p:column>
+			<p:column>
+				#{xmlLciamethod.administrativeInformation.publicationAndOwnership.copyright ? i18n['common.button.yes'] : i18n['common.button.no']}
+			</p:column>
+		</p:row>
+	</ui:define>
+	
+</ui:composition>

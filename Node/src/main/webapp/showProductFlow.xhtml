@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+	<f:metadata>
+		<f:viewParam name="id" value="#{pFlowHandler.dataSetIdString}" />
+		<f:viewParam name="uuid" value="#{pFlowHandler.dataSetUuidString}" />
+		<f:viewParam name="version" value="#{pFlowHandler.dataSetVersionString}" />
+		<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{pFlowHandler.postViewParamInit}" />
+	</f:metadata>
+	
+	<h:body>
+		<ui:include src="showFlow.xhtml">
+			<ui:param name="activeMenu" value="#{Constants.MENU_PRODUCT_FLOW}" />
+			<ui:param name="urlgenerator" value="#{url.pflow}" />
+			<ui:param name="flowHandler" value="#{pFlowHandler}" />
+		</ui:include>
+	</h:body>
+</html>
+

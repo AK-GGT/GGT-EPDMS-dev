@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+used in
+	- contact.xhtml
+	- flowproperty.xhtml
+	- lciamethod.xhtml
+	- process_info.xhtml
+	- source.xhtml
+	- unitgroup.xhtml
+	- NOT in flow.xhtml => special version: classification and categorization
+
+via ui:param:
+	- xmlClassification
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp">
+	
+	<div>
+		<soda:outputTextTooltip
+			outputTextId="className"
+			outputTextValue="#{i18n['common.className']}"
+			tooltipValue="#{i18n['datasetdetail.tooltip.dataset.className']}"
+			inline="true" />
+		<h:outputText value=": " />
+		<soda:outputTextTooltip
+			outputTextId="classLevel"
+			outputTextValue="#{i18n['common.hierarchyLevel']}"
+			tooltipValue="#{i18n['datasetdetail.tooltip.dataset.classLevel']}"
+			inline="true" />
+	</div>
+	<soda:dataListStyled dataListValue="#{xmlClassification}">
+		<ui:param name="class" value="#{dataListStyledVar}" />
+		#{class.name}:
+		<ui:fragment rendered="#{DataSetType.PROCESS == process.dataSetType}">
+			<h:outputText rendered="#{class.name.equalsIgnoreCase('OEKOBAU.DAT')}" value="#{processHandler.getLastElementOfList(class.clazz).classId} " />
+		</ui:fragment>
+		<h:outputText value="#{processHandler.getClassTypeListInline(class.clazz, class.name, lang)}" />
+	</soda:dataListStyled>
+</ui:composition>

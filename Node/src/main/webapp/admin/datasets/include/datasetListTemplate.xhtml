@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<!--
+Parameters for this composition:
+	via ui:define:
+		columns
+	via ui:param:
+		mostRecentVersionOnlyFilter
+		includeMessages
+		omitForm
+		dataTableId
+		backingBean
+		lazyDataModel
+		selectionProperty
+		nameFilterField
+		nameFilterActionMethod 
+		selectedActionButtonLabel
+		actionDialogHeader
+		actionDialogMessage
+		actionDialogOKLabel
+		actionDialogCancelLabel
+		actionDialogOKActionMethod
+		showDependenciesOption
+		moveControls
+		publicShowFacelet
+		initialRows (optional, default is 15)
+		nameProperty (optional, default is name.defaultValue)
+		namePropertyField (mandatory if nameProperty is declared, else optional and ignored if set)
+		forceDs (optional, override data stock link -> $root$ for root data stock)
+		datasetType
+-->
+	<c:if test="#{not omitForm}">
+		<h:form id="#{dataTableId}Form" prependId="false">
+			<ui:include src="datasetListTemplateDataTable.xhtml" />
+		</h:form>
+	</c:if>
+	<c:if test="#{omitForm}">
+		<ui:include src="datasetListTemplateDataTable.xhtml" />
+	</c:if>
+</ui:composition>

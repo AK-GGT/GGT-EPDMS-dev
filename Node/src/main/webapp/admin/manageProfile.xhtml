@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<h:body>
+		<ui:composition template="/admin/layout/adminDesign.xhtml">
+            <ui:param name="pageTitle" value="#{i18n['admin.manageProfile']}" />
+            <ui:define name="content">
+                <h:form id="generalForm" enctype="multipart/form-data" prependId="false">
+
+                    <p class="boldText">#{i18n['admin.profileUpload.msg']}:</p>
+                    <p>#{i18n['admin.importUpload.msgDragDrop']}.</p>
+                    <p>#{i18n['admin.profileUpload.description']}!</p>
+                    <p:fileUpload description="#{i18n['admin.fileUpload.description']}"
+                                  id="documentToUpload"
+                                  allowTypes="/(\.|\/)(jar)$/"
+                                  listener="#{profileHandler.handleProfileUpload}"
+                                  multiple="true"
+                                  update="@form" 
+                                  style="padding-bottom:10px"
+                                  mode="advanced"
+                                  dragDropSupport="true"
+                                  auto="true"
+                                  label="#{i18n['admin.fileUpload.browse']}" />
+                    <ui:include src="/messages.xhtml" />
+                    <p:growl id="msgs" showDetail="true" />
+             
+    				<p:dataTable id="checkboxDT" var="profile" value="#{profileHandler.uploadedProfiles}"
+	    				 selection="#{profileHandler.selectedProfiles}"
+	    				 rowKey="#{profile.path}" tableStyle="width:fixed" style="margin-bottom:0"
+	    				 rowStyleClass="#{profileHandler.isDefaultProfile(profile)? 'unselectable':''}">
+				        <f:facet name="header">
+				            #{i18n['admin.added.profile']}
+				        </f:facet>
+				        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+				        <p:column headerText="Name">
+				            <h:outputText value="#{profile.name}" />
+				        </p:column>			        
+				        <p:column headerText="Version">
+				            <h:outputText value="#{profile.version}" />
+				        </p:column>
+				        <p:column headerText="#{i18n['admin.profile.file']}">
+				            <h:outputText value="#{profile.path.name}" />
+				        </p:column>
+				        <f:facet name="footer">
+				            <p:commandButton id="deleteProfileBtn"
+                                         widgetVar="deleteProfileBtn"
+                                         action="#{profileHandler.deleteProfile}"
+                                         value="#{i18n['admin.deleteSelected']}"
+                                         disabled="#{empty profileHandler.selectedProfiles}"
+                                         ajax="false" />
+				        </f:facet>
+				          <p:ajax event="rowSelectCheckbox" update="deleteProfileBtn" />
+						  <p:ajax event="rowUnselectCheckbox" update="deleteProfileBtn" />
+						  <p:ajax event="rowSelect" update="deleteProfileBtn" />
+						  <p:ajax event="rowUnselect" update="deleteProfileBtn" />
+						  <p:ajax event="toggleSelect" update="@this" process="@this" />
+			    	</p:dataTable>
+    				
+                </h:form>
+                <br/>
+                
+           </ui:define>
+        </ui:composition>
+	</h:body>
+</html>      

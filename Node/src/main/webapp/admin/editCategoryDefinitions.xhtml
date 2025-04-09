@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:body>
+	<ui:composition template="/admin/layout/adminDesign.xhtml">
+		<ui:param name="pageTitle" value="#{i18n['admin.categories.categorydefinitions.edit.title']}" />
+		<ui:define name="content">
+			<p:panel id="catDefsPanel">
+
+				<h:outputScript>
+				$(document).on("keydown", ".ui-cell-editor-input input", function(event) {
+    				if (event.keyCode == 13) {
+        				$(this).closest("tr").find(".ui-row-editor .ui-icon-check").click();
+    				}
+    				else if (event.keyCode == 27) {
+        				$(this).closest("tr").find(".ui-row-editor .ui-icon-close").click();
+    				}
+				});
+				</h:outputScript>
+
+				<p:confirmDialog id="confirmDlg" header="#{i18n['admin.categories.categorydefinitions.deleteentry']}"
+					severity="alert" widgetVar="catDefsEditorConfirm">
+					<f:facet name="message">
+						Are you sure you want to delete the category "#{categoryDefinitionsEditHandler.selectedNodeCategoryName}"
+    					#{categoryDefinitionsEditHandler.isSelectedNodeHasChildren() ? ' and all of its subcategories' : '' }?
+					</f:facet>
+					<div class="confirmDlgButtons">
+						<h:form>
+							<p:commandButton value="#{i18n['admin.cancel']}" onclick="PF('catDefsEditorConfirm').hide();" />
+							<p:commandButton value="#{i18n['admin.ok']}" action="#{categoryDefinitionsEditHandler.deleteNode()}"
+								oncomplete="PF('catDefsEditorConfirm').hide();" update=":catDefsEditor" />
+						</h:form>
+					</div>
+				</p:confirmDialog>
+
+				<h:form id="catDefsEditor">
+					<p:growl id="msgs" showDetail="true" />
+					<div class="floatLeft">
+						<p:commandButton update=":catDefsEditor:catsTree" actionListener="#{categoryDefinitionsEditHandler.collapseAll}"
+							icon="fa fa-minus" title="#{msg.collapseAll}" style="padding:3px;"/>
+						<p:commandButton update=":catDefsEditor:catsTree" actionListener="#{categoryDefinitionsEditHandler.expandAll}"
+							icon="fa fa-plus" title="#{msg.expandAll}" style="margin-bottom: 10px; padding:3px;" />
+					</div>
+					<div class="floatRight">
+						<p:commandButton id="btnSave" update=":catDefsEditor" actionListener="#{categoryDefinitionsEditHandler.save}"
+							value="#{i18n['admin.save']}" disabled="#{!categoryDefinitionsEditHandler.dirty}" />
+						<p:button outcome="manageCategoryDefinitions" value="#{i18n['admin.cancel']}" />
+					</div>
+
+					<div class="clearLeft">
+						<p:defaultCommand target="dummy" />
+						<p:commandButton id="dummy" process="@none" global="false" style="display:none;" />
+
+						<p:treeTable id="catsTree" editable="true" editMode="row" value="#{categoryDefinitionsEditHandler.definitions}"
+							var="category" selectionMode="single" selection="#{categoryDefinitionsEditHandler.selectedNode}"
+							stickyHeader="true">
+							<f:facet name="header">	
+    	        				#{i18n['admin.categories.categorydefinitions.categories']}: #{categoryDefinitionsEditHandler.categorySystem.name}
+	       					</f:facet>
+
+							<p:ajax event="select" listener="#{categoryDefinitionsEditHandler.onNodeSelect}" />
+							<p:ajax event="unselect" listener="#{categoryDefinitionsEditHandler.onNodeUnselect}" />
+							<p:ajax event="rowEdit" listener="#{categoryDefinitionsEditHandler.onRowEdit}" />
+							<p:ajax event="rowEdit" update=":catDefsEditor:btnSave" />
+
+							<p:column headerText="#{i18n['admin.categories.categorydefinitions.categories.id']}" resizable="true"
+								sortBy="#{category.id}" style="width:200px">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{category.id}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{category.id}" style="width:80%" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column headerText="#{i18n['admin.categories.categorydefinitions.categories.name']}" resizable="true"
+								sortBy="#{category.name}">
+								<p:cellEditor>
+									<f:facet name="output">
+										<h:outputText value="#{category.name}" />
+									</f:facet>
+									<f:facet name="input">
+										<p:inputText value="#{category.name}" style="width:80%" />
+									</f:facet>
+								</p:cellEditor>
+							</p:column>
+							<p:column style="width:32px">
+								<p:rowEditor />
+							</p:column>
+						</p:treeTable>
+
+						<p:contextMenu for="catsTree">
+							<p:menuitem value="#{i18n['admin.categories.categorydefinitions.categories.edit']}"
+								actionListener="#{categoryDefinitionsEditHandler.editNode}" update="catDefsPanel" icon="fa fa-pencil" />
+							<p:menuitem value="#{i18n['admin.categories.categorydefinitions.categories.add']}"
+								actionListener="#{categoryDefinitionsEditHandler.addNode}" update="catDefsPanel" icon="fa fa-plus" />
+							<p:menuitem value="#{i18n['admin.categories.categorydefinitions.categories.addchild']}"
+								actionListener="#{categoryDefinitionsEditHandler.addChildNode}" update="catDefsPanel"
+								icon="fa fa-caret-down" />
+							<p:menuitem value="#{i18n['admin.categories.categorydefinitions.categories.delete']}"
+								oncomplete="PF('catDefsEditorConfirm').show()" icon="fa fa-times" update=":confirmDlg" />
+						</p:contextMenu>
+					</div>
+				</h:form>
+			</p:panel>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

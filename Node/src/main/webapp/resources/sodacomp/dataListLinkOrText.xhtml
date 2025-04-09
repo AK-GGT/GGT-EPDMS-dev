@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+	example usages:
+	
+	<soda:dataListLinkOrText
+		dataListValue="#{contactHandler.getMultilangWithFallback(lang, contactRef.shortDescription)}"
+		outputLinkValue="#{contactHandler.getReferenceUrlXml(contactRef, url.contact)}"
+		outputLinkTitle="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.dataset']}" />
+
+	<soda:dataListLinkOrText
+		dataListValue="#{flowpropertyHandler.getMultilangWithFallback(lang, sourceRef.shortDescription)}"
+		outputLinkValue="#{flowpropertyHandler.getReferenceUrlXml(sourceRef, url.source)}"
+		outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+		repeatValue="#{sourceRef.subReference}" />
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	
+	<composite:interface>
+		<composite:attribute name="dataListValue" />
+		<composite:attribute name="outputLinkValue" />
+		<composite:attribute name="outputLinkTitle" />
+		<composite:attribute name="repeatValue" />
+	</composite:interface>
+	
+	<composite:implementation>
+		<ui:repeat value="#{cc.attrs.dataListValue}" var="myVar">
+			<div id="switchInline">
+				<pe:switch id="switch" value="#{not empty cc.attrs.outputLinkValue}">
+					<pe:case value="#{true}">
+						<h:outputLink value="#{cc.attrs.outputLinkValue}" title="#{cc.attrs.outputLinkTitle}">#{myVar.value}</h:outputLink>
+					</pe:case>
+					<pe:case value="#{false}">
+						<h:outputText value="#{myVar.value}" rendered="#{empty cc.attrs.outputLinkValue}" />
+					</pe:case>
+				</pe:switch>
+				<ui:repeat value="#{cc.attrs.repeatValue}" var="subRef" varStatus="subRefStatus">
+					<h:outputText value=" (" rendered="#{subRefStatus.first}" />
+					#{subRef}
+					<h:outputText value=", " rendered="#{not subRefStatus.last}" />
+					<h:outputText value=")" rendered="#{subRefStatus.last}" />
+				</ui:repeat>
+			</div>
+		</ui:repeat>
+	</composite:implementation>
+</html>

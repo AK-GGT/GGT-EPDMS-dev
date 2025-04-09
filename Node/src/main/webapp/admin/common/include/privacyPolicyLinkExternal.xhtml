@@ -1,0 +1,7 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+
+	<h:outputLink rendered="#{conf.privacyPolicyURL != null and !conf.privacyPolicyURLFragment}" target="_blank"
+		value="#{conf.privacyPolicyURLMultiLang ? langContentHandler.privacyPolicyURL : conf.privacyPolicyURL}">#{i18n['common.privacyPolicy']}</h:outputLink>
+
+</ui:composition>

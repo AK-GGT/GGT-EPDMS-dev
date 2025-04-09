@@ -1,0 +1,201 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+via ui:param:
+	- exchanges
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:soda="http://java.sun.com/jsf/composite/sodacomp"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<p:dataTable rendered="#{not empty exchanges}" value="#{exchanges}" draggableColumns="true" resizableColumns="true" var="exchange" styleClass="lotsofcolumns" expandedRow="true" sortBy="#{exchange}" sortFunction="#{processHandler.sortExchanges}">
+		<c:set var="notEmpty_refToDataSource" value="#{not empty exchange.refToDataSource}" />
+		<c:set var="notEmpty_comment" value="#{not empty exchange.comment.getValueWithFallback(lang)}" />
+		<c:set var="originatingProcess" value="#{not empty exchange.internalId ? processHandler.getOriginatingProcess(exchange.internalId) : null}" />  
+		<p:rowExpansion rendered="#{notEmpty_refToDataSource or notEmpty_comment or not empty originatingProcess}"> 
+			<p:panelGrid styleClass="expandedTable">
+				<p:row rendered="#{not empty originatingProcess}">
+					<p:column styleClass="ui-state-hover transp column-style">
+						<soda:outputTextTooltip
+							outputTextId="processLink"
+							outputTextValue="#{i18n['common.proc.linkedprocess']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.exchange.linkedprocess']}" />
+					</p:column>
+					<p:column styleClass="column-style" >
+						<soda:switchLinkOrText
+							outputLinkValue="#{processHandler.getReferenceUrlXml(originatingProcess, url.process)}"
+							outputLinkTitle="#{i18n['common.proc']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+							outputTextValue="#{originatingProcess.getShortDescription(lang)}"/>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{notEmpty_refToDataSource}">
+					<p:column styleClass="ui-state-hover transp column-style">
+						<soda:outputTextTooltip
+							outputTextId="generalComment"
+							outputTextValue="#{i18n['public.dataset.comment.wrapped']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.exchange.generalComment']}" />
+					</p:column>
+					<p:column styleClass="column-style" >
+						<soda:dataListStyled dataListValue="#{exchange.refToDataSource}">
+							<ui:param name="refToDataSource" value="#{dataListStyledVar}" />
+							<soda:switchLinkOrText
+								outputLinkValue="#{processHandler.getReferenceUrl(refToDataSource, url.source)}"
+								outputLinkTitle="#{i18n['common.source.inflected']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+								outputTextValue="#{processHandler.getMultilangWithFallback(lang, refToDataSource.shortDescription)}"
+								repeatValue="#{refToDataSource.subReference}" />
+						</soda:dataListStyled>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{notEmpty_comment}">
+					<p:column styleClass="ui-state-hover transp column-style">
+						<soda:outputTextTooltip
+							outputTextId="generalComment"
+							outputTextValue="#{i18n['public.dataset.comment']}"
+							tooltipValue="#{i18n['datasetdetail.tooltip.process.exchange.generalComment']}" />
+					</p:column>
+					<p:column styleClass="column-style">
+						#{exchange.comment.getValueWithFallback(lang)}
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+		</p:rowExpansion>
+		<p:column styleClass="column-style">
+			<f:facet name="header">
+				<soda:outputTextTooltip
+					outputTextId="typeOfFlow"
+					outputTextValue="#{i18n['common.typeOfFlow']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.flow.typeOfDataSet']}" />
+			</f:facet>
+			#{exchange.flowType}
+			<h:panelGroup rendered="#{notEmpty_refToDataSource or notEmpty_comment}">
+				<pe:tooltip forSelector=".ui-row-toggler" mouseTracking="true" adjustX="10" adjustY="10" value="#{i18n['common.expandRow']}" />
+				<p:rowToggler />
+			</h:panelGroup>
+		</p:column>
+		<p:column styleClass="column-style">
+			<f:facet name="header">
+				<soda:outputTextTooltip
+					outputTextId="classification"
+					outputTextValue="#{i18n['common.dataset.classif']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.dataset.classification']}" />
+			</f:facet>
+			#{exchange.classification.classHierarchyAsString}
+		</p:column>
+		<p:column styleClass="column-style">
+			<f:facet name="header">
+				<soda:outputTextTooltip
+					outputTextId="referenceToFlowDataSet"
+					outputTextValue="#{i18n['common.flow']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.process.exchange.referenceToFlowDataSet']}" />
+			</f:facet>
+			<soda:switchLinkOrText
+				outputLinkValue="#{processHandler.getReferenceUrl(exchange.flowReference, url.flow)}"
+				outputLinkTitle="#{i18n['common.flow']}#{i18n['delimiter']}#{i18n['public.dataset']}"
+				outputTextValue="#{exchange.flowName.value}" />
+		</p:column>
+		<p:column styleClass="column-style" rendered="#{process.parameterized}">
+			<f:facet name="header">
+				<soda:outputTextTooltip
+					outputTextId="referenceToVariable"
+					outputTextValue="#{i18n['common.referenceToVariable']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.process.exchange.referenceToVariable']}" />
+			</f:facet>
+			#{exchange.referenceToVariable}
+		</p:column>
+		<p:column styleClass="column-style" rendered="#{conf.displayConfig.showProcessesDetailExchangesLocation}">
+			<f:facet name="header">
+				<soda:outputTextTooltip
+					outputTextId="location"
+					outputTextValue="#{i18n['common.dataset.location']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.process.exchange.location']}" />
+			</f:facet>
+			#{exchange.location}
+		</p:column>
+		<p:column styleClass="column-style" rendered="#{conf.displayConfig.showProcessesDetailExchangesFunctionType}">
+			<f:facet name="header">
+				#{i18n['public.proc.functionType']}
+			</f:facet>
+			#{exchange.functionType}
+		</p:column>
+		<p:column styleClass="column-style">
+			<f:facet name="header">
+				<soda:outputTextTooltip
+					outputTextId="meanAmount"
+					outputTextValue="#{i18n['common.meanAmount']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.process.exchange.meanAmount']}" />
+			</f:facet>
+			<h:outputText value="#{exchange.meanAmount}"/>
+			<h:outputText value=" "/>
+			<h:outputText value="#{exchange.referenceUnit}" rendered="#{not empty exchange.referenceUnit}"/> 
+		</p:column>
+		<p:column styleClass="column-style">
+			<f:facet name="header">
+				<soda:outputTextTooltip
+					outputTextId="resultingAmount"
+					outputTextValue="#{i18n['common.resultingAmount']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.process.exchange.resultingAmount']}" />
+			</f:facet>
+			<h:outputText value="#{exchange.resultingAmount}"/>
+			<h:outputText value=" "/>
+			<h:outputText value="#{exchange.referenceUnit}" rendered="#{not empty exchange.referenceUnit}"/> 
+		</p:column>
+		<p:column rendered="#{conf.displayConfig.showProcessDetailExchangesMinMaxValues}" styleClass="column-style">
+			<f:facet name="header">
+				<soda:outputTextTooltip
+					outputTextId="minimumAmount"
+					outputTextValue="#{i18n['common.minimumAmount']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.process.exchange.minimumAmount']}" />
+			</f:facet>
+			#{exchange.minimumAmount}
+		</p:column>
+		<p:column rendered="#{conf.displayConfig.showProcessDetailExchangesMinMaxValues}" styleClass="column-style">
+			<f:facet name="header">
+				<soda:outputTextTooltip
+					outputTextId="maximumAmount"
+					outputTextValue="#{i18n['common.maximumAmount']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.process.exchange.maximumAmount']}" />
+			</f:facet>
+			#{exchange.maximumAmount}
+		</p:column>
+		<p:column styleClass="column-style" rendered="#{conf.displayConfig.showProcessesDetailExchangesUncertaintyDistType}">
+			<f:facet name="header">
+				<soda:outputTextTooltip
+					outputTextId="uncertaintyDistributionType"
+					outputTextValue="#{i18n['common.uncertaintyDistributionType.wrapped']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.process.uncertaintyDistributionType']}" />
+			</f:facet>
+			#{exchange.uncertaintyDistribution}
+		</p:column>
+		<p:column styleClass="column-style" rendered="#{conf.displayConfig.showProcessesDetailExchangesRelativeStdDev}">
+			<f:facet name="header">
+				<soda:outputTextTooltip
+					outputTextId="relativeStandardDeviation95In"
+					outputTextValue="#{i18n['common.relativeStdDev.wrapped']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.dataset.relativeStandardDeviation95In']}" />
+			</f:facet>
+			#{exchange.standardDeviation} %
+		</p:column>
+		<p:column styleClass="column-style" rendered="#{conf.displayConfig.showProcessesDetailExchangesDataSourceType}">
+			<f:facet name="header">
+				<soda:outputTextTooltip
+					outputTextId="dataSourceType"
+					outputTextValue="#{i18n['common.dataSourceType']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.process.exchange.dataSourceType']}" />
+			</f:facet>
+			#{exchange.dataSource}
+		</p:column>
+		<p:column styleClass="column-style" rendered="#{conf.displayConfig.showProcessesDetailExchangesDataDerivativeType}">
+			<f:facet name="header">
+				<soda:outputTextTooltip
+					outputTextId="dataDerivationTypeStatus"
+					outputTextValue="#{i18n['common.dataDerivationTypeStatus.wrapped']}"
+					tooltipValue="#{i18n['datasetdetail.tooltip.dataset.dataDerivationTypeStatus']}" />
+			</f:facet>
+			#{exchange.derivationType}
+		</p:column>
+	</p:dataTable>
+</ui:composition>

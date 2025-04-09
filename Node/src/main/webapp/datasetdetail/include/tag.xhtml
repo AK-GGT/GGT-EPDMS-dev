@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+via ui:param:
+	- showInvisibleTags
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    xmlns:soda="http://java.sun.com/jsf/composite/sodacomp">
+
+    <!-- section -->
+    <p:panelGrid>
+    	<!-- subsection -->
+        	<p:row rendered="#{not empty processHandler.process.associatedTagsList}">
+                <p:column styleClass="ui-state-hover transp">
+                    <soda:outputTextTooltip
+                        outputTextId="tags"
+                        outputTextValue="#{i18n['common.tag.tags']}"
+                        tooltipValue="#{i18n['datasetdetail.tooltip.tag.name']}" />                
+                </p:column>
+                <p:column>
+                    <ui:include src="./listTags.xhtml">
+                    	<ui:param name="showInvisibleTags" value="#{showInvisibleTags}"/>
+                    </ui:include>
+                </p:column>
+            </p:row>
+    </p:panelGrid>
+</ui:composition>

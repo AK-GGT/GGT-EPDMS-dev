@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+
+	<p:dataTable var="file" value="#{importHandler.uploadedFiles}">
+	    <p:column headerText="#{i18n['admin.uploadedFiles']}">
+	        <h:outputText value="#{file.fileName}" />
+	    </p:column>
+	    <!--p:column>
+	       <f:facet name="header">
+	           <h:outputText value="New / New version" />
+	       </f:facet>
+	       <p:selectBooleanCheckbox value="#{file.addAsNew}" />
+	   </p:column>
+	   <p:column>
+	       <f:facet name="header">	
+	           <h:outputText value="Overwrite existing" />
+	       </f:facet>
+	       <p:selectBooleanCheckbox value="#{file.overwrite}" />
+	   </p:column-->
+	</p:dataTable>		
+	
+		<p></p>
+		<h2>#{i18n['common.validation']}</h2>
+	<ui:include src="/admin/validation.xhtml" />
+		
+	<h:form id="tableForm" target="console">
+		
+		
+		<h:panelGrid style="margin-top:1em;">
+		<p:outputLabel value="#{i18n['admin.import.rootDataStock']}" for="importRootDataStock" />
+		<p:selectOneMenu value="#{importHandler.selectedStockName}" id="importRootDataStock">
+			<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+			<f:selectItems value="#{importHandler.availableRootStockNames}" var="rds" itemLabel="#{rds}" itemValue="#{rds}" />
+			<p:ajax event="change" process="@this" update="importBtn" />
+		</p:selectOneMenu>
+		              </h:panelGrid>
+		              
+		              <div class="buttonLeft">
+		              
+		                 <p:commandButton id="importBtn"
+		                 					 widgetVar="importBtn"
+		                                   action="#{importHandler.doImport}"
+		                                   value="#{i18n['admin.importFiles']}"
+		                                   ajax="false"
+		                                   onclick="PF('validateBtn').disable();jQuery(this).addClass('ui-state-disabled')"
+		                    disabled="#{empty importHandler.selectedStockName}" />
+		      
+		        <p:commandButton  id="cancel"
+		        			      value="#{i18n['admin.cancel']}" 
+		        				  action="#{importHandler.clearFilesList}"
+		        				  ajax="true"/>
+		       </div>
+		       			 		
+		
+		</h:form>
+		
+		 			
+		<h2>#{i18n['admin.statusLog']}</h2>
+		<iframe name="console" id="console" align="left" />
+                
+</ui:composition>

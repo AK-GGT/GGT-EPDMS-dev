@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:body>
+        <ui:composition template="#{conf.templatePath}/frontend.xhtml">
+            <ui:param name="pageTitle" value="#{i18n['common.lciaMethod.inflected']}#{i18n['delimiter']}#{i18n['public.datasets']}" />
+            <ui:param name="activeMenu" value="#{Constants.MENU_LCIAMETHOD}" />
+            <ui:define name="content">
+
+                <h:form id="tableForm" prependId="false">
+
+                   <p:dataTable id="lciamethodTable" var="lciamethod" lazy="true"
+                                 value="#{lciamethodsHandler.lazyDataModel}"
+                                 paginator="true" rows="10" rowsPerPageTemplate="5,10,15,50"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                                 		 {PreviousPageLink} {PageLinks} {NextPageLink}
+                                 		 {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']}"
+                                 currentPageReportTemplate="#{i18n['common.list.currentEntries']}: {totalRecords} 
+                                 		 (#{lciamethodsHandler.lazyDataModel.loadTotalElementCount()} #{i18n['common.list.total']})  
+                                 		 (#{i18n['common.list.page']} {currentPage} #{i18n['common.list.of']} {totalPages})"
+                                 emptyMessage="#{i18n['common.list.noneFound']}">
+
+                        <p:column style="width:40%" sortBy="#{lciamethod.name.defaultValue}" filterBy="#{lciamethod.name}" headerText="#{i18n['common.name']}" rendered="#{conf.displayConfig.showMethodName}">
+                            <h:link outcome="#{url.lciaMethod.getDetail(lciamethod)}" value="#{lciamethod.name.defaultValue}" title="#{lciamethod.uuidAsString}   #{lciamethod.version}" />
+                        </p:column>
+
+                        <p:column style="width:30%" sortBy="#{lciamethod.type.value}" headerText="#{i18n['common.type']}" rendered="#{conf.displayConfig.showMethodType}">
+                            <h:outputText
+                                value="#{lciamethod.type.value}" />
+                        </p:column>
+
+                        <p:column style="width:15%" sortBy="#{lciamethod.timeInformation.referenceYear.value}" headerText="#{i18n['common.dataset.refYear']}" rendered="#{conf.displayConfig.showMethodReferenceYear}">
+                            <h:outputText
+                                value="#{lciamethod.timeInformation.referenceYear.value}" />
+                        </p:column>
+
+                        <p:column style="width:15%" sortBy="#{lciamethod.timeInformation.duration.value}" headerText="#{i18n['common.lciam.duration']}" rendered="#{conf.displayConfig.showMethodDuration}">
+                            <h:outputText
+                                value="#{lciamethod.timeInformation.duration.value}" />
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

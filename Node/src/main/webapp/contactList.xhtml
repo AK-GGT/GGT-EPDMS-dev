@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <h:body>
+        <ui:composition template="#{conf.templatePath}/frontend.xhtml">
+            <ui:param name="pageTitle" value="#{i18n['common.contact']}#{i18n['delimiter']}#{i18n['public.datasets']}" />
+            <ui:param name="activeMenu" value="#{Constants.MENU_CONTACT}" />
+            <ui:define name="content">
+
+                <h:form id="tableForm" prependId="false">
+
+                    <p:dataTable id="contactTable" var="contact" lazy="true"
+                                 value="#{contactsHandler.lazyDataModel}"
+                                 paginator="true" rows="10" rowsPerPageTemplate="5,10,15,50"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+                                 		 {PreviousPageLink} {PageLinks} {NextPageLink}
+                                 		 {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']}"
+                                 currentPageReportTemplate="#{i18n['common.list.currentEntries']}: {totalRecords} 
+                                 		 (#{contactsHandler.lazyDataModel.loadTotalElementCount()} #{i18n['common.list.total']})  
+                                 		 (#{i18n['common.list.page']} {currentPage} #{i18n['common.list.of']} {totalPages})"
+                                 emptyMessage="#{i18n['common.list.noneFound']}">
+
+                        <p:column style="width:55%" sortBy="#{contact.name.defaultValue}" filterBy="#{contact.name}" headerText="#{i18n['common.name']}" rendered="#{conf.displayConfig.showContactName}">
+
+                            <h:link outcome="#{url.contact.getDetail(contact)}"
+                                    rendered="#{empty contact.shortName.defaultValue}"
+                                    value="#{contact.name.defaultValue}" title="#{contact.uuidAsString}   #{contact.version}" />
+
+                            <h:link outcome="#{url.contact.getDetail(contact)}"
+                                    rendered="#{not empty contact.shortName.defaultValue}"
+                                    value="#{contact.shortName.defaultValue}" title="#{contact.uuidAsString}   #{contact.version}" />
+
+                        </p:column>
+
+                        <p:column style="width:15%" sortBy="#{contact.classification.classHierarchyAsString}" headerText="#{i18n['public.dataset.cat']}" rendered="#{conf.displayConfig.showContactCategory}">
+                            <h:outputText
+                                value="#{contact.classification.classHierarchyAsString}" />
+                        </p:column>
+
+                        <p:column style="width:15%" sortBy="#{contact.email}" headerText="#{i18n['common.email']}" rendered="#{conf.displayConfig.showContactEmail}">
+                            <h:outputText value="#{contact.email}" />
+                        </p:column>
+
+                        <p:column style="width:15%" sortBy="#{contact.www}" headerText="#{i18n['public.contact.hp']}" rendered="#{conf.displayConfig.showContactHomePage}">
+                            <h:outputLink value="#{contact.www}" target="_blank">#{contact.www}</h:outputLink>
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

@@ -1,0 +1,66 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+                
+<!--                 Informs user of existing superceding data set or newer versions. 						-->
+<!--                 ui:params: 																			-->
+<!--                 	handler - ProcessHandler 															-->
+<!--                 	detailsView - Boolean. True directs links to external/detail pages of data sets. 	-->
+    
+<!--     Alert if superceding data set exists or more recent version exists. Prefer superceding data set alert. -->
+	<p>
+		<p:staticMessage rendered="#{handler.supersedingVersion != null}" severity="warn"
+	         		detail="#{i18n['common.dataset.supercedingDataSetExists']}"/>
+		<p:staticMessage rendered="#{handler.supersedingVersion == null and !handler.mostRecentVersion}" severity="warn"
+	     			detail="#{i18n['common.dataset.newerVersionExists']}."/>
+	</p>
+	
+<!-- 	Always provide prominent link to superceding data set (newest version). -->
+	<p>
+		<h:form rendered="#{handler.supersedingVersion != null}">
+			<h:outputLink rendered="#{!detailsView}" value="#{conf.contextPath}#{urlgen.getDetail(handler.supersedingVersion)}">
+				<h:outputText value="#{i18n['common.dataset.viewSupercedingDataSet']}" />
+			</h:outputLink>
+			<h:outputLink rendered ="#{detailsView and !handler.foreignDataSet}" value="#{conf.contextPath}#{urlgen.getResourceDetailHtml(handler.supersedingVersion)}">
+				<h:outputText value="#{i18n['common.dataset.viewSupercedingDataSet']}"/>
+			</h:outputLink>
+			<h:outputLink rendered ="#{detailsView and handler.foreignDataSet}" value="#{urlgen.getDetail(handler.supersedingVersion)}">
+				<h:outputText value="#{i18n['common.dataset.viewSupercedingDataSet']}"/>
+			</h:outputLink>
+		</h:form>
+	</p>
+	
+<!-- 	Provide prominent link to most recent version and links to other versions. -->
+	<p>
+		<h:form rendered="#{handler.otherVersionPresent}" style="display:inline">
+			<h:form rendered="#{!handler.mostRecentVersion}" style="display:inline">
+				<h:outputText value="#{i18n['common.dataset.mostRecentVersion']}:" />
+				<p:spacer width="5"/>
+				<h:outputLink rendered="#{!detailsView}" value="#{conf.contextPath}#{urlgen.getDetail(handler.getNewerVersion())}">
+					<h:outputText value="#{handler.getNewerVersion().version}"/>
+				</h:outputLink>
+				<h:outputLink rendered="#{detailsView and !handler.foreignDataSet}"
+						value="#{conf.contextPath}#{urlgen.getResourceDetailHtml(handler.getNewerVersion())}" style="color:blue">
+					<h:outputText value="#{handler.getNewerVersion().version}"/>
+				</h:outputLink>
+				<h:outputLink rendered="#{detailsView and handler.foreignDataSet}" value="#{urlgen.getDetail(handler.getNewerVersion())}"
+						style="color:blue">
+					<h:outputText value="#{handler.getNewerVersion().version}"/>
+				</h:outputLink>
+				<p:spacer width="10"/>
+			</h:form>
+<!-- 							other versions -->
+			<h:form rendered="#{!detailsView and not empty handler.otherVersionsWithoutMostRecentVersion}" style="display:inline">
+				<h:outputText value="#{i18n['public.dataset.otherVersions']}:" />
+				<ui:repeat value="#{handler.otherVersionsWithoutMostRecentVersion}" var="ov">
+					<p:spacer width="5"/>
+					<h:outputLink value="#{conf.contextPath}#{urlgen.getDetail(ov)}">
+						<h:outputText value="#{ov.version}"/>
+					</h:outputLink>
+				</ui:repeat>
+			</h:form>
+		</h:form>
+	</p>
+</ui:composition>

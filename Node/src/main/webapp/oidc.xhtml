@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+    <f:metadata>
+        <f:viewParam name="src" value="#{loginHandler.source}" />
+        <f:event listener="#{loginHandler.showMessage}" type="preRenderComponent" />
+    </f:metadata>
+
+    <h:body>
+        <ui:composition template="#{conf.templatePath}/frontend.xhtml">
+            <ui:param name="pageTitle" value="OIDC Debug" />
+            <ui:define name="content">
+
+                <p:dataTable var="entry" value="#{loginHandler.OidcAttrs()}">
+                    <p:column headerText="Key">
+                        <h:outputText value="#{entry.key}" style="font-weight:bold" />
+                    </p:column>
+                
+                    <p:column headerText="Value">
+                        <h:outputText value="#{entry.value}" />
+                    </p:column>
+                </p:dataTable>
+
+
+                <p:dataTable var="entry" value="#{loginHandler.OidcRoles()}">
+                    <p:column headerText="Key">
+                        <h:outputText value="#{entry}" style="font-weight:bold" />
+                    </p:column>
+                </p:dataTable>
+
+
+                <p:dataTable var="entry" value="#{loginHandler.OidcPermissions()}">
+                    <p:column headerText="Key">
+                        <h:outputText value="#{entry}" style="font-weight:bold" />
+                    </p:column>
+                </p:dataTable>
+
+                <ui:include src="/messages.xhtml" />
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

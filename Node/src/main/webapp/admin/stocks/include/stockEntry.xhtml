@@ -1,0 +1,511 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+Parameters for this composition:
+	via ui:param:
+		stock
+		sHandler
+		renderDataTabView (optional, default is false)
+		tabId: active tab index
+-->
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+	<ui:include src="sodaMenuBarStock.xhtml">
+		<ui:param name="spacerHeight_afterToolbar" value="50" />
+	</ui:include>
+	
+	<!-- dynamic="true" for tabview results in problem with selectonemenu, see http://forum.primefaces.org/viewtopic.php?f=3&t=12869 -->
+	<p:tabView id="stockTabs" activeIndex="#{tabId}" style="max-width:1500px !important; overflow:auto !important">
+		<p:tab id="mainInfoTab" title="#{i18n['admin.tab.mainInfo']}">
+		<p:panel id="wrapperPanelMainInfo" style="width:80%">
+			<p:panel header="#{i18n['common.type']}" rendered="#{sHandler.createView}">
+				<h:panelGrid columns="2">
+					<p:outputLabel for="stockTypeChoice" value="#{i18n['admin.stock.createAs']} #{utilStr['unicodeChar.hellip']}" style="margin-right:3em;" />
+					<p:selectOneRadio id="stockTypeChoice" value="#{sHandler.stockType}" required="#{sHandler.createView}" requiredMessage="#{i18n['admin.stock.requiredMsg.type']}" styleClass="radioLabelPadding">
+						<f:selectItem itemLabel="#{i18n['admin.stock.type.rds']}" itemValue="rds" />
+						<f:selectItem itemLabel="#{i18n['admin.stock.type.ds']}" itemValue="ds" />
+					</p:selectOneRadio>
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel header="#{i18n['admin.stock.nameTitleInfo']}" id="namePanel">
+				<p:focus context="namePanel" rendered="#{sHandler.createView}" />
+				<h:panelGrid columns="2">
+					<p:outputLabel value="#{i18n['admin.stock.id']}:" for="name" />
+					<h:panelGroup>
+						<p:inputText id="name" value="#{stock.name}" required="true" requiredMessage="#{i18n['admin.stock.requiredMsg.name']}" validatorMessage="#{i18n['admin.stock.validatorMsg.name']} #{i18n['admin.stock.allowed']}">
+							<f:validateRegex pattern="[a-zA-Z0-9_]+" />
+						</p:inputText>
+						<h:outputText value="#{i18n['admin.stock.allowed']}" />
+					</h:panelGroup>
+					<p:outputLabel value="#{i18n['admin.stock.name']}:" for="title" />
+					<p:inputText id="title" value="#{stock.title}" size="50" />
+					<p:outputLabel value="#{i18n['common.uuid']}:" for="uuid" />
+					<h:outputText id="uuid" value="#{stock.uuidAsString}" />
+				</h:panelGrid>
+			</p:panel>
+
+			<p:panel header="#{i18n['admin.stock.displayProperties']}" id="displayPropertiesPanel">
+				<p:focus context="displayPropertiesPanel" rendered="#{sHandler.createView}" />
+				<h:panelGrid columns="2">
+					<h:panelGroup>
+						<p:selectOneRadio id="hiddenChoice" value="#{stock.displayProperties.hidden}" required="#{sHandler.createView}" requiredMessage="#{i18n['admin.stock.requiredMsg.type']}" styleClass="radioLabelPadding">
+							<f:selectItem itemLabel="#{i18n['admin.stock.visible']}" itemValue="false" />
+							<f:selectItem itemLabel="#{i18n['admin.stock.hidden']}" itemValue="true" />
+						</p:selectOneRadio>
+					</h:panelGroup>
+				</h:panelGrid>
+			</p:panel>
+						
+			<p:panel header="#{i18n['admin.org.info']}">
+				<h:panelGrid columns="2">
+					<p:outputLabel for="org" value="#{i18n['admin.org']}:" />
+					<p:selectOneMenu id="org" value="#{stock.ownerOrganization}" converter="orgConverter" required="true" requiredMessage="#{i18n['admin.org.requiredMsg.selection']}" disabled="#{not user.hasSuperAdminPermission()}">
+						<f:selectItem itemLabel="#{i18n['common.select.hint']}" noSelectionValue="true" />
+						<f:selectItems value="#{sHandler.organizations}" var="o" itemLabel="#{o.name}" itemValue="#{o}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+			</p:panel>
+	
+			<p:panel header="#{i18n['admin.description']}">
+				<p:inputTextarea value="#{stock.description.value}" cols="45" rows="5" />
+			</p:panel>
+			</p:panel>
+		</p:tab>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<p:tab id="usrAccessRights" title="#{i18n['admin.stock.accessRights.user']}" disabled="#{sHandler.createView}">
+			<ui:fragment rendered="#{not sHandler.createView}">
+				<div class="floatRight">
+					<p:commandButton id="newAccessRightUserBtn" value="#{i18n['admin.assign']} #{utilStr['unicodeChar.hellip']}" onclick="PF('assignUserDlg').show();" type="button" />
+				</div>
+				<p:commandButton id="removeUserBtn" value="#{i18n['admin.removeAssigned']}" onclick="PF('confirmRemoveUsr').show()" type="button" disabled="#{sHandler.removeButtonDisabled}" />
+				<p:confirmDialog message="#{i18n['admin.confirmMsg.removeSelected']}?"
+					header="#{i18n['admin.confirmDlg.remove']}" severity="alert"
+					widgetVar="confirmRemoveUsr">
+					<div class="confirmDlgButtons">
+						<p:commandButton value="#{i18n['admin.cancel']}" type="button" onclick="PF('confirmRemoveUsr').hide()" />
+						<p:commandButton value="#{i18n['admin.ok']}"
+							action="#{sHandler.removeSelected}"
+							oncomplete="PF('confirmRemoveUsr').hide()" ajax="false"
+							update="messages accessRightsUserTable" />
+					</div>
+				</p:confirmDialog>
+				<p:dialog id="assignUserDialog" header="#{i18n['admin.assigningUsers']}" widgetVar="assignUserDlg" dynamic="true" modal="true">
+					<p:pickList value="#{sHandler.dualUserAssignmentList}"
+						var="u" converter="userConverter"
+						itemLabel="#{u.userName}" itemValue="#{u}"
+						addLabel="#{i18n['common.picklist.add']}"
+						addAllLabel="#{i18n['common.picklist.addAll']}"
+						removeLabel="#{i18n['common.picklist.remove']}"
+						removeAllLabel="#{i18n['common.picklist.removeAll']}" style="margin:1em;">
+						<f:facet name="sourceCaption">#{i18n['admin.picklist.sourceUsers']}</f:facet>
+						<f:facet name="targetCaption">#{i18n['admin.picklist.targetUsers']}</f:facet>
+					</p:pickList>
+					<div class="confirmDlgButtons">
+						<p:commandButton value="#{i18n['admin.cancel']}" type="button" onclick="PF('assignUserDlg').hide()" />
+						<p:commandButton value="#{i18n['admin.assignUsers']}" action="#{sHandler.processUserPickList()}" oncomplete="handleDialogUsr()" update="@(#usrConfirm)" />
+					</div>
+					<p:remoteCommand name="updateUserRightTable" update="accessRightsUserTable" action="#{sHandler.assignUser()}" />
+					<script type="text/javascript">
+						function handleDialogUsr() {
+							if ( jQuery('#usrConfirm').val() == 'true' ){
+							    PF('confirmRemoveAssignedUsr').show();
+							} else {
+							    PF('assignUserDlg').hide();
+								updateUserRightTable();
+							}
+						}
+					</script>
+				</p:dialog>
+				<p:confirmDialog message="#{i18n['admin.confirmMsg.removeAssignedUsers']}?"
+					header="#{i18n['admin.confirmDlg.remove']}" severity="alert"
+					widgetVar="confirmRemoveAssignedUsr" >
+					<div class="confirmDlgButtons">
+						<p:commandButton value="#{i18n['admin.cancel']}" type="button" onclick="PF('confirmRemoveAssignedUsr').hide()" />
+						<p:commandButton value="#{i18n['admin.ok']}" process="@this" update="accessRightsUserTable" action="#{sHandler.assignUser()}" oncomplete="PF('assignUserDlg').hide();PF('confirmRemoveAssignedUsr').hide()" />
+					</div>
+				</p:confirmDialog>
+	
+				<p:dataTable id="accessRightsUserTable" var="accessRightUser" value="#{sHandler.accessRightsUser}" emptyMessage="#{i18n['common.list.noneFound']}">
+					<!-- <p:column style="text-align: center;" selectionMode="multiple" /> -->
+					
+					<p:column headerText="#{i18n['admin.user.name']}">
+						<h:outputText value="#{accessRightUser.guest ? i18n['admin.guest']: accessRightUser.subjectName}" />
+					</p:column>
+					<ui:include src="accessRightsCols.xhtml">
+						<ui:param name="sar" value="#{accessRightUser}" />
+					</ui:include>
+					
+				</p:dataTable>
+			</ui:fragment>
+		</p:tab>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<p:tab id="grpAccessRights" title="#{i18n['admin.stock.accessRights.group']}" disabled="#{sHandler.createView}">
+			<ui:fragment rendered="#{not sHandler.createView}">
+				<div class="floatRight">
+					<p:commandButton id="newAccessRightGroupBtn" value="#{i18n['admin.assign']} #{utilStr['unicodeChar.hellip']}" onclick="PF('assignGroupDlg').show();" type="button" />
+				</div>
+				<p:commandButton id="removeGroupBtn" value="#{i18n['admin.removeAssigned']}" onclick="PF('confirmRemoveGrp').show()" type="button" disabled="#{sHandler.removeButtonDisabled}" />
+				<p:confirmDialog message="#{i18n['admin.confirmMsg.removeSelected']}?"
+					header="#{i18n['admin.confirmDlg.remove']}" severity="alert"
+					widgetVar="confirmRemoveGrp">
+					<div class="confirmDlgButtons">
+						<p:commandButton value="#{i18n['admin.cancel']}" type="button" onclick="PF('confirmRemoveGrp').hide()" />
+						<p:commandButton value="#{i18n['admin.deleteSelected']}"
+							action="#{sHandler.removeSelected}"
+							oncomplete="PF('confirmRemoveGrp').hide()" ajax="false"
+							update="messages accessRightsGroupTable" />
+					</div>
+				</p:confirmDialog>
+				<p:dialog id="assignGroupDialog" header="#{i18n['admin.assigningGroups']}" widgetVar="assignGroupDlg" dynamic="true" modal="true">
+					<p:pickList id="myPickListGroup" value="#{sHandler.dualGroupAssignmentList}"
+						var="g" converter="userGroupConverter"
+						itemLabel="#{g.groupName}#{sHandler.noUsersHint(g)}" itemValue="#{g}"
+						addLabel="#{i18n['common.picklist.add']}"
+						addAllLabel="#{i18n['common.picklist.addAll']}"
+						removeLabel="#{i18n['common.picklist.remove']}"
+						removeAllLabel="#{i18n['common.picklist.removeAll']}" style="margin:1em;">
+						<f:facet name="sourceCaption">#{i18n['admin.picklist.sourceGroups']}</f:facet>
+						<f:facet name="targetCaption">#{i18n['admin.picklist.targetGroups']}</f:facet>
+					</p:pickList>
+					<div class="confirmDlgButtons">
+						<p:commandButton value="#{i18n['admin.cancel']}" type="button" onclick="PF('assignGroupDlg').hide()" />
+						<p:commandButton value="#{i18n['admin.assignGroups']}" action="#{sHandler.processGroupPickList()}" oncomplete="handleDialogGrp()" update="@(#grpConfirm)" />
+					</div>
+					<p:remoteCommand name="updateGroupRightTable" update="accessRightsGroupTable" action="#{sHandler.assignGroup()}" />
+					<script type="text/javascript">
+						function handleDialogGrp() {
+							if ( jQuery('#grpConfirm').val() === 'true' ){
+							    PF('confirmRemoveAssignedGrp').show();
+							} else {
+							    PF('assignGroupDlg').hide();
+								updateGroupRightTable();
+							}
+						}
+					</script>
+					<p:confirmDialog message="#{i18n['admin.confirmMsg.removeAssignedGroups']}?"
+						header="#{i18n['admin.confirmDlg.remove']}" severity="alert"
+						widgetVar="confirmRemoveAssignedGrp" appendToBody="true">
+						<div class="confirmDlgButtons">
+							<p:commandButton value="#{i18n['admin.cancel']}" type="button" onclick="PF('confirmRemoveAssignedGrp').hide()" />
+							<p:commandButton value="#{i18n['admin.ok']}" process="@this" update="accessRightsGroupTable" action="#{sHandler.assignGroup()}" oncomplete="PF('assignGroupDlg').hide();PF('confirmRemoveAssignedGrp').hide()" />
+						</div>
+					</p:confirmDialog>
+				</p:dialog>
+	
+				<p:dataTable id="accessRightsGroupTable" var="accessRightGroup" value="#{sHandler.accessRightsGroup}" emptyMessage="#{i18n['common.list.noneFound']}">
+					<!-- <p:column style="text-align: center;" selectionMode="multiple" /> -->
+					
+					<p:column headerText="#{i18n['admin.group.name']}">
+						<h:outputText value="#{accessRightGroup.subjectName}" />
+					</p:column>
+					<ui:include src="accessRightsCols.xhtml">
+						<ui:param name="sar" value="#{accessRightGroup}" />
+					</ui:include>
+					
+				</p:dataTable>
+			</ui:fragment>
+		</p:tab>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<p:tab id="assignedDataSets" title="#{i18n['admin.stock.assignedDataSets']}" disabled="#{sHandler.createView}">
+			<ui:fragment rendered="#{not sHandler.createView}">
+<!-- 				<p:tabView id="dataSetTabView" dynamic="true" style="max-width:850px;overflow:auto;clear: right;margin-top:1em;"> -->
+				<p:tabView id="dataSetTabView" dynamic="true" style="margin:1em">
+					<ui:include src="stockDataSetInclude.xhtml">
+						<ui:param name="dsType" value="Process" />
+						<ui:param name="tabTitleKey" value="common.processes" />
+						<ui:param name="typeKey" value="common.proc" />
+						<ui:param name="listInclude" value="processListInclude.xhtml" />
+						<ui:param name="sHandler" value="#{sHandler}" />
+						<ui:param name="dsWrapper" value="#{sHandler.processWrapper}" />
+					</ui:include>
+					<ui:include src="stockDataSetInclude.xhtml">
+						<ui:param name="dsType" value="LCIAM" />
+						<ui:param name="tabTitleKey" value="common.lciaMethods" />
+						<ui:param name="typeKey" value="common.lciaMethod" />
+						<ui:param name="listInclude" value="lciaMethodListInclude.xhtml" />
+						<ui:param name="sHandler" value="#{sHandler}" />
+						<ui:param name="dsWrapper" value="#{sHandler.lciaMethodWrapper}" />
+					</ui:include>
+					<ui:include src="stockDataSetInclude.xhtml">
+						<ui:param name="publicShowFacelet" value="showElementaryFlow" />
+						<ui:param name="dsType" value="EFlow" />
+						<ui:param name="tabTitleKey" value="common.elementaryFlows" />
+						<ui:param name="typeKey" value="common.elementaryFlow" />
+						<ui:param name="listInclude" value="flowListInclude.xhtml" />
+						<ui:param name="sHandler" value="#{sHandler}" />
+						<ui:param name="dsWrapper" value="#{sHandler.elementaryFlowWrapper}" />
+					</ui:include>
+					<ui:include src="stockDataSetInclude.xhtml">
+						<ui:param name="publicShowFacelet" value="showProductFlow" />
+						<ui:param name="dsType" value="PFlow" />
+						<ui:param name="tabTitleKey" value="common.productFlows" />
+						<ui:param name="typeKey" value="common.productFlow" />
+						<ui:param name="listInclude" value="flowListInclude.xhtml" />
+						<ui:param name="sHandler" value="#{sHandler}" />
+						<ui:param name="dsWrapper" value="#{sHandler.productFlowWrapper}" />
+					</ui:include>
+					<ui:include src="stockDataSetInclude.xhtml">
+						<ui:param name="dsType" value="FlowProp" />
+						<ui:param name="tabTitleKey" value="common.flowProperties" />
+						<ui:param name="typeKey" value="common.flowProperty" />
+						<ui:param name="listInclude" value="flowpropertyListInclude.xhtml" />
+						<ui:param name="sHandler" value="#{sHandler}" />
+						<ui:param name="dsWrapper" value="#{sHandler.flowPropertyWrapper}" />
+					</ui:include>
+					<ui:include src="stockDataSetInclude.xhtml">
+						<ui:param name="dsType" value="UnitGr" />
+						<ui:param name="tabTitleKey" value="common.unitGroups" />
+						<ui:param name="typeKey" value="common.unitGroup" />
+						<ui:param name="listInclude" value="unitgroupListInclude.xhtml" />
+						<ui:param name="sHandler" value="#{sHandler}" />
+						<ui:param name="dsWrapper" value="#{sHandler.unitGroupWrapper}" />
+					</ui:include>
+					<ui:include src="stockDataSetInclude.xhtml">
+						<ui:param name="dsType" value="Source" />
+						<ui:param name="tabTitleKey" value="common.sources" />
+						<ui:param name="typeKey" value="common.source" />
+						<ui:param name="listInclude" value="sourceListInclude.xhtml" />
+						<ui:param name="sHandler" value="#{sHandler}" />
+						<ui:param name="dsWrapper" value="#{sHandler.sourceWrapper}" />
+					</ui:include>
+					<ui:include src="stockDataSetInclude.xhtml">
+						<ui:param name="dsType" value="Contact" />
+						<ui:param name="tabTitleKey" value="common.contacts" />
+						<ui:param name="typeKey" value="common.contact" />
+						<ui:param name="listInclude" value="contactListInclude.xhtml" />
+						<ui:param name="sHandler" value="#{sHandler}" />
+						<ui:param name="dsWrapper" value="#{sHandler.contactWrapper}" />
+					</ui:include>
+					<ui:include src="stockDataSetInclude.xhtml">
+						<ui:param name="dsType" value="Lifecyclemodel" />
+						<ui:param name="tabTitleKey" value="common.lifecyclemodels" />
+						<ui:param name="typeKey" value="common.lifecyclemodel" />
+						<ui:param name="listInclude" value="lifecyclemodelListInclude.xhtml" />
+						<ui:param name="sHandler" value="#{sHandler}" />
+						<ui:param name="dsWrapper" value="#{sHandler.lifeCycleModelWrapper}" />
+					</ui:include>
+				</p:tabView>
+			</ui:fragment>
+		</p:tab>
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<p:tab id="assignRemoveAllDataSets" title="#{i18n['admin.stock.batchAssignRemove']}"
+			disabled="#{sHandler.createView}"
+			rendered="#{not sHandler.entry.root}">
+			<ui:fragment rendered="#{not sHandler.createView}">
+				<p:panelGrid id="assignRemoveAllDataSetsConfig" columns="2"
+					columnClasses="ui-grid-col-12, ui-grid-col-10" layout="grid"
+					style="width:100%;">
+					<p:panel header="#{i18n['admin.pushConfig.source']}"
+						rendered="true">
+
+						<p:dataTable id="sourceStockTable" var="source"
+							value="#{assignRemoveDataSetHandler.stockListHandler.lazyModel}"
+							selection="#{assignRemoveDataSetHandler.stockListHandler.selectedStocks}"
+							emptyMessage="#{i18n['common.list.noneFound']}" lazy="true"
+							paginator="true" rows="15" draggableRows="false"
+							rowsPerPageTemplate="5,10,15,50"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink}
+   		                                 {PreviousPageLink} {PageLinks} {NextPageLink}
+  		                                 {LastPageLink} {RowsPerPageDropdown} #{i18n['common.list.entriesPerPage']}  
+		                                 (#{assignRemoveDataSetHandler.stockListHandler.lazyModel.rowCount} #{i18n['common.list.total']})"
+							widgetVar="sourceTable">
+
+							<p:column style="text-align: center;" selectionMode="multiple"
+								width="15" />
+
+							<p:column headerText="#{i18n['admin.stock.id']}" width="22%">
+								<h:outputText id="sourceID" value="#{source.name}" />
+								<p:tooltip id="tooltipSourceUuid" for="sourceID"
+									value="UUID: #{source.uuid.uuid}" />
+							</p:column>
+
+							<p:column headerText="#{i18n['common.type']}" width="8%">
+								<h:outputText
+									value="#{source.root ? i18n['admin.stock.type.rds.short'] : i18n['admin.stock.type.ds.short']}" />
+							</p:column>
+
+							<p:column headerText="#{i18n['admin.stock.name']}">
+								<h:outputText value="#{source.title}" />
+							</p:column>
+
+							<p:column headerText="#{i18n['admin.stock.uuid']}" width="30%">
+								<h:outputText value="#{source.uuid.uuid}" />
+							</p:column>
+
+						</p:dataTable>
+					</p:panel>
+					
+					<p:panel id="targetInfo" style="width:100%">
+						<f:facet name="header">
+							<h:outputText value="#{i18n['admin.batchAssign.selection']}" 
+								style="display:inline-block; padding-top:2.5px"/>
+							<p:selectOneMenu id="selectionByMenu" value="#{assignRemoveDataSetHandler.selectionBy}"
+					        	style="float:right; margin-top:-1px; display:inline-block; font-size:.9em">
+					            <f:selectItem itemLabel="#{i18n['admin.batchAssign.byType']}" itemValue="byType"/>
+					            <f:selectItem itemLabel="#{i18n['admin.batchAssign.byXLSImport']}" itemValue="byExcelImport"/>
+					            <p:ajax update="assignRemoveAllDataSetsConfig" listener="#{assignRemoveDataSetHandler.selectionByListener}"/>
+					        </p:selectOneMenu>
+						</f:facet>
+												
+							<p:panel id="selectionByTypePanel"
+								visible="#{assignRemoveDataSetHandler.selectionBy == 'byType'}">
+								<p:selectOneRadio  rendered="#{assignRemoveDataSetHandler.selectionBy == 'byType'}" id = "selectionRadioBtnTab" update="dataSetsListTab" value="#{assignRemoveDataSetHandler.selectMode}">
+									<f:selectItem  itemValue="1" itemLabel="#{i18n['admin.stock.selectAll']}" />
+									<f:selectItem  itemValue="2" itemLabel="#{i18n['admin.stock.none']}" />
+									<f:selectItem  itemValue="3" itemLabel="#{i18n['admin.stock.secondaryDatasets']}" />
+									<p:ajax  oncomplete="$('#stockTabs\\:dataSetsList_head').hide();" update="dataSetsListTab" event="valueChange"/>
+								</p:selectOneRadio>
+		
+								<p:dataTable id="dataSetsListTab" var="dataSetEntry"
+									value="#{assignRemoveDataSetHandler.dataSets}"
+									selection="#{assignRemoveDataSetHandler.selectedDataSetTypes}" rowKey="#{dataSetEntry}"
+									styleClass="noHeader"
+									style="margin-bottom:0">
+		
+									<p:column class="remove-checkall" selectionMode="multiple"
+										style="width:16px;text-align:center" />
+									<p:column headerText="Data Sets">
+										<h:outputText value="#{i18n[dataSetEntry.displayName]}" />
+									</p:column>
+								</p:dataTable>
+							</p:panel>
+							
+
+							<p:panel id="xlsImportPanel" enctype="multipart/form-data" prependId="false"
+								visible="#{assignRemoveDataSetHandler.selectionBy == 'byExcelImport'}">
+								<h:outputText value="#{i18n['admin.batchAssign.xlsColumnRequirements']}" />
+								<br> </br>
+								<p:fileUpload description="#{i18n['admin.fileUpload.description']}"
+									id="documentToUpload"
+									allowTypes="/(\.|\/)(xls|xlsx)$/"
+									listener="#{assignRemoveDataSetHandler.handleExcelImport}"
+									multiple="false"
+									style="padding-bottom:10px; word-break:break-all"
+									cancelLabel="#{i18n['admin.cancel']}"
+									uploadLabel="#{i18n['admin.fileUpload.upload']}"
+									label="#{i18n['admin.fileUpload.browse']}"
+									update="xlsImportPanel"/>
+ 								<p:selectBooleanCheckbox itemLabel="#{i18n['admin.batchAssign.fetchFromAllStocks']}" value="#{assignRemoveDataSetHandler.fetchFromAllStocks}">
+ 									<p:ajax update="sourceStockTable" listener="#{assignRemoveDataSetHandler.fetchFromAllStocksListener}"/>
+ 								</p:selectBooleanCheckbox>
+								<br/>
+								<br/>
+								<h:outputText id="numberOfParsedEntries"
+									value="	#{assignRemoveDataSetHandler.excelSelectionHandler.numberOfSuccesses} #{i18n['admin.batchAssign.entriesParsed']}"/>
+								<h:outputText id="fileNameText" rendered="#{assignRemoveDataSetHandler.isFileKnown}"
+									value=" #{i18n['admin.batchAssign.fromFile']} #{assignRemoveDataSetHandler.excelSelectionHandler.fileName}"/>
+								<h:outputText>.</h:outputText>
+							</p:panel>
+
+						<f:facet name="footer">
+							<p:panel id="chooseAction"
+								header="#{i18n['admin.assignRemove.chooseAction']}">
+								<div style="margin-left: 50px;">
+									<p:commandButton style="padding" id="removeAllBtn"
+										onclick="PF('adAssignAll#{assignRemoveDataSetHandler.stockHandler.entry.root ? 'deleteSelected' : 'detachSelectedFromStock'}Confirm').show()"
+										type="button" value="#{i18n['common.picklist.remove']}"
+										immediate="true">
+										<pe:tooltip for="removeAllBtn" mouseTracking="true"
+											adjustX="10" adjustY="10"
+											value="#{i18n['common.picklist.hint.remove']}" />
+									</p:commandButton>
+									<p:commandButton id="assignAllBtn"
+										onclick="PF('cdAssignAllattachSelectedToStockConfirm').show()"
+										type="button" value="#{i18n['admin.assign']}" immediate="true">
+										<pe:tooltip for="assignAllBtn" mouseTracking="true"
+											adjustX="10" adjustY="10"
+											value="#{i18n['admin.hint.assign']}" />
+									</p:commandButton>
+									<p:button style="float: right;"
+										rendered="#{assignRemoveDataSetHandler.showJobsButton}"
+										id="jobsBtn" value="#{i18n['admin.jobs.showButton']}"
+										outcome="#{url.jobs.showList}">
+										<pe:tooltip for="jobsBtn" mouseTracking="true" adjustX="10"
+											adjustY="10" value="#{i18n['admin.hint.jobsList']}" />
+									</p:button>
+								</div>
+							</p:panel>
+						</f:facet>
+					</p:panel>
+					
+				</p:panelGrid>
+				<ui:include style="display: none"
+					src="/admin/datasets/include/confirmDialog.xhtml">
+					<ui:param name="allMode" value="true" />
+					<ui:param name="action"
+						value="#{assignRemoveDataSetHandler.stockHandler.entry.root ? 'deleteSelected' : 'detachSelectedFromStock'}" />
+					<ui:param name="dialogHeader"
+						value="#{i18n['admin.confirmDlg.remove']}" />
+					<ui:param name="dialogMessage"
+						value="#{i18n['admin.confirmMsg.removeSelected']}?" />
+					<ui:param name="dataTableId" value="adAssignAll" />
+					<ui:param name="showDependenciesOption" value="true" />
+					<ui:param name="assignRemoveDataSetHandler"
+						value="#{assignRemoveDataSetHandler}" />
+					<ui:param name="backingBean"
+						value="#{assignRemoveDataSetHandler}" />
+					<ui:param name="actionDialogCancelLabel"
+						value="#{i18n['admin.cancel']}" />
+					<ui:param name="actionDialogOKLabel" value="#{i18n['admin.ok']}" />
+					<ui:param name="jobCheckbox" value="false" />
+				</ui:include>
+
+				<ui:include style="display: none"
+					src="/admin/datasets/include/confirmDialog.xhtml">
+					<ui:param name="allMode" value="true" />
+					<ui:param name="action" value="attachSelectedToStock" />
+					<ui:param name="dialogHeader"
+						value="#{i18n['admin.confirmDlg.assign']}" />
+					<ui:param name="dialogMessage"
+						value="#{i18n['admin.confirmMsg.assignSelected']}?" />
+					<ui:param name="dataTableId" value="cdAssignAll" />
+					<ui:param name="showDependenciesOption" value="true" />
+					<ui:param name="assignRemoveDataSetHandler"
+						value="#{assignRemoveDataSetHandler}" />
+					<ui:param name="backingBean"
+						value="#{assignRemoveDataSetHandler}" />
+					<ui:param name="actionDialogCancelLabel"
+						value="#{i18n['admin.cancel']}" />
+					<ui:param name="actionDialogOKLabel" value="#{i18n['admin.ok']}" />
+					<ui:param name="jobCheckbox" value="false" />
+				</ui:include>
+
+				<script type="text/javascript">
+					$('#stockTabs\\:dataSetsList_head').hide();
+				</script>
+			</ui:fragment>
+		</p:tab>
+		<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+		<p:tab id="tags" title="#{i18n['admin.stock.tags']}"
+			disabled="#{sHandler.createView}">
+			<ui:fragment rendered="#{not sHandler.createView}">
+				<p:panel id="wrapperPanelTags" style="width: 80%">
+					<p:panel header="#{i18n['admin.stock.tags.select']}">
+						<p:pickList id="tagList" value="#{stockHandler.dualTagList}"
+							converter="tagConverter"
+							var="t" itemLabel="#{t.name}" itemValue="#{t}" >
+							<f:facet name="sourceTags">#{i18n['admin.picklist.sourceTags']}</f:facet>
+							<f:facet name="targetTags">#{i18n['admin.picklist.targetTags']}</f:facet>
+							
+							<p:ajax event="transfer" listener="#{stockHandler.onTagTransfer}" />
+						</p:pickList>
+					</p:panel>
+				</p:panel>
+			</ui:fragment>
+		</p:tab>
+	</p:tabView>
+
+	<h:inputHidden id="grpConfirm" value="#{sHandler.confirmGroupRightDelete}" />
+	<h:inputHidden id="usrConfirm" value="#{sHandler.confirmUserRightDelete}" />
+	
+	<ui:include src="sodaMenuBarStock.xhtml">
+		<ui:param name="spacerHeight_beforeToolbar" value="50" />
+	</ui:include>
+
+</ui:composition>
+
