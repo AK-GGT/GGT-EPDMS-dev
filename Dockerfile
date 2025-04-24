@@ -1,0 +1,90 @@
+FROM okworx/sodabuilder:20 AS builder
+
+WORKDIR /opt/soda4LCA/
+
+# Grab whole project src (Node, Registry, etc... )
+COPY . .
+
+# Prepare the properties file in the builder stage instead
+ENV CONFIG_DIR .docker/Node/dev
+COPY ${CONFIG_DIR}/soda4LCA.properties.template .
+
+# soda4LCA.properties will be copied later by the deploy image
+RUN export NODE_TITLE="$(git symbolic-ref --short HEAD) $(git show -s --format='%h')" && \
+	export NODE_SUBTITLE="$(git show -s --format='%s %an (%ai)')" && \
+	envsubst '${NODE_TITLE},${NODE_SUBTITLE}' < soda4LCA.properties.template > soda4LCA.properties.template
+
+# Re-Build Node/target/Node.war
+RUN mvn -B --no-transfer-progress clean package -pl Node -am -DskipTests -DskipITs -DskipCargo
+
+FROM tomcat:9-jdk11-temurin
+
+WORKDIR /soda
+
+EXPOSE 8081
+EXPOSE 8082
+
+ENV MARIADB_VERSION=10.11
+
+RUN apt-get update; \
+    apt-get install curl software-properties-common dirmngr ca-certificates apt-transport-https -y
+
+RUN curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | bash -s -- --mariadb-server-version=$MARIADB_VERSION;
+
+RUN { \
+		echo mariadb-server mysql-server/data-dir select ''; \
+		echo mariadb-server mysql-server/root-pass password ''; \
+		echo mariadb-server mysql-server/re-root-pass password ''; \
+		echo mariadb-server mysql-server/remove-test-db select false; \
+	} | debconf-set-selections \
+    && export DEBIAN_FRONTEND=noninteractive \
+	&& apt-get install -y mariadb-server mariadb-client && rm -rf /var/lib/apt/lists/* \
+	&& rm -rf /var/lib/mysql && mkdir -p /var/lib/mysql /var/run/mysqld \
+	&& chown -R mysql:mysql /var/lib/mysql /var/run/mysqld \
+# ensure that /var/run/mysqld (used for socket and lock files) is writable regardless of the UID our mysqld instance ends up having at runtime
+	&& chmod 1777 /var/run/mysqld /var/lib/mysql \
+# comment out a few problematic configuration values
+	&& find /etc/mysql/ -name '*.cnf' -print0 \
+		| xargs -0 grep -lZE '^(bind-address|log)' \
+		| xargs -rt -0 sed -Ei 's/^(bind-address|log)/#&/' \
+# don't reverse lookup hostnames, they are usually another container
+	&& echo '[mysqld]\nskip-host-cache\nskip-name-resolve' > /etc/mysql/conf.d/docker.cnf
+
+RUN mariadb --version; \
+    mariadbd &
+
+# create upload and data folders
+RUN mkdir -p /opt/soda/data/datafiles \
+	&& mkdir -p /opt/soda/data/validation_profiles \
+	&& mkdir -p /opt/soda/data/tmp/uploads \
+	&& mkdir -p /opt/soda/data/tmp/zips
+
+ENV CATALINA_BASE /usr/local/tomcat
+
+# disable default logging (JULI). log4j will take it's place
+RUN rm ${CATALINA_BASE}/conf/logging.properties
+
+# download and put the MySQL driver into the tomcat libraries
+RUN curl -O https://cdn.mysql.com/Downloads/Connector-J/mysql-connector-j-8.4.0.tar.gz \
+	&& mkdir connector-j \
+	&& tar xvf mysql-connector-j-*.tar.gz -C connector-j --strip-components=1 \
+	&& mv connector-j/mysql-connector-*.jar ${CATALINA_BASE}/lib \
+	&& rm -rf connector-j \
+	&& rm mysql-connector-j-*.tar.gz
+
+ENV CONFIG_DIR .docker/Node/dev
+
+# copy configuration files
+COPY ${CONFIG_DIR}/server.xml.template ${CONFIG_DIR}/web.xml.template ${CATALINA_BASE}/conf/
+
+# adding the startup script
+COPY ${CONFIG_DIR}/start.sh /soda/
+
+# copy soda4LCA.properties with latest commit info in title/subtitle
+COPY --from=builder /opt/soda4LCA/soda4LCA.properties.template /opt/soda/soda4LCA.properties.template
+
+# copy the webapp from builder stage
+COPY --from=builder /opt/soda4LCA/Node/target/Node.war ${CATALINA_BASE}/webapps/Node.war
+
+# sudo docker run -it --rm -p 80:8080 soda
+CMD [ "/soda/start.sh" ]
