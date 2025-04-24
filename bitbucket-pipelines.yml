@@ -1,0 +1,83 @@
+image: okworx/pipeline-mysql57:20
+
+clone:
+  lfs: true
+
+pipelines:
+  default:
+    - step:
+        name: CI Build
+        caches:
+          - maven
+        # size: 2x
+        script:
+          - ./PrePipeline.sh
+          - mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=$(find Node/lib/primefaces/ -name '*.jar')
+          - mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=$(find Node/lib/shiro-faces/ -name '*.jar')
+          #            - mvn org.apache.maven.plugins:maven-install-plugin:3.0.0-M1:install-file -Dfile=Node/lib/ilcd-validation/ilcd-validation-2.3.1u1.jar -DpomFile=Node/lib/ilcd-validation/ilcd-validation-2.3.1u1.pom
+          - mvn -B verify -Pexternaldb_ci,headless -Dmaven.wagon.http.pool=false -Dhttp.keepAlive=false -Dmaven.resolver.transport=wagon
+        artifacts:
+          - Node/build/reports/tests/**/*.png
+          - Node/build/reports/tests/**/*.html
+  custom:
+#    cibuild:
+      # branches:
+      # 4.0-branch:
+    release:
+      - variables:
+          - name: VERSION
+          - name: NEXT_DEV_VERSION
+      - step:
+          name: Release
+          size: 2x
+          caches:
+            - maven
+          script:
+            - ./PrePipeline.sh
+            - mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=$(find Node/lib/primefaces/ -name '*.jar')
+            - mvn -B release:prepare -Dtag=$VERSION -DreleaseVersion=$VERSION -DdevelopmentVersion=$NEXT_DEV_VERSION-SNAPSHOT -Pexternaldb_ci,headless -Dscm-url=scm:git:http://okusche@bitbucket.org/okusche/soda4lca -Dmaven.wagon.http.pool=false
+            - ./prepare_release.sh $VERSION
+            - pipe: atlassian/bitbucket-upload-file:0.3.2
+              variables:
+                BITBUCKET_USERNAME: $BITBUCKET_USERNAME
+                BITBUCKET_APP_PASSWORD: $BITBUCKET_APP_PASSWORD
+                FILENAME: "soda4LCA_$VERSION.zip"
+          artifacts:
+            - soda4LCA_*.zip
+    infer-static-analysis:
+      - step:
+          name: Infer Static Analyzer
+          image: maven:3.6.3-jdk-11
+          caches:
+            - maven
+          script:
+            - cp maven_settings.xml $HOME/.m2/settings.xml
+            - export MAVEN_OPTS=-XX:+UseG1GC
+            - mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=$(find Node/lib/primefaces/ -name '*.jar')
+            - export INFER_HOME=/infer/infer PATH=${INFER_HOME}/bin:${PATH} INFER_VERSION=v1.0.0
+            - curl -sSL "https://github.com/facebook/infer/releases/download/$INFER_VERSION/infer-linux64-$INFER_VERSION.tar.xz" | tar -C /opt -xJ
+            - ln -s "/opt/infer-linux64-$INFER_VERSION/bin/infer" /usr/local/bin/infer
+            - infer run -- mvn clean compile
+          artifacts:
+            - infer-out/**
+    deployToJelastic:
+      - step:
+          services:
+            - docker
+          caches:
+            - maven
+            - docker
+          script:
+            - mysqld --daemonize --log-error --user=root --max_connections=1000 --max_allowed_packet=256M
+            - mysql -u root --skip-password -e "ALTER USER 'root'@'127.0.0.1' IDENTIFIED BY 'root';CREATE DATABASE soda; CREATE DATABASE root;CREATE DATABASE root2; GRANT ALL PRIVILEGES ON *.* to root@'127.0.0.1' IDENTIFIED BY 'root';"
+            - mvn org.apache.maven.plugins:maven-install-plugin:2.5.2:install-file -Dfile=$(find Node/lib/primefaces/ -name '*.jar')
+            - mvn clean package -pl Node -am -Pdocker_image # build docker image
+            - PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+            - TAG_NAME=$(echo $BITBUCKET_BRANCH-staging-$(date '+%Y%m%d%H%M') | sed -e 's/\//_/g')
+            - echo $TAG_NAME
+            - docker login --username $DOCKER_LOGIN --password $DOCKER_PASSWORD
+            - docker tag okworx/soda4lca:$PROJECT_VERSION okworx/soda4lca-internal-deploy:$TAG_NAME # re-tag docker image
+            - docker image list
+            - docker push okworx/soda4lca-internal-deploy:$TAG_NAME # push docker image
+            - curl "$JELASTIC_API_URL/environment/control/rest/startenv?session=$JELASTIC_API_TOKEN&appid=$JELASTIC_APP_ID" # start environment
+            - curl -X POST "$JELASTIC_API_URL/environment/control/rest/redeploycontainerbyid?session=$JELASTIC_API_TOKEN&appid=$JELASTIC_APP_ID&nodeid=$JELASTIC_NODE_ID&tag=$TAG_NAME" # redeploy node

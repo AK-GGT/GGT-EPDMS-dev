@@ -40,10 +40,10 @@ public class FlowCommon extends DataSet {
     @Column(name = "PERMANENTURI")
     private String permanenturi;
 
-    @Column(name = "referenceProperty_cache", length = 20)
+    @Column(name = "referenceproperty_cache", length = 20)
     private String referencepropertyCache;
 
-    @Column(name = "referencePropertyUnit_cache", length = 10)
+    @Column(name = "referencepropertyunit_cache", length = 10)
     private String referencepropertyunitCache;
 
     @Column(name = "RELEASESTATE")

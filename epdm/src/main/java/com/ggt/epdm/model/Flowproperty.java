@@ -22,10 +22,10 @@ public class Flowproperty extends DataSet {
     @Column(name = "classification_cache", length = 100)
     private String classificationCache;
 
-    @Column(name = "defaultUnit_cache", length = 10)
+    @Column(name = "defaultunit_cache", length = 10)
     private String defaultunitCache;
 
-    @Column(name = "defaultUnitGroup_cache", length = 20)
+    @Column(name = "defaultunitgroup_cache", length = 20)
     private String defaultunitgroupCache;
 
     @Column(name = "MOSTRECENTVERSION")
@@ -53,7 +53,7 @@ public class Flowproperty extends DataSet {
     private Integer version;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UNITGROUP_ID")
+    @JoinColumn(name = "unitgroup_id")
     private com.ggt.epdm.model.Unitgroup unitgroup;
 
     @Column(name = "IMPORTDATE")

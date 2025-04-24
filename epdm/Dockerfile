@@ -8,7 +8,7 @@ WORKDIR /usr/local/tomcat/webapps/
 COPY target/*.war epdm-0.0.1-SNAPSHOT.war
 
 # Expose the application port (Make sure this matches your Spring Boot server.port)
-EXPOSE 8090
+EXPOSE 8082
 
 # Start Tomcat properly
 CMD ["catalina.sh", "run"]

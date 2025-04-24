@@ -31,7 +31,7 @@ public class Unitgroup extends DataSet {
     @Column(name = "PERMANENTURI")
     private String permanenturi;
 
-    @Column(name = "referenceUnit_cache", length = 10)
+    @Column(name = "referenceunit_cache", length = 10)
     private String referenceunitCache;
 
     @Column(name = "RELEASESTATE")

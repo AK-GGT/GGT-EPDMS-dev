@@ -16,7 +16,7 @@ public class Process extends DataSet {
     @Column(name = "ID", nullable = false)
     private Long id;
 
-    @Column(name = "BRANCH")
+    @Column(name = "branch")
     private Integer branch;
 
     @Column(name = "classification_cache", length = 100)
@@ -25,73 +25,73 @@ public class Process extends DataSet {
     @Column(name = "COMPLETENESS")
     private String completeness;
 
-    @Column(name = "complianceSystem_cache", length = 1)
+    @Column(name = "compliancesystem_cache", length = 1)
     private String compliancesystemCache;
 
-    @Column(name = "containsProductModel")
+    @Column(name = "containsproductmodel")
     private Boolean containsProductModel;
 
-    @Column(name = "EXCHANGESINCLUDED")
+    @Column(name = "exchangesincluded")
     private Boolean exchangesincluded;
 
-    @Column(name = "FORMAT")
+    @Column(name = "format")
     private String format;
 
-    @Column(name = "lciMethodInformation_cache", length = 20)
+    @Column(name = "lcimethodinformation_cache", length = 20)
     private String lcimethodinformationCache;
 
-    @Column(name = "MOSTRECENTVERSION")
+    @Column(name = "mostrecentversion")
     private Boolean mostrecentversion;
 
     @Column(name = "name_cache")
     private String nameCache;
 
-    @Column(name = "PARAMETERIZED")
+    @Column(name = "parameterized")
     private Boolean parameterized;
 
-    @Column(name = "PERMANENTURI")
+    @Column(name = "permanenturi")
     private String permanenturi;
 
-    @Column(name = "RELEASESTATE")
+    @Column(name = "releasestate")
     private String releasestate;
 
-    @Column(name = "RESULTSINCLUDED")
+    @Column(name = "resultsincluded")
     private Boolean resultsincluded;
 
     @Column(name = "subtype")
     private String subtype;
 
-    @Column(name = "TYPE")
+    @Column(name = "type")
     private String type;
 
     @Column(name = "margins")
     private Integer margins;
 
-    @Column(name = "MAJORVERSION")
+    @Column(name = "majorversion")
     private Integer majorversion;
 
-    @Column(name = "MINORVERSION")
+    @Column(name = "minorversion")
     private Integer minorversion;
 
-    @Column(name = "SUBMINORVERSION")
+    @Column(name = "subminorversion")
     private Integer subminorversion;
 
-    @Column(name = "VERSION")
+    @Column(name = "version")
     private Integer version;
 
-    @Column(name = "IMPORTDATE")
+    @Column(name = "importdate")
     private Instant importdate;
 
-    @Column(name = "publicationDateOfEPD")
+    @Column(name = "publicationdateofepd")
     private Instant publicationDateOfEPD;
 
-    @Column(name = "registrationNumber")
+    @Column(name = "registrationnumber")
     private String registrationNumber;
 
-    @Column(name = "epdFormatVersion")
+    @Column(name = "epdformatversion")
     private String epdFormatVersion;
 
-    @Column(name = "metaDataOnly")
+    @Column(name = "metadataonly")
     private Boolean metaDataOnly;
 
     @Column(name = "visible")

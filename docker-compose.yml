@@ -4,10 +4,10 @@ services:
   soda:
     image: okworx/soda4lca:7.14.0
     ports:
-      - "80:8080" #the internal port is 8080 and 80 is exposed
+      - "8080:8080" 
     environment:
-      MYSQL_HOST: mysqld
-      MYSQL_DATABASE: soda4LCA
+      MYSQL_HOST: host.docker.internal
+      MYSQL_DATABASE: epdm
       MYSQL_USER: root
       MYSQL_PASSWORD: admin@123
     volumes:
@@ -15,33 +15,19 @@ services:
     container_name: soda
     networks:
       - epdm-network
-  mysqld:
-    image: mysql/mysql-server:5.7
-    command: --bind-address=0.0.0.0 --character-set-server=utf8 --collation-server=utf8_general_ci --max_allowed_packet=25M --sql_mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: admin@123
-      MYSQL_DATABASE: soda4LCA
-      MYSQL_ROOT_HOST: "%"
-    networks:
-      - epdm-network   
-    container_name: mysqld
+
 
   epdm:
     build:
       context: ./epdm
       dockerfile: Dockerfile
     container_name: epdm
-    depends_on:
-      mysqld:  
-        condition: service_healthy
     ports:
-      - "8090:8090"
+      - "8082:8082"
     environment:
       SPRING_application_name: epdm
       SPRING_PROFILES_ACTIVE: dev
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqld:3306/soda4LCA?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/epdm?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: admin@123
       SPRING_DATASOURCE_DRIVER-CLASS-NAME: com.mysql.cj.jdbc.Driver
@@ -49,7 +35,8 @@ services:
       SPRING_JPA_HIBERNATE_DDL-AUTO: none
       SPRING_JPA_SHOW_SQL: 	true
       SPRING_JPA_PROPERTIES_HIBERNATE_FORMAT_SQL: true
-      SERVER_PORT: 8090
+      SERVER_PORT: 8082
+      SERVER_ADDRESS: 0.0.0.0
       SPRING_SQL_INIT_MODE: always
     networks:
       - epdm-network

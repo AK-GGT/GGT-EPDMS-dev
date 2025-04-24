@@ -469,7 +469,7 @@ public enum ConfigurationService {
         this.tls = this.fileConfig.getBoolean("service.url.tls", false);
 
         String configuredHostName = this.fileConfig.getString("service.url.hostname");
-        int port = this.fileConfig.getInteger("service.url.port", 80);
+        int port = this.fileConfig.getInteger("service.url.port", 8081);
 
         String hostName;
 
@@ -480,7 +480,7 @@ public enum ConfigurationService {
         }
 
         try {
-            URI newUri = new URI((this.tls ? "https" : "http"), null, hostName, (port == 80 ? -1 : port), this.contextPath, null, null);
+            URI newUri = new URI((this.tls ? "https" : "http"), null, hostName, (port == 8081 ? -1 : port), this.contextPath, null, null);
             this.logger.info("application base URI: " + newUri.toString());
             this.baseURI = newUri;
             this.nodeInfo.setBaseURL(newUri.toString() + "/resource/");

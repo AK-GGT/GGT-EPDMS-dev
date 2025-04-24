@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS soda4LCA.portal_exported_xml (
+CREATE TABLE IF NOT EXISTS epdm.portal_exported_xml (
     ID BIGINT AUTO_INCREMENT PRIMARY KEY,
   	`XMLFILE_ID` bigint(20) DEFAULT NULL,
     `IS_EXPORTED` tinyint(1) DEFAULT '0',
